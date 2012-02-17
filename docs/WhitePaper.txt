@@ -15,16 +15,15 @@ MFC or Matrix Facts Conversion, being one of the key concepts of MIPL, means fac
 Due to the fact that MIPL has both characteristics of Prolog and MATLAB, it is important to understand what features belong to which part.
 2.1. FRQ
 2.1.1 Primitive Data Types
-MIPL's single data type outside of the job definitions is the term, which include numbers, strings, and compound terms.  Compound terms consist of a "functor" and a number of "arguments", which are again terms.
+In Facts, Rules, Query, the single data type is the term, which include numbers, strings, and compound terms.  Compound terms consist of a "functor" and a number of "arguments", which are again terms.
 An atom is a general-purpose name with no inherent meaning. Examples of atoms include x, blue, 'Taco', and 'some atom'.
 Numbers can be floats or integers.
  A compound term is composed of an atom called a "functor" and a number of "arguments", which are again terms. Compound terms are ordinarily written as a functor followed by a comma-separated list of argument terms, which is contained in parentheses. The number of arguments is called the term's arity. An atom can be regarded as a compound term with arity zero.
 2.1.2. Variables
 Variables are denoted by a string consisting of letters, numbers and underscore characters, and beginning with an upper-case letter or underscore. Variables closely resemble variables in logic in that they are placeholders for arbitrary terms.
 2.2 JOB
-[To be decided]
 2.2.1 Primitive Data Types
-[To be decided]
+In JOB definitions, allowed primitive data types are integers, floating-point numbers.  Unlike MATLAB, MIPL does not support complex numbers, which is unusually used in most of Data Mining algorithms.
 2.2.2 Variables
 [To be decided]
 2.3. Comparison to Prolog
