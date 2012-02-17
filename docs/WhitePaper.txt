@@ -42,7 +42,7 @@ List, one of the most frequently used features of Prolog, is removed in MIPL mos
 3. Architecture Neutral, Virtual Machine Neutral, Portable
 Similarly to Java, MIPL's target code is designed to run on a virtual machine.  MIPL, however, does not generate only one kind of code targeted at a specific virtual machine, but is also able to work for various virtual machines, by having several code generation component plugins.  This means MIPL is independent from virtual machines as well as from architecture, and it gives you more portability even when a certain virtual machine is not portable to the target machine.
 3.1. Virtual Machine
-[To be decided] . heap / JVM, MIPL VM
+Through plugin architecture MIPL compiler can generate different types of intermediate codes at the option request of the users.  By default, MIPL generates Java Bytecode that runs on Java Virtual Machine.  Users may insert a new codde generator which fits in the code generator plugin architecture so that the generated code can run on the new type of virtual machine.  For example, for future work we plan to provide MIPL virtual machine along with MIPL intermediate code generator plugin for MIPL compiler.
 /* 4. Dynamic and Looseness
 Every rules, facts and JOBs are evaluated at run time upon the user's query from the command prompt or the MIPL program.  This means, dynamic type checking including variable types or matrix computability is determined at run time, unlike syntax checking which is done at interpret or compile time.
 4.1. Lazy Binding
