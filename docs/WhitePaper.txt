@@ -48,7 +48,11 @@ Every rules, facts and JOBs are evaluated at run time upon the user's query from
 4.1. Lazy Binding
 Rule binding occurs at run time.
 4.2. Loose Types
-Each variable is declared without a type.
+Each variable is declared without a type. Dynamic Typing!!!! fastercompilation,genericcode
+Weak Typing . Implicit type conversion is allowed
+. Ex.  C, C++, JavaScript
+. Advantages: easier to write programs?
+
 5. High Performance
 MIPL's architecture enables four notable optimization techniques including Parallelization, Sparse Matrix Handling, GPGPU computation, and Matrix Caching.
 5.1. Parallelization
