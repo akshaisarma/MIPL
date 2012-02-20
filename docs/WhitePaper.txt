@@ -50,7 +50,7 @@ As MIPL is both architecture and virtual machine independent, it gives the user 
 3.4 Dynamic
 Every rules, facts and JOBs are evaluated at run time upon the user's query from the command prompt or the MIPL program. This means, dynamic type checking including variable types or matrix computability is determined at run time, unlike static typing, which is done at compile time.
 
-3.4.1 Dynamic  and Weak Typing
+3.4.1 Dynamic and Weak Typing
 Each variable is declared without a type. In other words, MIPL is dynamically typed. With dynamic typing and type conversion, MIPL users can produce code very fast, similar to a scripting language.
 
 3.4.2 Lazy Rule Binding
