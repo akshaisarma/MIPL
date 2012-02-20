@@ -65,38 +65,41 @@ List, one of the most frequently used features of Prolog, is removed in MIPL mos
 2.4.3 Features Removed from MATLAB
 No complex data type.  Real numbers only.
 
-3. Buzzwords
-We define some characteristics of our language in the form of buzzwords.
+3. MIPL Buzzwords
+In order to characterize MIPL, we define some of the key features of our language in the form of buzzwords. MIPL: A platform and architecture neutral, portable, dynamic, lazy, high performance, easy, interpreted language.
 
 3.1 Architecture Neutral 
-Similarly to Java, MIPL's target code is designed to run on a virtual machine.  MIPL, however, does not generate only one kind of code targeted at a specific virtual machine, but is also able to work for various virtual machines, by having several code generation component plugins.  This means MIPL is independent from virtual machines as well as from architecture, and it gives you more portability even when a certain virtual machine is not portable to the target machine.
+Similar to Java, MIPL's target code is designed to run on a virtual machine.  MIPL currently produces Java bytecode itself as the compilation output, allowing it to be run on Java Virtual Machines for architecture neutrality.  
 
-3.2. Virtual Machine Neutral
-Through plugin architecture MIPL compiler can generate different types of intermediate codes at the option request of the users.  By default, MIPL generates Java Bytecode that runs on Java Virtual Machine.  Users may insert a new codde generator which fits in the code generator plugin architecture so that the generated code can run on the new type of virtual machine.  For example, for future work we plan to provide MIPL virtual machine along with MIPL intermediate code generator plugin for MIPL compiler.
+3.1.1. Virtual Machine Neutral
+MIPL is not limited to a particular virtual machine. Because MIPL is open, through the modular plugin architecture, the MIPL compiler can be augmented to generate different types of intermediate codes at the behest of its users.  By default, MIPL generates Java Bytecode that runs on Java Virtual Machine.  Users are free to insert a new code generator so that the generated code can run on a new type of virtual machine. This means MIPL is independent from virtual machines as well as from architecture.
 
-3.3 Portable
+3.2 Portable
+As MIPL is both architecture and virtual machine independent, it gives the user high portability. When a certain virtual machine is not portable to the target machine, the MIPL user can replace the code generation module with one that does match the target. 
 
-3.4 Dynamic
-Every rules, facts and JOBs are evaluated at run time upon the user's query from the command prompt or the MIPL program.  This means, dynamic type checking including variable types or matrix computability is determined at run time, unlike syntax checking which is done at interpret or compile time.
+3.3 Dynamic
+Every rules, facts and JOBs are evaluated at run time upon the user's query from the command prompt or the MIPL program.  This means, dynamic type checking including variable types or matrix computability is determined at run time, unlike static typing, which is done at compile time.
 
-3.4.1 Loose Types
-Each variable is declared without a type. Dynamic Typing!!!! fastercompilation,genericcode
-Weak Typing . Implicit type conversion is allowed
-. Ex.  C, C++, JavaScript
-. Advantages: easier to write programs?
+3.3.1 Typing
+Each variable is declared without a type. In other words, MIPL is dynamically typed. With dynamic typing and type conversion, MIPL users can produce code very fast, similar to a scripting language.
 
-3.5 Lazy Binding
-Rule binding occurs at run time.
+3.4 Lazy
+MIPL deals with the binding of rules and facts in the FRQ, at runtime. This provides for fast and easy compilation. MIPL includes a command prompt that allows the user to enter queries. As the query is applied, binding is done on the rules and facts.
 
+3.5 High Performance
+MIPL is designed to have high performance. With the vast amounts of data dealt with in the data mining field, it is imperative that the language designed for it be of high performance. As such, MIPL's architecture enables four notable optimization techniques, which are Parallelization, Sparse Matrix Handling, GPGPU computation, and Matrix Caching.
 
-3.6 High Performance
-MIPL's architecture enables four notable optimization techniques including Parallelization, Sparse Matrix Handling, GPGPU computation, and Matrix Caching.
+3.5.1 Parallelization
+MIPL includes a MapReduce component. After generating code, the MIPL execution environment can be linked to run on the MapReduce framework to efficiently compute on large data sets and complex rules.
 
-3.6.1 Parallelization
-MapReduce
+3.5.2 Sparse Matrix Handing
 
-3.6.2 Sparse Matrix Handing
+3.5.3 GPGPU Computation
 
-3.6.3 GPGPU Computation
+3.5.4 Matrix Caching
 
-3.6.4 Matrix Caching */
+3.6 Simple
+MIPL's FRQ is simple to use. A user with only a little programming experience can quickly learn the syntax of the FRQ and create a complete data mining program very quickly. However, the simplicity does not sacrifice the capabilities of MIPL as JOB can be used to develop by experienced users to generate powerful new algorithms by using and defining in-built operations.
+
+3.7 Interpreted
+MIPL is designed to run on an virtual machine and as such, its code is translated on the fly to native machine code. However, MIPL is currently designed to run on the Java Virtual Machine, which can incorporate Just In Time compilation to decrease the performance overhead of interpretation.
