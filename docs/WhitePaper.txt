@@ -10,51 +10,73 @@ Akshai Sarma (as4107)
 
 1. Introduction to MIPL
 MIPL is a language for Data Mining which provides methods to implement various sophisticated matrix-based algorithms and to retrieve the computed data easily by offering a novel, convenient way that converts matrices into a set of facts and vice versa.
+
 1.1 Design Goals of MIPL
 Most of the languages that provide matrix based computations, such as MATLAB or R, require the user to be fluent in complex syntaxes and a number of functions for matrix manipulations. MIPL, on the other hand, provides two simple yet different aspects of the language to every user independent of their proficiency in Data Mining. The language handles different skills and interests by separating the data retrieval part of the language from the algorithm implementation part, each of which plays a distinct role in the language.
+
 1.1.1 FRQ: Facts, Rules and Queries
 The data retrieval part of the language is called FRQ, which stands for Facts, Rules, and Queries. From the user perspective, this part of MIPL is similar Prolog, which supports logic programming in a declarative way. However, the syntax is extended for the purposes of data mining and supports various useful constructs such as regular expressions in rules and facts, allowing the user to express complex sentences elegantly and concisely.  This also allows the user to very easily describe the data to be retrieved by defining rules and facts and then defining queries. On the top of MIPL's FRQ, even a casual programmer familiar with Prolog, can easily write a data retrieval program, utilizing pre-written algorithms.
+
 1.1.2 JOB: For Efficient Matrix-based Algorithm Development 
 While the Prolog like syntax in the FRQ provides the users an easy way to retrieve data, it is not a viable method for the development of algorithms to use for the data retrieval. The FRQ's syntax, which uses nested list types is not convenient nor is it optimized for complex matrix operations or parallelization. To solve this issue, MIPL has a second component, called JOB, which uses a seperate syntax from FRQ. JOB provides the algorithm implementation part that takes inspiration from MATLAB's syntax, to provide an efficient means of representation for algorithm creation. JOB is intended for serious users, who have sufficient programming experience and want to create a new "JOB". To facilitate this, JOB also provides various linear algebra primitives that constitute key building blocks for various sets of Data Mining algorithms.  By separating JOB from FRQ, MIPL can be used by users with a varying degree of data mining and programming experiences. It frees the users who simply want to create a data retrieval program from understanding or creating complex algorithms by separating and delegating this task to more serious developers or researchers.
+
 1.1.3 MFC: Matrix Facts Conversion
 FRQ and JOB are logically separated for the user but can work together in synergy through the MFC, which stands for Matrix Facts Conversion. This is one of the key concepts of MIPL. The MFC allows facts in FRQ to be converted to matrices, used for input arguments of a JOB.  Conversely, the output matrix from JOB can be converted to a set of facts through MFC, so that FRQ users can use these facts in combination with other rules and facts for further computation. The MFC collects a rule with a set of facts under a matrix, much like how it would be represented as a table.
 
 2. Linguistic Perspective
-Due to the fact that MIPL has both characteristics of Prolog and MATLAB, it is important to understand what features belong to which part.
+Due to the fact that MIPL is a combination of FRQ and JOB, linked by MFC and since it has both characteristics of Prolog and MATLAB, it is important to clarify what features belong to which part.
+
 2.1. FRQ
+
 [To be rephrased] 2.1.1 Primitive Data Types
-In Facts, Rules, Query, the single data type is the term, which include numbers, strings, and compound terms.  Compound terms consist of a "functor" and a number of "arguments", which are again terms.
+In Facts, Rules, Queries, the single logical data type is the term. A term can include numbers, strings, and compound terms. Compound terms consist of a "functor" and a number of "arguments", which are again terms.
 An atom is a general-purpose name with no inherent meaning. Examples of atoms include x, blue, 'Taco', and 'some atom'.
 Numbers can be floats or integers.
- A compound term is composed of an atom called a "functor" and a number of "arguments", which are again terms. Compound terms are ordinarily written as a functor followed by a comma-separated list of argument terms, which is contained in parentheses. The number of arguments is called the term's arity. An atom can be regarded as a compound term with arity zero.
+A compound term is composed of an atom called a "functor" and a number of "arguments", which are again terms. Compound terms are ordinarily written as a functor followed by a comma-separated list of argument terms, which is contained in parentheses. The number of arguments is called the term's arity. An atom can be regarded as a compound term with arity zero.
+
 2.1.2. Variables
 Variables are denoted by a string consisting of letters, numbers and underscore characters, and beginning with an upper-case letter or underscore. Variables closely resemble variables in logic in that they are placeholders for arbitrary terms.
+
 2.2 JOB
+
 2.2.1 Primitive Data Types
-In JOB definitions, allowed primitive data types are integers, floating-point numbers.  Unlike MATLAB, MIPL does not support complex numbers, which is unusually used in most of Data Mining algorithms.
+In JOB definitions, allowed primitive data types are integers, floating-point numbers.  Unlike MATLAB, MIPL does not support complex numbers, which are not used frequently in most of Data Mining algorithms.
+
 2.2.2 Variables
 Unlike MATLAB, variables in JOB definitions follow the rule for variables in FRQ.  This is for the users who use both parts of MIPL - FRQ and JOB - to avoid confusion on the variable rules.
+
 2.3. Comparison to Prolog
 While some complex features have been removed from Prolog to reduce complexity and to increase usability, MIPL contains core logic functionalities in addition to newly introduced features.
+
 2.3.1 Dynamic Rule Definition
 Prolog interpreters require rules and facts to be loaded from a file.  MIPL allows the users, however, to dynamically declare rules and facts in the command prompt as well as queries.  This difference
+
 2.3.2 Features Removed from Prolog
 Prolog's computational part has been removed because MIPL's FRQ is intended to provide the users a simple way to retrieve data.
+
 [Tentative] 2.3.2.1 List
 List, one of the most frequently used features of Prolog, is removed in MIPL mostly because matrices replace lists in MIPL.  Also, list is not the adequate type for representing input and output data of Data Mining.
+
 2.3.2.2 Grammar Rules (DFA)
+
 2.4. Comparison to MATLAB
 [To be decided]
+
 2.4.3 Features Removed from MATLAB
 No complex data type.  Real numbers only.
+
 3. Architecture Neutral, Virtual Machine Neutral, Portable
 Similarly to Java, MIPL's target code is designed to run on a virtual machine.  MIPL, however, does not generate only one kind of code targeted at a specific virtual machine, but is also able to work for various virtual machines, by having several code generation component plugins.  This means MIPL is independent from virtual machines as well as from architecture, and it gives you more portability even when a certain virtual machine is not portable to the target machine.
+
 3.1. Virtual Machine
 Through plugin architecture MIPL compiler can generate different types of intermediate codes at the option request of the users.  By default, MIPL generates Java Bytecode that runs on Java Virtual Machine.  Users may insert a new codde generator which fits in the code generator plugin architecture so that the generated code can run on the new type of virtual machine.  For example, for future work we plan to provide MIPL virtual machine along with MIPL intermediate code generator plugin for MIPL compiler.
+
 /* 4. Dynamic and Looseness
 Every rules, facts and JOBs are evaluated at run time upon the user's query from the command prompt or the MIPL program.  This means, dynamic type checking including variable types or matrix computability is determined at run time, unlike syntax checking which is done at interpret or compile time.
+
 4.1. Lazy Binding
 Rule binding occurs at run time.
+
 4.2. Loose Types
 Each variable is declared without a type. Dynamic Typing!!!! fastercompilation,genericcode
 Weak Typing . Implicit type conversion is allowed
@@ -63,8 +85,12 @@ Weak Typing . Implicit type conversion is allowed
 
 5. High Performance
 MIPL's architecture enables four notable optimization techniques including Parallelization, Sparse Matrix Handling, GPGPU computation, and Matrix Caching.
+
 5.1. Parallelization
 MapReduce
+
 5.2. Sparse Matrix Handing
+
 5.3. GPGPU Computation
+
 5.4. Matrix Caching */
