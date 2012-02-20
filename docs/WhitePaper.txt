@@ -2,9 +2,9 @@ The Mining Integrated Programming Language (MIPL)
 A White Paper
 February 2012
 1. Introduction to MIPL
-MIPL is a language for Data Mining which provides methods to implement various matrix-based algorithms and to retrieve the computed data extremely easily by offering a novel way that converts the result matrix into a set of facts.
+MIPL is a language for Data Mining which provides methods to implement various sophisticated matrix-based algorithms and to retrieve the computed data easily by offering a novel, convenient way that converts matrics into a set of facts and vice versa.
 1.1 Design Goals of MIPL
-Whereas most of the matrix based languages, such as MATLAB or R, require the user to be fluent in complex syntaxes and a number of functions for matrix manipulation, MIPL provides distinct aspects of the language to each user with different skills and interests by separating the data retrieval part from the algorithm implementation part, each of which play a distinct role in the language.
+Whereas most of the matrix based languages, such as MATLAB or R, require the user to be fluent in complex syntax and a number of functions for matrix manipulation, MIPL provides two different aspects of the language to each user with different skills and interests by separating the data retrieval part from the algorithm implementation part, each of which plays a distinct role in the language.
 1.1.1 FRQ: Simple and Easy to users
 For users, MIPL is similar Prolog, because MIPL supports logic programming in a declarative way.  This part of MIPL is called FRQ, which stands for Facts, Rules, and Queries.  On the top of MIPL's FRQ, a Prolog programmer can easily write a data retrieval program, utilizing pre-written algorithms.
 1.1.2 JOB: Efficient Matrix-based algorithms Development
@@ -14,7 +14,7 @@ MFC or Matrix Facts Conversion, being one of the key concepts of MIPL, means fac
 2. Linguistic Perspective
 Due to the fact that MIPL has both characteristics of Prolog and MATLAB, it is important to understand what features belong to which part.
 2.1. FRQ
-2.1.1 Primitive Data Types
+[To be rephrased] 2.1.1 Primitive Data Types
 In Facts, Rules, Query, the single data type is the term, which include numbers, strings, and compound terms.  Compound terms consist of a "functor" and a number of "arguments", which are again terms.
 An atom is a general-purpose name with no inherent meaning. Examples of atoms include x, blue, 'Taco', and 'some atom'.
 Numbers can be floats or integers.
@@ -25,21 +25,20 @@ Variables are denoted by a string consisting of letters, numbers and underscore 
 2.2.1 Primitive Data Types
 In JOB definitions, allowed primitive data types are integers, floating-point numbers.  Unlike MATLAB, MIPL does not support complex numbers, which is unusually used in most of Data Mining algorithms.
 2.2.2 Variables
-[To be decided]
+Unlike MATLAB, variables in JOB definitions follow the rule for variables in FRQ.  This is for the users who use both parts of MIPL - FRQ and JOB - to avoid confusion on the variable rules.
 2.3. Comparison to Prolog
 While some complex features have been removed from Prolog to reduce complexity and to increase usability, MIPL contains core logic functionalities in addition to newly introduced features.
 2.3.1 Dynamic Rule Definition
 Prolog interpreters require rules and facts to be loaded from a file.  MIPL allows the users, however, to dynamically declare rules and facts in the command prompt as well as queries.  This difference
 2.3.2 Features Removed from Prolog
 Prolog's computational part has been removed because MIPL's FRQ is intended to provide the users a simple way to retrieve data.
-2.3.2.1 List
+[Tentative] 2.3.2.1 List
 List, one of the most frequently used features of Prolog, is removed in MIPL mostly because matrices replace lists in MIPL.  Also, list is not the adequate type for representing input and output data of Data Mining.
 2.3.2.2 Grammar Rules (DFA)
 2.4. Comparison to MATLAB
 [To be decided]
 2.4.3 Features Removed from MATLAB
-Complex data type.  Real numbers only.
-
+No complex data type.  Real numbers only.
 3. Architecture Neutral, Virtual Machine Neutral, Portable
 Similarly to Java, MIPL's target code is designed to run on a virtual machine.  MIPL, however, does not generate only one kind of code targeted at a specific virtual machine, but is also able to work for various virtual machines, by having several code generation component plugins.  This means MIPL is independent from virtual machines as well as from architecture, and it gives you more portability even when a certain virtual machine is not portable to the target machine.
 3.1. Virtual Machine
