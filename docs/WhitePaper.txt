@@ -65,32 +65,38 @@ List, one of the most frequently used features of Prolog, is removed in MIPL mos
 2.4.3 Features Removed from MATLAB
 No complex data type.  Real numbers only.
 
-3. Architecture Neutral, Virtual Machine Neutral, Portable
+3. Buzzwords
+We define some characteristics of our language in the form of buzzwords.
+
+3.1 Architecture Neutral 
 Similarly to Java, MIPL's target code is designed to run on a virtual machine.  MIPL, however, does not generate only one kind of code targeted at a specific virtual machine, but is also able to work for various virtual machines, by having several code generation component plugins.  This means MIPL is independent from virtual machines as well as from architecture, and it gives you more portability even when a certain virtual machine is not portable to the target machine.
 
-3.1. Virtual Machine
+3.2. Virtual Machine Neutral
 Through plugin architecture MIPL compiler can generate different types of intermediate codes at the option request of the users.  By default, MIPL generates Java Bytecode that runs on Java Virtual Machine.  Users may insert a new codde generator which fits in the code generator plugin architecture so that the generated code can run on the new type of virtual machine.  For example, for future work we plan to provide MIPL virtual machine along with MIPL intermediate code generator plugin for MIPL compiler.
 
-/* 4. Dynamic and Looseness
+3.3 Portable
+
+3.4 Dynamic
 Every rules, facts and JOBs are evaluated at run time upon the user's query from the command prompt or the MIPL program.  This means, dynamic type checking including variable types or matrix computability is determined at run time, unlike syntax checking which is done at interpret or compile time.
 
-4.1. Lazy Binding
-Rule binding occurs at run time.
-
-4.2. Loose Types
+3.4.1 Loose Types
 Each variable is declared without a type. Dynamic Typing!!!! fastercompilation,genericcode
 Weak Typing . Implicit type conversion is allowed
 . Ex.  C, C++, JavaScript
 . Advantages: easier to write programs?
 
-5. High Performance
+3.5 Lazy Binding
+Rule binding occurs at run time.
+
+
+3.6 High Performance
 MIPL's architecture enables four notable optimization techniques including Parallelization, Sparse Matrix Handling, GPGPU computation, and Matrix Caching.
 
-5.1. Parallelization
+3.6.1 Parallelization
 MapReduce
 
-5.2. Sparse Matrix Handing
+3.6.2 Sparse Matrix Handing
 
-5.3. GPGPU Computation
+3.6.3 GPGPU Computation
 
-5.4. Matrix Caching */
+3.6.4 Matrix Caching */
