@@ -38,7 +38,8 @@ List, one of the most frequently used features of Prolog, is removed in MIPL mos
 2.4. Comparison to MATLAB
 [To be decided]
 2.4.3 Features Removed from MATLAB
-[To be decided] Complex data type.  Real numbers
+Complex data type.  Real numbers only.
+
 3. Architecture Neutral, Virtual Machine Neutral, Portable
 Similarly to Java, MIPL's target code is designed to run on a virtual machine.  MIPL, however, does not generate only one kind of code targeted at a specific virtual machine, but is also able to work for various virtual machines, by having several code generation component plugins.  This means MIPL is independent from virtual machines as well as from architecture, and it gives you more portability even when a certain virtual machine is not portable to the target machine.
 3.1. Virtual Machine
