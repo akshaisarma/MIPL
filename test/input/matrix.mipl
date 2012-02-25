@@ -1,0 +1,14 @@
+
+grade("john", 100, 80, 90, 100).
+grade("jane", 75, 60, 95, 88).
+grade("tom", 100, 100, 94, 92).
+
+weight(20, 10, 30, 40).
+
+calculate_weighted_grade(G, W) {
+ @ bind(G[0,], G[1:,] * W').
+}
+
+[weighted_grade] <- calculate_weighted_grade(grade, weight).
+
+weighted_grade(*)?

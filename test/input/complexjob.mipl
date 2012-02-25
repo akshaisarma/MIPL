@@ -1,0 +1,10 @@
+
+#complex job
+multi_return() {
+ @A
+ B = A + C.
+ @B
+ @C
+}
+
+[a, b, c] <- multi_return().

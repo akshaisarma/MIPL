@@ -72,6 +72,7 @@ term
 	: sub_term
         | REGEX
         | REGEX '(' term_arg_list ')'
+        | REGEX '(' '*' ')'
         | NOT term
         | sub_term IS sub_term
         | sub_term '<' sub_term
@@ -88,6 +89,7 @@ sub_term
 strict_term
 	: IDENTIFIER
 	| IDENTIFIER '(' strict_term_arg_list ')'
+	| IDENTIFIER '(' '*' ')'
 	| VARIABLE
 	;
 

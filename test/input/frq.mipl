@@ -1,0 +1,6 @@
+
+# comment
+cat(tom). # fact
+cat(tom)? # query
+cat(X)?   # query
+animal(X) <- cat(X). # rule

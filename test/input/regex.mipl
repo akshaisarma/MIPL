@@ -1,0 +1,10 @@
+#regular expressions
+^.a.$(X)?
+cat(X), X is ^[staozm]+$?
+
+#nested frqs
+study(math, buy(math_book)).
+study(language, buy(english_book)).
+
+study(math, buy(X))?
+study(language, Y), Y?
