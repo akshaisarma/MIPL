@@ -6,7 +6,7 @@ grade("tom", 100, 100, 94, 92).
 weight(20, 10, 30, 40).
 
 calculate_weighted_grade(G, W) {
- @ bind(G[0,], G[1:,] * W').
+ @ bind(G[0,], G[1:,] * transpose(W)).
 }
 
 [weighted_grade] <- calculate_weighted_grade(grade, weight).
