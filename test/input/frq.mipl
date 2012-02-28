@@ -1,6 +1,19 @@
 
-# comment
+# comment with #
+
 cat(tom). # fact
+
+cat(foo). # fact
+
 cat(tom)? # query
+# true
 cat(X)?   # query
+# tom
+# foo
 animal(X) <- cat(X). # rule
+
+animal(tom)?
+# true
+
+animal(jane)?
+# false

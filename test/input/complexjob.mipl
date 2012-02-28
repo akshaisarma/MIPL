@@ -1,10 +1,10 @@
 
 #complex job
-multi_return() {
+multi_return(A, B, C) {
  @A
  B = A + C.
  @B
  @C
 }
 
-[a, b, c] <- multi_return().
+[a, b, c] <- multi_return(x, y, z).
