@@ -15,7 +15,7 @@ g = read(G).
 	mat_iterationo = 20.
 	i = 0.
 	while (i < max_iteration) {
-		p = alpha * (g * p) + (1 - alpha) * (e * u * p).
+		p = alpha * (g * p) + (1 - alpha) * (identity * u * p).
 	}
 }
 
