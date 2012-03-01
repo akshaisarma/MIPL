@@ -1,3 +1,13 @@
+/**
+ * MIPL: Mining Integrated Programming Language
+ *
+ * File: MatrixLoader.java
+ * Author: YoungHoon Jung <yj2244@columbia.edu>
+ * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
+ * Description: Matrix Loader Interface
+ *
+ */
+
 package edu.columbia.mipl.ds;
 
 import PrimitiveMatrix;
