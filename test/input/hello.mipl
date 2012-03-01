@@ -1,3 +1,10 @@
+# MIPL: Mining Integrated Programming Language
+#
+# File: hello.mipl
+# Author: YoungHoon Jung <yj2244@columbia.edu>
+# Reviewer: Younghoon Jeon <yj2231@columbia.edu>
+# Description: A MIPL hello world program
+
 # Hello world
 say(hello, world).
 

@@ -10,7 +10,7 @@
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
-%token REGEX VARIABLE INTEGER NUMBER NOT LARROW_OP IS
+%token REGEX VARIABLE INTEGER NUMBER NOT LARROW_OP IS NEWLINE
 
 %start program
 %%
@@ -70,16 +70,34 @@ and_terms
 
 term
 	: sub_term
+	| NEWLINE
         | REGEX
         | REGEX '(' term_arg_list ')'
         | REGEX '(' '*' ')'
         | NOT term
-        | sub_term IS sub_term
-        | sub_term '<' sub_term
-        | sub_term '>' sub_term
-        | sub_term LE_OP sub_term
-        | sub_term GE_OP sub_term
+        | term_expr IS term_expr
+        | term_expr '<' term_expr
+        | term_expr '>' term_expr
+        | term_expr LE_OP term_expr
+        | term_expr GE_OP term_expr
         ;
+
+term_expr
+	: term_expr '+' term_fact
+	| term_expr '-' term_fact
+	| term_fact
+	;
+
+term_fact
+	: term_fact '*' term_term
+	| term_fact '/' term_term
+	| term_term
+	;
+
+term_term:
+	| NUMBER
+	| IDENTIFIER
+	| '(' term_expr ')'
 
 sub_term
 	: NUMBER

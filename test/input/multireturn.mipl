@@ -1,0 +1,18 @@
+# MIPL: Mining Integrated Programming Language
+#
+# File: multireturn.mipl
+# Author: YoungHoon Jung <yj2244@columbia.edu>
+# Reviewer: Younghoon Jeon <yj2231@columbia.edu>
+# Description: A MIPL program that shows how to define
+#              a function with multiple returns.
+
+# a function that returns three values
+multi_return(A, B, C) {
+ @A
+ B = A + C.
+ @B
+ @C
+}
+
+[a, b, c] <- multi_return(x, y, z).
+# a <- A, b <- B, c <- C

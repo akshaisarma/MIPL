@@ -1,14 +1,25 @@
+# MIPL: Mining Integrated Programming Language
+#
+# File: matrix.mipl
+# Author: YoungHoon Jung <yj2244@columbia.edu>
+# Reviewer: Younghoon Jeon <yj2231@columbia.edu>
+# Description: A MIPL program that shows how to use matrix computation
 
 grade("john", 100, 80, 90, 100).
 grade("jane", 75, 60, 95, 88).
 grade("tom", 100, 100, 94, 92).
 
-weight(20, 10, 30, 40).
+weight(0.2, 0.1, 0.3, 0.4).
 
 calculate_weighted_grade(G, W) {
  @ bind(G[0,], G[1:,] * transpose(W)).
 }
 
+# facts grade and weight turn into matrix
+# returned matrix turn into a set of facts
 [weighted_grade] <- calculate_weighted_grade(grade, weight).
 
 weighted_grade(*)?
+# ("john", 95)
+# ("jane", 84.7)
+# ("tom", 94.2)

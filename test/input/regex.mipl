@@ -1,10 +1,18 @@
+# MIPL: Mining Integrated Programming Language
+#
+# File: regex.mipl
+# Author: YoungHoon Jung <yj2244@columbia.edu>
+# Reviewer: Younghoon Jeon <yj2231@columbia.edu>
+# Description: A MIPL program that shows how to
+#              use regular expressions in MIPL
+
+cat(tom).
+cat(john).
+
 #regular expressions
 ^.a.$(X)?
+# cat(X), X = tom.
+# cat(X), X = john.
+
 cat(X), X is ^[staozm]+$?
-
-#nested frqs # defer supporting nested frqs
-#study(math, buy(math_book)).
-#study(language, buy(english_book)).
-
-#study(math, buy(X))?
-#study(language, Y), Y?
+# cat(X), X = tom.

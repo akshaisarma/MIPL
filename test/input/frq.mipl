@@ -1,3 +1,11 @@
+# MIPL: Mining Integrated Programming Language
+#
+# File: frq.mipl
+# Author: YoungHoon Jung <yj2244@columbia.edu>
+# Reviewer: Younghoon Jeon <yj2231@columbia.edu>
+# Description: A MIPL program that shows
+#              how to use basic fact and rule
+#              definitions and how to query.
 
 # comment with #
 
