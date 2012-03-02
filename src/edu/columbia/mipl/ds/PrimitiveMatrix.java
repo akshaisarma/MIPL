@@ -8,6 +8,8 @@
  */
 package edu.columbia.mipl.ds;
 
+import java.util.*;
+
 class SparseData {
 	int row;
 	int col;

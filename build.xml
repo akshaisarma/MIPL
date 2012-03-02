@@ -1,0 +1,30 @@
+<project name="MIPL" default="mipl" basedir=".">
+    <tstamp/>
+    <property name="src" location="src" />
+    <property name="docs" location="docs" />
+    <property name="lib" location="lib" />
+    <property name="build" location="build" />
+    <property name="test" location="test" />
+    <property name="test_result" location="test_result" />
+    <property name="dist" location="dist" />
+
+    <target name="mipl" description="MIPL compiler">
+        <mkdir dir="${build}" />
+        <javac srcdir="${src}" destdir="${build}" classpath="" />
+    </target>
+
+    <target name="test_ds" depends="mipl" description="Data Structure Testing">
+        <mkdir dir="${test_result}" />
+        <jar jarfile="${dist}/mipl_ds.${DSTAMP}.jar">
+            <fileset dir="${build}/edu/columbia/mipl/ds/" />
+        </jar>
+        <javac srcdir="${test}/testing_ds" destdir="${test_result}"
+            classpath="${dist}/mipl_ds.${DSTAMP}.jar" />
+    </target>
+
+    <target name="delete" description="Clean Project">
+        <delete dir="${build}" />
+        <delete dir="${dist}" />
+        <delete dir="${test_result}" />
+    </target>
+</project>

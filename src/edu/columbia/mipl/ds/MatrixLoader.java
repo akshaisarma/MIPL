@@ -10,7 +10,7 @@
 
 package edu.columbia.mipl.ds;
 
-import PrimitiveMatrix;
+import edu.columbia.mipl.ds.PrimitiveMatrix;
 
 /* If you want to make a factory pattern, do so */
 public interface MatrixLoader {
