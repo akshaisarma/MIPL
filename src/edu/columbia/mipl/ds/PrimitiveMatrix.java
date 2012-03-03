@@ -102,6 +102,9 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 	}
 
 	void allocateMatrix(T t) {
+		if (data != null)
+			return;
+
 		if (t instanceof Double) {
 			data = new PrimitiveDoubleArray(row * col);
 		}
