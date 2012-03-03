@@ -11,10 +11,16 @@ package edu.columbia.mipl.ds;
 import java.util.*;
 import java.lang.reflect.*;
 
-public class PrimitiveDoubleArray extends PrimitiveType implements PrimitiveArray {
+public class PrimitiveDoubleArray extends PrimitiveArray {
 	double data[];
 
-	void setData(double data[]) {
+	void setData(int row, int col, double data[]) /* throws UnalignedMatrixSizeException */ {
+		if (row % PADDING_ALIGN != 0 || col % PADDING_ALIGN != 0)
+			/* throw new UnalignedMatrixSizeException() */;
+		this.row = row;
+		this.col = col;
+		paddedRow = getPaddedLength(row);
+		paddedCol = getPaddedLength(col);
 		this.data = data;
 	}
 
@@ -22,19 +28,20 @@ public class PrimitiveDoubleArray extends PrimitiveType implements PrimitiveArra
 		return data;
 	}
 
-	public PrimitiveDoubleArray(int size) {
-		this(new double[size]);
+	public PrimitiveDoubleArray(int row, int col) {
+		this(row, col, null);
+		data = new double[paddedRow * paddedCol];
 	}
 
-	public PrimitiveDoubleArray(double data[]) {
-		this.data = data;
+	public PrimitiveDoubleArray(int row, int col, double data[]) /* throws UnalignedMatrixSizeException */ {
+		setData(row, col, data);
 	}
 
-	public void setValue(int index, Object value) {
-		data[index] = (double) (Double) value;
+	public void setValue(int row, int col, Object value) {
+		data[flattenIndex(row, col)] = (double) (Double) value;
 	}
 
-	public Object getValue(int index) {
-		return (Object) (Double) data[index];
+	public Object getValue(int row, int col) {
+		return (Object) (Double) data[flattenIndex(row, col)];
 	}
 }

@@ -29,12 +29,12 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 
 	public static void main(String args[]) {
 		/* Unit Tests */
-		PrimitiveMatrix<Double> pm = new PrimitiveMatrix<Double>(1, 1, true);
-		PrimitiveMatrix<Integer> pm_int = new PrimitiveMatrix<Integer>(100, 1, false);
+		PrimitiveMatrix<Double> pm = new PrimitiveMatrix<Double>(1, 1);
+		PrimitiveMatrix<Integer> pm_int = new PrimitiveMatrix<Integer>(100, 1);
 		pm_int.setValue(10, 0, 300);
 
 		double newdata[] = new double[100];
-		PrimitiveMatrix<Double> pm_with_array = new PrimitiveMatrix<Double>(10, 10, new PrimitiveDoubleArray(newdata));
+		PrimitiveMatrix<Double> pm_with_array = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(10, 10, newdata));
 		pm_with_array.setValue(0, 0, 3.244); // without this line, pda will be null
 		PrimitiveDoubleArray pda = (PrimitiveDoubleArray) pm_with_array.getData();
 		double arr[] = pda.getData();
@@ -43,22 +43,17 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 
 	Map<Integer, T> sparseList;
 
+	/* SparseMatrix */
 	PrimitiveMatrix(int row, int col) {
-		this(row, col, true);
-	}
-
-	PrimitiveMatrix(int row, int col, boolean isSparse) {
 		this.row = row;
 		this.col = col;
-		if (isSparse) {
-			sparseList = new HashMap<Integer, T>();
-			status = Status.PM_STATUS_LOADED_SPARSE;
-		}
-		else {
-			/* No Lazy Allocation */
-			allocateMatrix();
-			status = Status.PM_STATUS_LOADED_FULL;
-		}
+		sparseList = new HashMap<Integer, T>();
+		status = Status.PM_STATUS_LOADED_SPARSE;
+	}
+
+	/* FullMatrix */
+	PrimitiveMatrix(PrimitiveArray data) {
+		setData(data.getRow(), data.getCol(), data);
 	}
 
 	PrimitiveMatrix(String uri) {
@@ -75,15 +70,7 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		}
 	}
 
-	PrimitiveMatrix(int row, int col, PrimitiveArray data) {
-		setData(row, col, data);
-	}
-
 	int makeHashKey(int row, int col) {
-		return flattenIndex(row, col);
-	}
-
-	int flattenIndex(int row, int col) {
 		return this.col * row + col;
 	}
 
@@ -111,25 +98,12 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		if (status == Status.PM_STATUS_URI_LOCAL) {
 			// matrixLoader = MatrixLoaderFactory.getInstance().getMatrixLoader(MatrixType);
 			// data = matrixLoader.loadMatrix(uri);
+			// status = Status.PM_STATUS_LOADED_FULL
 			// or
 			// sparseList = matrixLoader.loadMatrix(uri);
+			// status = Status.PM_STATUS_LOADED_SPARSE
 		}
 		// status == REMOTE : similar to LOCAL or MatrixFactory returns a remote matrix loader;
-	}
-
-	void allocateMatrix() {
-		if (data != null)
-			return;
-
-		T t = (T) (Object) 0;
-
-		if (t instanceof Double) {
-			data = new PrimitiveDoubleArray(row * col);
-		}
-		else if (t instanceof Integer) {
-			data = new PrimitiveIntArray(row * col);
-		}
-		// throw new UnsupportedTypeException();
 	}
 
 	void setValue(int row, int col, T value) /* throws OutOfBoundExcpetion */ {
@@ -143,7 +117,7 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 			sparseList.put(makeHashKey(row, col), value);
 		}
 		else if (status == Status.PM_STATUS_LOADED_FULL) {
-			data.setValue(flattenIndex(row, col), (Object) value);
+			data.setValue(row, col, (Object) value);
 		}
 	}
 
@@ -161,7 +135,7 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 			if (data == null)
 				return (T) (Object) 0;
 
-			return (T) data.getValue(flattenIndex(row, col));
+			return (T) data.getValue(row, col);
 		}
 		// throw new InvalidStatusException();
 		return null;
