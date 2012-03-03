@@ -1,0 +1,9 @@
+#! /bin/bash
+
+# Find location of JAR file in relation to executable
+JAR=`type $0`
+JAR="${JAR##* }"
+JAR="${JAR%/*}"
+JAR="${JAR}/JFlex.jar"
+
+java -cp $JAR JFlex.Main $@

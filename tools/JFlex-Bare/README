@@ -1,0 +1,6 @@
+This folder structure has been created by ripping from jFlex-1.4.3 the bare
+essentials to run the JFlex tool, i.e. the JAR file and a shell launcher (mod).
+
+Visit http://jflex.de/download.html for the full download.
+
+JFlex is copyrighted under GPL.
