@@ -23,6 +23,7 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		PM_STATUS_URI_REMOTE,
 		PM_STATUS_LOADED_FULL,
 		PM_STATUS_LOADED_SPARSE,
+		/* Reference or SubMatrix Type may be added for performance */
 	};
 	Status status;
 	String uri;
