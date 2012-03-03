@@ -11,8 +11,6 @@
 import edu.columbia.mipl.ds.*;
 
 public class DefaultMatrixOperations {
-	/* http://www.opengl.org/discussion_boards/ubbthreads.php?ubb=showflat&Number=50403 */
-	/* http://gpgpu.org/developer#programming */
 	boolean checkDimensionSame(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		return (arg1.getRow() == arg2.getRow() && arg1.getCol() == arg2.getCol());
 	}
