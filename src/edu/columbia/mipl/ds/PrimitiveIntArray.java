@@ -23,7 +23,11 @@ public class PrimitiveIntArray extends PrimitiveType implements PrimitiveArray {
 	}
 
 	public PrimitiveIntArray(int size) {
-		data = new int[size];
+		this(new int[size]);
+	}
+
+	public PrimitiveIntArray(int[] data) {
+		this.data = data;
 	}
 
 	public void setValue(int index, Object value) {

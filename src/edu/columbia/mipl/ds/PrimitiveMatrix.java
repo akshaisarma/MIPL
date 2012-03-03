@@ -32,6 +32,13 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		PrimitiveMatrix<Double> pm = new PrimitiveMatrix<Double>(1, 1, true);
 		PrimitiveMatrix<Integer> pm_int = new PrimitiveMatrix<Integer>(100, 1, false);
 		pm_int.setValue(10, 0, 300);
+
+		double newdata[] = new double[100];
+		PrimitiveMatrix<Double> pm_with_array = new PrimitiveMatrix<Double>(10, 10, new PrimitiveDoubleArray(newdata));
+		pm_with_array.setValue(0, 0, 3.244); // without this line, pda will be null
+		PrimitiveDoubleArray pda = (PrimitiveDoubleArray) pm_with_array.getData();
+		double arr[] = pda.getData();
+		System.out.println(arr[0]);
 	}
 
 	Map<Integer, T> sparseList;
@@ -48,7 +55,8 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 			status = Status.PM_STATUS_LOADED_SPARSE;
 		}
 		else {
-			/* Lazy Allocation */
+			/* No Lazy Allocation */
+			allocateMatrix();
 			status = Status.PM_STATUS_LOADED_FULL;
 		}
 	}
@@ -91,6 +99,14 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		status = Status.PM_STATUS_LOADED_FULL;
 	}
 
+	PrimitiveArray getData() {
+		if (data == null) {
+			// throw new DataRequestedToSparseMatrix();
+			// or, transform into a full matrix
+		}
+		return data;
+	}
+
 	void loadMatrix() {
 		if (status == Status.PM_STATUS_URI_LOCAL) {
 			// matrixLoader = MatrixLoaderFactory.getInstance().getMatrixLoader(MatrixType);
@@ -101,9 +117,11 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		// status == REMOTE : similar to LOCAL or MatrixFactory returns a remote matrix loader;
 	}
 
-	void allocateMatrix(T t) {
+	void allocateMatrix() {
 		if (data != null)
 			return;
+
+		T t = (T) (Object) 0;
 
 		if (t instanceof Double) {
 			data = new PrimitiveDoubleArray(row * col);
@@ -125,7 +143,6 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 			sparseList.put(makeHashKey(row, col), value);
 		}
 		else if (status == Status.PM_STATUS_LOADED_FULL) {
-			allocateMatrix(value);
 			data.setValue(flattenIndex(row, col), (Object) value);
 		}
 	}

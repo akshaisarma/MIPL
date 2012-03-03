@@ -23,7 +23,11 @@ public class PrimitiveDoubleArray extends PrimitiveType implements PrimitiveArra
 	}
 
 	public PrimitiveDoubleArray(int size) {
-		data = new double[size];
+		this(new double[size]);
+	}
+
+	public PrimitiveDoubleArray(double data[]) {
+		this.data = data;
 	}
 
 	public void setValue(int index, Object value) {
