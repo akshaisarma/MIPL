@@ -1,21 +1,16 @@
 /**
  * MIPL: Mining Integrated Programming Language
  *
- * File: GlMatrixOperations.java
+ * File: DefaultMatrixOperations.java
  * Author: 
  * Reviewer: 
- * Description: Matrix Operations Implementations with OpenGL
+ * Description: Matrix Operations Default Implementations
  *
  */
 
 import edu.columbia.mipl.ds.*;
 
-public class GlMatrixOperations {
-
-	static {
-		/* Initializations */
-	}
-
+public class DefaultMatrixOperations {
 	/* http://www.opengl.org/discussion_boards/ubbthreads.php?ubb=showflat&Number=50403 */
 	/* http://gpgpu.org/developer#programming */
 	boolean checkDimensionSame(final PrimitiveArray arg1, final PrimitiveArray arg2) {
@@ -38,12 +33,39 @@ public class GlMatrixOperations {
 		int offset = 0;
 		int pos;
 
-		/* Use GPGPU */
+		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
+			for (j = 0; j < arg1.getCol(); j++) {
+				data[pos] = data1[pos] + data2[pos];
+				pos++;
+			}
+			offset += arg1.getPaddedRow();
+		}
 
 		return result;
 	}
 
 	public PrimitiveArray add(final PrimitiveArray arg1, double arg2) {
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
+		double data1[] = a1.getData();
+		double data[] = result.getData();
+
+		int i;
+		int j;
+		int offset = 0;
+		int pos;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
+			for (j = 0; j < arg1.getCol(); j++) {
+				data[pos] = data1[pos] + arg2
+				pos++;
+			}
+			offset += arg1.getPaddedRow();
+		}
+
+		return result;
 	}
 
 	public PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2) {
