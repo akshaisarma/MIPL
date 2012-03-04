@@ -1,15 +1,15 @@
 /**
  * MIPL: Mining Integrated Programming Language
  *
- * File: TableMatrixLoader.java
+ * File: CSVMatrixLoader.java
  * Author: Akshai Sarma <as4107@columbia.edu>
  * Reviewer: Wonjoon Song <dws2127@columbia.edu>
  * Description: CSV Matrix Loader implementing Matrix Loader
- * 				CSV Loaders support boolean strings and
- * 				support mixed doubles and integers. Doubles 
- * 				must be written in a common double format for
- * 				all relevant double values. Assumes there is
- * 				label line at the beginning and skips it.
+ * 		CSV Loaders support boolean strings and
+ * 		support mixed doubles and integers. Doubles
+ * 		must be written in a common double format for
+ * 		all relevant double values. Assumes there is
+ * 		label line at the beginning and skips it.
  *
  */
 
@@ -28,7 +28,7 @@ import java.io.IOException;
 public class CSVMatrixLoader implements MatrixLoader {
 
 	public PrimitiveArray loadMatrix(String file) {
-		try {			
+		try {
 			FileInputStream tableMatrix = new FileInputStream(file);
 			Scanner matrixScan = new Scanner(tableMatrix);
 			String line = null;
@@ -39,18 +39,18 @@ public class CSVMatrixLoader implements MatrixLoader {
 				if (!line.trim().equals(""))
 					break;
 			}
-			
+
 			/* Skip label line */
 			if (matrixScan.hasNextLine())
 				line = matrixScan.nextLine();
-			
+
 			/* If file has no matrix */
 			if (line == null)
 				return null;
-			
+
 			line = changeFormat(line);
-			/* 
-			 * Find type of data in matrix file. Double matrices can 
+			/*
+			 * Find type of data in matrix file. Double matrices can
 			 * have integers. If there is a double in a line, store
 			 * into a PrimitiveDoubleArray
 			 */
@@ -74,7 +74,7 @@ public class CSVMatrixLoader implements MatrixLoader {
 					break;
 				}
 			}
-			
+
 			if (isIntMatrix)
 				loadedMatrix = (PrimitiveIntArray) copyToArray(matrixScan, line, Integer.class);
 			else if (isDoubleMatrix)
@@ -82,7 +82,7 @@ public class CSVMatrixLoader implements MatrixLoader {
 			else
 				// Add new types here
 
-			tableMatrix.close();			
+			tableMatrix.close();
 			return loadedMatrix;
 		}
 		catch (FileNotFoundException e) {
@@ -101,7 +101,7 @@ public class CSVMatrixLoader implements MatrixLoader {
 	}
 
 	private String changeFormat(String line) {
-		/* 
+		/*
 		 * Replace booleans with 1 or 0 and replace commas with space.
 		 */
 		line = line.replaceAll("\"?[yY]es\"?","1");
@@ -113,7 +113,7 @@ public class CSVMatrixLoader implements MatrixLoader {
 		try {
 			FileWriter outputFile = new FileWriter(file);
 			BufferedWriter outputWriter = new BufferedWriter(outputFile);
-				
+
 			if (matrix instanceof PrimitiveDoubleArray) {
 				PrimitiveDoubleArray pda = (PrimitiveDoubleArray) matrix;
 				double data[] = pda.getData();
@@ -151,7 +151,7 @@ public class CSVMatrixLoader implements MatrixLoader {
 			System.out.println("IO Exception occurred while saving Matrix");
 		}
 	}
-	
+
 	private <T> PrimitiveArray copyToArray (Scanner matrixScan,
 					String line, Class<T> type)throws NumberFormatException {
 		int numberOfCols = 0;
@@ -172,7 +172,7 @@ public class CSVMatrixLoader implements MatrixLoader {
 		else {
 			// Add new types here.
 		}
-		
+
 		while (matrixScan.hasNextLine()) {
 			line = matrixScan.nextLine();
 			if (line.trim().equals(""))

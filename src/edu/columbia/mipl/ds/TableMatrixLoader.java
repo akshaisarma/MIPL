@@ -24,7 +24,7 @@ import java.io.IOException;
 public class TableMatrixLoader implements MatrixLoader {
 
 	public PrimitiveArray loadMatrix(String file) {
-		try {			
+		try {
 			FileInputStream tableMatrix = new FileInputStream(file);
 			Scanner matrixScan = new Scanner(tableMatrix);
 			String line = null;
@@ -38,9 +38,9 @@ public class TableMatrixLoader implements MatrixLoader {
 			/* If file is empty */
 			if (line == null)
 				return null;
-			
-			/* 
-			 * Find type of data in matrix file. Double matrices can 
+
+			/*
+			 * Find type of data in matrix file. Double matrices can
 			 * have integers
 			 */
 			Scanner stringScanner = new Scanner(line);
@@ -52,7 +52,7 @@ public class TableMatrixLoader implements MatrixLoader {
 			else
 				//Add new types here.
 
-			tableMatrix.close();			
+			tableMatrix.close();
 			return loadedMatrix;
 		}
 		catch (FileNotFoundException e) {
@@ -74,7 +74,7 @@ public class TableMatrixLoader implements MatrixLoader {
 		try {
 			FileWriter outputFile = new FileWriter(file);
 			BufferedWriter outputWriter = new BufferedWriter(outputFile);
-				
+
 			if (matrix instanceof PrimitiveDoubleArray) {
 				PrimitiveDoubleArray pda = (PrimitiveDoubleArray) matrix;
 				double data[] = pda.getData();
@@ -110,7 +110,7 @@ public class TableMatrixLoader implements MatrixLoader {
 			System.out.println("IO Exception occurred while saving Matrix");
 		}
 	}
-	
+
 	private <T> PrimitiveArray copyToArray (Scanner matrixScan,
 					String line, Class<T> type)throws NumberFormatException {
 		int numberOfCols = 0;
@@ -129,7 +129,7 @@ public class TableMatrixLoader implements MatrixLoader {
 		else {
 			// Add new types here.
 		}
-		
+
 		while (matrixScan.hasNextLine()) {
 			line = matrixScan.nextLine();
 			if (line.trim().equals(""))
