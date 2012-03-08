@@ -8,9 +8,8 @@
  *
  */
 
-package edu.columbia.mipl.ds;
+package edu.columbia.mipl.datastr;
 
-import edu.columbia.mipl.ds.PrimitiveMatrix;
 import java.util.*;
 
 /* Singleton MatrixLoaderFactory Class */

@@ -7,8 +7,9 @@
  * Description: Matrix Operations Default Implementations
  *
  */
+package edu.columbia.mipl.matops;
 
-import edu.columbia.mipl.ds.*;
+import edu.columbia.mipl.datastr.*;
 
 public class DefaultMatrixOperations implements MatrixOperations {
 	boolean checkDimensionSame(final PrimitiveArray arg1, final PrimitiveArray arg2) {

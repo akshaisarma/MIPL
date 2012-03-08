@@ -7,8 +7,9 @@
  * Description: Matrix Operations Interface
  *
  */
+package edu.columbia.mipl.matops;
 
-import edu.columbia.mipl.ds.*;
+import edu.columbia.mipl.datastr.*;
 
 public interface MatrixOperations {
 	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2);

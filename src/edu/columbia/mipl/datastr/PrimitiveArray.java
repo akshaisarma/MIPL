@@ -6,7 +6,7 @@
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
  * Description: Primitive Matrix
  */
-package edu.columbia.mipl.ds;
+package edu.columbia.mipl.datastr;
 
 import java.util.*;
 

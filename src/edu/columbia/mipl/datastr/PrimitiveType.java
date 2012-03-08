@@ -5,7 +5,7 @@
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
  * Description: Primitive Type
 */
-package edu.columbia.mipl.ds;
+package edu.columbia.mipl.datastr;
 
 public class PrimitiveType {
 }

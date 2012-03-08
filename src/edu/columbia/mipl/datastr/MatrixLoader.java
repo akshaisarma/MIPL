@@ -8,9 +8,7 @@
  *
  */
 
-package edu.columbia.mipl.ds;
-
-import edu.columbia.mipl.ds.PrimitiveMatrix;
+package edu.columbia.mipl.datastr;
 
 /* If you want to make a factory pattern, do so */
 public abstract class MatrixLoader {

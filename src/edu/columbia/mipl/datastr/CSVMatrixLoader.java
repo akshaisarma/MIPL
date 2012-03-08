@@ -1,15 +1,19 @@
 /**
  * MIPL: Mining Integrated Programming Language
  *
- * File: TableMatrixLoader.java
+ * File: CSVMatrixLoader.java
  * Author: Akshai Sarma <as4107@columbia.edu>
  * Reviewer: Wonjoon Song <dws2127@columbia.edu>
- * Description: Table Matrix Loader implementing Matrix Loader
- * 				Only supports either integer or double matrices
+ * Description: CSV Matrix Loader implementing Matrix Loader
+ * 		CSV Loaders support boolean strings and
+ * 		support mixed doubles and integers. Doubles
+ * 		must be written in a common double format for
+ * 		all relevant double values. Assumes there is
+ * 		label line at the beginning and skips it.
  *
  */
 
-package edu.columbia.mipl.ds;
+package edu.columbia.mipl.datastr;
 
 import java.util.ArrayList;
 
@@ -21,10 +25,10 @@ import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class TableMatrixLoader extends MatrixLoader {
+public class CSVMatrixLoader extends MatrixLoader {
 
 	public String getLoaderName() {
-		return "Table";
+		return "CSV";
 	}
 
 	public PrimitiveMatrix loadMatrix(String file) {
@@ -39,22 +43,48 @@ public class TableMatrixLoader extends MatrixLoader {
 				if (!line.trim().equals(""))
 					break;
 			}
-			/* If file is empty */
+
+			/* Skip label line */
+			if (matrixScan.hasNextLine())
+				line = matrixScan.nextLine();
+
+			/* If file has no matrix */
 			if (line == null)
 				return null;
 
+			line = changeFormat(line);
 			/*
 			 * Find type of data in matrix file. Double matrices can
-			 * have integers
+			 * have integers. If there is a double in a line, store
+			 * into a PrimitiveDoubleArray
 			 */
-			Scanner stringScanner = new Scanner(line);
+			String rowValues[] = line.trim().split(",");
 			PrimitiveArray loadedMatrix = null;
-			if (stringScanner.hasNextInt())
+			boolean isIntMatrix = true;
+			boolean isDoubleMatrix = false;
+			for (int i = 0; i < rowValues.length; i++) {
+				try {
+					Integer.parseInt(rowValues[i]);
+				}
+				catch (NumberFormatException e) {
+					try {
+						isIntMatrix = false;
+						isDoubleMatrix = true;
+						Double.parseDouble(rowValues[i]);
+					}
+					catch (NumberFormatException e1) {
+						isDoubleMatrix = false;
+					}
+					break;
+				}
+			}
+
+			if (isIntMatrix)
 				loadedMatrix = (PrimitiveIntArray) copyToArray(matrixScan, line, Integer.class);
-			else if (stringScanner.hasNextDouble())
+			else if (isDoubleMatrix)
 				loadedMatrix = (PrimitiveDoubleArray) copyToArray(matrixScan, line, Double.class);
 			else
-				//Add new types here.
+				// Add new types here
 
 			tableMatrix.close();
 			return new PrimitiveMatrix(loadedMatrix);
@@ -72,6 +102,15 @@ public class TableMatrixLoader extends MatrixLoader {
 			System.out.println("Could not close file");
 		}
 		return null;
+	}
+
+	private String changeFormat(String line) {
+		/*
+		 * Replace booleans with 1 or 0 and replace commas with space.
+		 */
+		line = line.replaceAll("\"?[yY]es\"?","1");
+		line = line.replaceAll("\"?[nN]o\"?","0");
+		return line;
 	}
 
 	public void saveMatrix(String file, PrimitiveMatrix matrix) {
@@ -92,8 +131,9 @@ public class TableMatrixLoader extends MatrixLoader {
 				for (int i = 0; i < rows; i++)  {
 					String oneLine = ""	;
 					for (int j = 0; j < cols; j++)
-						oneLine = oneLine + data[i*cols + j] + "\t";
-					outputWriter.write(oneLine.trim() + "\n");
+						oneLine = oneLine + data[i*cols + j] + ",";
+					oneLine = oneLine.substring(0, oneLine.length()-1);
+					outputWriter.write(oneLine + "\n");
 				}
 			}
 			else if (matrix instanceof PrimitiveIntArray) {
@@ -105,8 +145,9 @@ public class TableMatrixLoader extends MatrixLoader {
 				for (int i = 0; i < rows; i++)  {
 					String oneLine = "";
 					for (int j = 0; j < cols; j++)
-						oneLine = oneLine + data[i*cols + j] + "\t";
-					outputWriter.write(oneLine.trim() + "\n");
+						oneLine = oneLine + data[i*cols + j] + ",";
+					oneLine = oneLine.substring(0, oneLine.length()-1);
+					outputWriter.write(oneLine + "\n");
 				}
 			}
 			else {
@@ -123,7 +164,9 @@ public class TableMatrixLoader extends MatrixLoader {
 					String line, Class<T> type)throws NumberFormatException {
 		int numberOfCols = 0;
 		int numberOfRows = 1;
-		String rowValues[] = line.trim().split("\\s+");
+		/* Add first line to array */
+		line = changeFormat(line);
+		String rowValues[] = line.trim().split(",");
 		numberOfCols = rowValues.length;
 		ArrayList <T> values = new ArrayList<T>();
 		if (type == java.lang.Double.class) {
@@ -143,7 +186,8 @@ public class TableMatrixLoader extends MatrixLoader {
 			if (line.trim().equals(""))
 				continue;
 			numberOfRows++;
-			rowValues = line.trim().split("\\s+");
+			line = changeFormat(line);
+			rowValues = line.trim().split(",");
 			if (type == Double.class) {
 				for (int i = 0; i < rowValues.length; i++)
 					values.add((T) new Double(Double.parseDouble(rowValues[i])));
@@ -153,7 +197,7 @@ public class TableMatrixLoader extends MatrixLoader {
 					values.add((T) new Integer(Integer.parseInt(rowValues[i])));
 			}
 			else {
-				// Add new types here.
+				// Add new types here
 			}
 		}
 		if (type == Double.class) {

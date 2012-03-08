@@ -7,8 +7,9 @@
  * Description: Matrix Operations Implementations with OpenCL
  *
  */
+package edu.columbia.mipl.matops;
 
-import edu.columbia.mipl.ds.*;
+import edu.columbia.mipl.datastr.*;
 
 public class ClMatrixOperations extends DefaultMatrixOperations {
 
