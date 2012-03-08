@@ -24,17 +24,22 @@ public class Term {
 		TERM_TYPE_NE,
 		TERM_TYPE_MATRIX,
 		TERM_TYPE_TERM,
+		TERM_TYPE_ANDTERMS,
+		TERM_TYPE_ORTERMS,
 		TERM_TYPE_NOTTERM,
 		TERM_TYPE_NUMBER,
+		TERM_TYPE_VARIABLE,
 	};
 	Type type;
 
 	double value;
-	List<String> variables;
+	List<Term> arguments;
 	String name;
 	PrimitiveMatrix matrix;
 	Expression expr1;
 	Expression expr2;
+	Term term1;
+	Term term2;
 
 	Term(Type type, Expression expr1, Expression expr2) {
 		assert (type == Type.TERM_TYPE_EQ || type == Type.TERM_TYPE_LT ||
@@ -46,27 +51,60 @@ public class Term {
 		this.expr2 = expr2;
 	}
 
-	Term(String variable, Expression expr) {
-		type = Type.TERM_TYPE_IS;
+	/* X is Y - 1 */
+	Term(Type type, String variable, Expression expr) {
+		assert (type == Type.TERM_TYPE_IS);
+
+		this.type = type;
 		name = variable;
 		expr1 = expr;
 	}
 
-	Term(double value) {
-		type = Type.TERM_TYPE_NUMBER;
+	Term(Type type, double value) {
+		assert (type == Type.TERM_TYPE_NUMBER);
+
+		this.type = type;
 		this.value = value;
 	}
 
-	Term(int value) {
-		this((double) value);
+	Term(Type type, int value) {
+		this(type, (double) value);
 	}
 
-	Term(String name, PrimitiveArray data) {
+	Term(Type type, String name, PrimitiveArray data) {
+		this(type, name, new PrimitiveMatrix(data));
+	}
+
+	Term(Type type, String name, PrimitiveMatrix matrix) {
+		assert (type == Type.TERM_TYPE_MATRIX);
+
+		this.type = type;
 		this.name = name;
-		matrix = new PrimitiveMatrix(data);
+		this.matrix = matrix;
 	}
 
-	Term(String name, 
+	Term(Type type, Term term1, Term term2) {
+		assert (type == Type.TERM_TYPE_ANDTERMS || type == Type.TERM_TYPE_ORTERMS);
+
+		this.type = type;
+		this.term1 = term1;
+		this.term2 = term2;
+	}
+
+	Term(Type type, String name, List<Term> arguments) {
+		assert (type == Type.TERM_TYPE_TERM || type == Type.TERM_TYPE_NOTTERM);
+
+		this.type = type;
+		this.name = name;
+		this.arguments = arguments;
+	}
+
+	Term(String name) {
+		assert (type == Type.TERM_TYPE_VARIABLE);
+
+		this.type = type;
+		this.name = name;
+	}
 
 	Type getType() {
 		return type;
@@ -77,11 +115,11 @@ public class Term {
 
 		return value;
 	}
-
+/*
 	boolean evaluate(VariableStack vs) {
 		switch (type) {
-			case TERM_TYPE_IS:
-				vs.setValue(variable, new Term(TERM_TYPE_NUMBER)
+			case Type.TERM_TYPE_IS:
+				vs.setValue(variable, new Term(Type.TERM_TYPE_NUMBER)
 	}
-
+*/
 }

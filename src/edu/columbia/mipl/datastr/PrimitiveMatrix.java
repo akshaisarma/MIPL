@@ -12,9 +12,6 @@ import java.util.*;
 import java.lang.reflect.*;
 
 public class PrimitiveMatrix<T> extends PrimitiveType {
-	int row;
-	int col;
-
 	PrimitiveArray data;
 
 	public enum Status {
@@ -30,8 +27,8 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 
 	public static void main(String args[]) {
 		/* Unit Tests */
-		PrimitiveMatrix<Double> pm = new PrimitiveMatrix<Double>(1, 1);
-		PrimitiveMatrix<Integer> pm_int = new PrimitiveMatrix<Integer>(100, 1);
+		PrimitiveMatrix<Double> pm = new PrimitiveMatrix<Double>();
+		PrimitiveMatrix<Integer> pm_int = new PrimitiveMatrix<Integer>();
 		pm_int.setValue(10, 0, 300);
 
 		double newdata[] = new double[100];
@@ -42,26 +39,24 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		System.out.println(arr[0]);
 	}
 
-	Map<Integer, T> sparseList;
+	Map<String, T> sparseList;
 
 	/* SparseMatrix */
-	PrimitiveMatrix(int row, int col) {
-		this.row = row;
-		this.col = col;
-		sparseList = new HashMap<Integer, T>();
+	public PrimitiveMatrix() {
+		sparseList = new HashMap<String, T>();
 		status = Status.PM_STATUS_LOADED_SPARSE;
 	}
 
 	/* FullMatrix */
-	PrimitiveMatrix(PrimitiveArray data) {
+	public PrimitiveMatrix(PrimitiveArray data) {
 		setData(data);
 	}
 
-	PrimitiveMatrix(String uri) {
+	public PrimitiveMatrix(String uri) {
 		this(uri, true);
 	}
 
-	PrimitiveMatrix(String uri, boolean isLocal) {
+	public PrimitiveMatrix(String uri, boolean isLocal) {
 		this.uri = uri;
 		if (isLocal) {
 			status = Status.PM_STATUS_URI_LOCAL;
@@ -73,28 +68,17 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 
 	void increaseRow() {
 		data.increaseRow();
-		row++;
 	}
 
 	void increaseRow(int n) {
 		data.increaseRow(n);
-		row += n;
 	}
 
-	int makeHashKey(int row, int col) {
-		return this.col * row + col;
-	}
-
-	boolean checkOutOfBound(int row, int col)
-	{
-		if (row >= this.row || col >= this.col)
-			return true;
-		return false;
+	String makeHashKey(int row, int col) {
+		return row + "," + col;
 	}
 
 	void setData(PrimitiveArray data) {
-		row = data.getRow();
-		col = data.getCol();
 		this.data = data;
 		status = Status.PM_STATUS_LOADED_FULL;
 	}
@@ -120,10 +104,6 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 	}
 
 	void setValue(int row, int col, T value) /* throws OutOfBoundExcpetion */ {
-		if (checkOutOfBound(row, col)) {
-			// throw new OutOfBoundException();
-		}
-
 		loadMatrix();
 
 		if (status == Status.PM_STATUS_LOADED_SPARSE) {
@@ -135,10 +115,6 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 	}
 
 	public T getValue(int row, int col) /* throws OutOfBoundExcpetion */ {
-		if (checkOutOfBound(row, col)) {
-			// throw new OutOfBoundException();
-		}
-
 		loadMatrix();
 
 		if (status == Status.PM_STATUS_LOADED_SPARSE) {
