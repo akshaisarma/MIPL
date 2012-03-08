@@ -14,27 +14,24 @@ import java.lang.reflect.*;
 public class PrimitiveDoubleArray extends PrimitiveArray {
 	double data[];
 
-	void setData(int row, int col, double data[]) /* throws UnalignedMatrixSizeException */ {
-		if (row % PADDING_ALIGN != 0 || col % PADDING_ALIGN != 0)
-			/* throw new UnalignedMatrixSizeException() */;
-		this.row = row;
-		this.col = col;
-		paddedRow = getPaddedLength(row);
-		paddedCol = getPaddedLength(col);
-		this.data = data;
-	}
-
-	double[] getData() {
+	public double[] getData() {
 		return data;
 	}
 
 	public PrimitiveDoubleArray(int row, int col) {
 		this(row, col, null);
-		data = new double[paddedRow * paddedCol];
 	}
 
 	public PrimitiveDoubleArray(int row, int col, double data[]) /* throws UnalignedMatrixSizeException */ {
-		setData(row, col, data);
+		this.row = row;
+		this.col = col;
+		paddedRow = getPaddedLength(row);
+		paddedCol = getPaddedLength(col);
+
+		if (data == null)
+			data = new double[paddedRow * paddedCol];
+
+		this.data = data;
 	}
 
 	public void setValue(int row, int col, Object value) {

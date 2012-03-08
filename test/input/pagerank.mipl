@@ -19,7 +19,7 @@ g = read(G).
 	}
 }
 
-[g_pr] <- pagerank('g.dat', 'init_pg.dat', 'personal.dat').
+[g_pr] <- pagerank(load('g.dat'), load('init_pg.dat'), load('personal.dat')).
 
 g_pr(X).
 # X = 0.85

@@ -29,19 +29,19 @@ public abstract class PrimitiveArray {
 		return paddedCol * row + col;
 	}
 
-	int getRow() {
+	public int getRow() {
 		return row;
 	}
 
-	int getCol() {
+	public int getCol() {
 		return col;
 	}
 
-	int getPaddedRow() {
+	public int getPaddedRow() {
 		return paddedRow;
 	}
 
-	int getPaddedCol() {
+	public int getPaddedCol() {
 		return paddedCol;
 	}
 
