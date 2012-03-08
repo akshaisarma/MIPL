@@ -72,7 +72,7 @@ and_terms
 	| and_terms ',' term
 	;
 
-term
+term /*% load into edu.columbia.mipl.runtime.Term */
 	: sub_term
 	| NEWLINE
         | REGEX
@@ -84,9 +84,11 @@ term
         | term_expr '>' term_expr
         | term_expr LE_OP term_expr
         | term_expr GE_OP term_expr
+        | term_expr '=' term_expr
+        | term_expr NE_OP term_expr
         ;
 
-term_expr
+term_expr /*% load into edu.columbia.mipl.runtime.Expression */
 	: term_expr '+' term_fact
 	| term_expr '-' term_fact
 	| term_fact
