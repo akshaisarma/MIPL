@@ -79,7 +79,7 @@ term /*% load into edu.columbia.mipl.runtime.Term */
         | REGEX '(' term_arg_list ')'
         | REGEX '(' '*' ')'
         | NOT term
-        | term_expr IS term_expr
+        | IDENTIFIER IS term_expr
         | term_expr '<' term_expr
         | term_expr '>' term_expr
         | term_expr LE_OP term_expr
