@@ -34,7 +34,7 @@ line
 
 fact
 	: term '.'
-	| '[' maf_list ']' LARROW_OP IDENTIFIER '(' maf_arg_list ')' '.'
+	| '[' maf_list ']' LARROW_OP IDENTIFIER '(' arg_list ')' '.'
 	;
 
 maf_list
@@ -42,24 +42,12 @@ maf_list
 	| IDENTIFIER
 	;
 
-maf_arg_list
-	: maf_arg_list ',' maf_arg_cand
-	| maf_arg_cand
-	;
-
-maf_arg_cand
-	: IDENTIFIER
-	| IDENTIFIER '(' maf_arg_list ')'
-	| STRING_LITERAL
-	| NUMBER
-	;
-
 query
 	: term '?'
 	;
 
 rule
-	: strict_term LARROW_OP or_terms '.'
+	: term LARROW_OP or_terms '.'
 	;
 
 or_terms
@@ -73,10 +61,14 @@ and_terms
 	;
 
 term /*% load into edu.columbia.mipl.runtime.Term */
-	: sub_term
+	: NUMBER
+	| IDENTIFIER
+	| IDENTIFIER '(' arg_list ')'
+	| IDENTIFIER '(' '*' ')'
+	| VARIABLE
 	| NEWLINE
         | REGEX
-        | REGEX '(' term_arg_list ')'
+        | REGEX '(' arg_list ')'
         | REGEX '(' '*' ')'
         | NOT term
         | IDENTIFIER IS term_expr
@@ -104,47 +96,23 @@ term_term:
 	| NUMBER
 	| IDENTIFIER
 	| '(' term_expr ')'
-
-sub_term
-	: NUMBER
-	| strict_term
 	;
 
-strict_term
+arg_cand
 	: IDENTIFIER
-	| IDENTIFIER '(' strict_term_arg_list ')'
-	| IDENTIFIER '(' '*' ')'
+	| IDENTIFIER '(' arg_list ')'
 	| VARIABLE
-	;
-
-term_arg_cand
-	: VARIABLE
-	| strict_term_arg_cand
-	;
-
-strict_term_arg_cand
-	: NUMBER
-	| IDENTIFIER
+	| NUMBER
         | STRING_LITERAL
 	;
 
-term_arg_list
-	: term_arg_cand
-	| term_arg_list ',' term_arg_cand
-	;
-
-strict_term_arg_list
-	: strict_term_arg_cand
-	| strict_term_arg_list ',' strict_term_arg_cand
+arg_list
+	: arg_cand
+	| arg_list ',' arg_cand
 	;
 
 job
-	: IDENTIFIER '(' job_arg_list ')' '{' stmt_list '}'
-	;
-
-job_arg_list
-	: VARIABLE
-	| job_arg_list ',' VARIABLE
+	: IDENTIFIER '(' arg_list ')' '{' stmt_list '}'
 	;
 
 stmt

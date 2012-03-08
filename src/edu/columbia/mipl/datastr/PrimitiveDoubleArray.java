@@ -34,6 +34,10 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 		this.data = data;
 	}
 
+	public void increaseRowInternal() {
+		data = Arrays.copyOf(data, paddedCol * paddedRow);
+	}
+
 	public void setValue(int row, int col, Object value) {
 		data[flattenIndex(row, col)] = (double) (Double) value;
 	}

@@ -36,8 +36,12 @@ public class PrimitiveIntArray extends PrimitiveArray {
 
 	public PrimitiveIntArray(int row, int col, int[] data) /* throws UnalignedMatrixSizeException */ {
 		setData(row, col, data);
-System.out.println("Int Array");
 	}
+
+	public void increaseRowInternal() {
+		data = Arrays.copyOf(data, paddedCol * paddedRow);
+	}
+
 
 	public void setValue(int row, int col, Object value) {
 		data[flattenIndex(row, col)] = (int) (Integer) value;

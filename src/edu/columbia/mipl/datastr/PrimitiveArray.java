@@ -19,6 +19,8 @@ public abstract class PrimitiveArray {
 	int row;
 	int col;
 
+	final int INCREASE_RATE = 2;
+
 	int getPaddedLength(int length) {
 		// This should make 1, 2, 3, or 4 => 4
 		//                 // This should make 5, 6, 7, or 8 => 8
@@ -44,6 +46,21 @@ public abstract class PrimitiveArray {
 	public int getPaddedCol() {
 		return paddedCol;
 	}
+
+	public void increaseRow() {
+		increaseRow(1);
+	}
+
+	public void increaseRow(int n) {
+		if (row + n > paddedRow) {
+			paddedRow = (row + n) * INCREASE_RATE;
+			increaseRowInternal();
+		}
+
+		row += n;
+	}
+
+	abstract void increaseRowInternal();
 
 	abstract void setValue(int row, int col, Object value);
 	abstract Object getValue(int row, int col);

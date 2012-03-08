@@ -71,6 +71,16 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		}
 	}
 
+	void increaseRow() {
+		data.increaseRow();
+		row++;
+	}
+
+	void increaseRow(int n) {
+		data.increaseRow(n);
+		row += n;
+	}
+
 	int makeHashKey(int row, int col) {
 		return this.col * row + col;
 	}
