@@ -13,13 +13,20 @@ package edu.columbia.mipl.ds;
 import edu.columbia.mipl.ds.PrimitiveMatrix;
 
 /* If you want to make a factory pattern, do so */
-public interface MatrixLoader {
+public abstract class MatrixLoader {
 	/**
 	 * Loads a matrix
 	 *
 	 * @param file name of the file
 	 * @return PrimitiveMatrix loaded matrix
 	 */
-	PrimitiveMatrix loadMatrix(String file);
-	void saveMatrix(String file, PrimitiveMatrix matrix);
+
+	MatrixLoader() {
+		MatrixLoaderFactory.getInstance().installMatrixLoader(getLoaderName(), this);
+	}
+
+	abstract PrimitiveMatrix loadMatrix(String file);
+	abstract void saveMatrix(String file, PrimitiveMatrix matrix);
+
+	abstract String getLoaderName();
 }

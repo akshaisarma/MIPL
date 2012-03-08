@@ -54,7 +54,7 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 
 	/* FullMatrix */
 	PrimitiveMatrix(PrimitiveArray data) {
-		setData(data.getRow(), data.getCol(), data);
+		setData(data);
 	}
 
 	PrimitiveMatrix(String uri) {
@@ -82,7 +82,9 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		return false;
 	}
 
-	void setData(int row, int col, PrimitiveArray data) {
+	void setData(PrimitiveArray data) {
+		row = data.getRow();
+		col = data.getCol();
 		this.data = data;
 		status = Status.PM_STATUS_LOADED_FULL;
 	}

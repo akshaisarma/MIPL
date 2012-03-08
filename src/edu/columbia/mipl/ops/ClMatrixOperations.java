@@ -75,6 +75,6 @@ public class ClMatrixOperations extends DefaultMatrixOperations {
 
 //	public double sum(final PrimitiveArray arg1);
 //	public double mean(final PrimitiveArray arg1);
-//	public double row_sum(final PrimitiveArray arg1);
-//	public double row_mean(final PrimitiveArray arg1);
+//	public PrimitiveArray row_sum(final PrimitiveArray arg1);
+//	public PrimitiveArray row_mean(final PrimitiveArray arg1);
 }

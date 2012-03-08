@@ -25,9 +25,13 @@ import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class CSVMatrixLoader implements MatrixLoader {
+public class CSVMatrixLoader extends MatrixLoader {
 
-	public PrimitiveArray loadMatrix(String file) {
+	public String getLoaderName() {
+		return "CSV";
+	}
+
+	public PrimitiveMatrix loadMatrix(String file) {
 		try {
 			FileInputStream tableMatrix = new FileInputStream(file);
 			Scanner matrixScan = new Scanner(tableMatrix);
@@ -83,7 +87,7 @@ public class CSVMatrixLoader implements MatrixLoader {
 				// Add new types here
 
 			tableMatrix.close();
-			return loadedMatrix;
+			return new PrimitiveMatrix(loadedMatrix);
 		}
 		catch (FileNotFoundException e) {
 			System.out.println("Matrix file not found!");
@@ -109,7 +113,11 @@ public class CSVMatrixLoader implements MatrixLoader {
 		return line;
 	}
 
-	public void saveMatrix(String file, PrimitiveArray matrix) {
+	public void saveMatrix(String file, PrimitiveMatrix matrix) {
+		saveMatrix(file, matrix.getData());
+	}
+
+	void saveMatrix(String file, PrimitiveArray matrix) {
 		try {
 			FileWriter outputFile = new FileWriter(file);
 			BufferedWriter outputWriter = new BufferedWriter(outputFile);

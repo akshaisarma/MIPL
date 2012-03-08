@@ -67,23 +67,31 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+		return null;
 	}
 
 	public PrimitiveArray sub(final PrimitiveArray arg1, double arg2) {
+		return null;
 	}
 
 	public PrimitiveArray cellmult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+		return null;
 	}
 	public PrimitiveArray mult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+		return null;
 	}
 	public PrimitiveArray mult(final PrimitiveArray arg1, final double arg2) {
+		return null;
 	}
 
 	public PrimitiveArray celldiv(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+		return null;
 	}
 	public PrimitiveArray div(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+		return null;
 	}
 	public PrimitiveArray div(final PrimitiveArray arg1, final double arg2) {
+		return null;
 	}
 
 	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
@@ -111,16 +119,22 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray transpose(final PrimitiveArray arg1) {
+		return null;
 	}
 	public PrimitiveArray inverse(final PrimitiveArray arg1) {
+		return null;
 	}
 
 	public double sum(final PrimitiveArray arg1) {
+		return 0;
 	}
 	public double mean(final PrimitiveArray arg1) {
+		return 0;
 	}
-	public double row_sum(final PrimitiveArray arg1) {
+	public PrimitiveArray row_sum(final PrimitiveArray arg1) {
+		return null;
 	}
-	public double row_mean(final PrimitiveArray arg1) {
+	public PrimitiveArray row_mean(final PrimitiveArray arg1) {
+		return null;
 	}
 }
