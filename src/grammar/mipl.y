@@ -21,9 +21,8 @@ program
 	;
 
 lines
-	: lines '\n' line
+	: lines line
 	| line
-        | '\n'
 	;
 
 line
@@ -35,7 +34,7 @@ line
 
 fact
 	: term '.'
-	| '[' maf_list ']' LARROW_OP IDENTIFIER '(' maf_arg_list ')'
+	| '[' maf_list ']' LARROW_OP IDENTIFIER '(' maf_arg_list ')' '.'
 	;
 
 maf_list
@@ -44,9 +43,14 @@ maf_list
 	;
 
 maf_arg_list
-	: maf_arg_list ',' IDENTIFIER
-	| maf_arg_list ',' NUMBER
-	| IDENTIFIER
+	: maf_arg_list ',' maf_arg_cand
+	| maf_arg_cand
+	;
+
+maf_arg_cand
+	: IDENTIFIER
+	| IDENTIFIER '(' maf_arg_list ')'
+	| STRING_LITERAL
 	| NUMBER
 	;
 
