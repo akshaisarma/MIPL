@@ -31,6 +31,7 @@ public class Term {
 		TERM_TYPE_VARIABLE,
 	};
 	Type type;
+	boolean hasVariables;
 
 	double value;
 	List<Term> arguments;
@@ -89,6 +90,8 @@ public class Term {
 		this.type = type;
 		this.term1 = term1;
 		this.term2 = term2;
+
+		hasVariables = (term1.containVariables() || term2.containVariables());
 	}
 
 	Term(Type type, String name, List<Term> arguments) {
@@ -97,6 +100,14 @@ public class Term {
 		this.type = type;
 		this.name = name;
 		this.arguments = arguments;
+
+		hasVariables = false;
+		for (Term t : arguments) {
+			if (t.containVariables()) {
+				hasVariables = true;
+				break;
+			}
+		}
 	}
 
 	Term(String name) {
@@ -114,6 +125,14 @@ public class Term {
 		assert (type == Type.TERM_TYPE_NUMBER);
 
 		return value;
+	}
+
+	boolean containVariables() {
+		return hasVariables;
+	}
+
+	String getName() {
+		return name;
 	}
 /*
 	boolean evaluate(VariableStack vs) {

@@ -13,7 +13,7 @@ package edu.columbia.mipl.datastr;
 import java.util.*;
 
 /* Singleton MatrixLoaderFactory Class */
-public class MatrixLoaderFactory {
+public final class MatrixLoaderFactory {
 	Map<String, MatrixLoader> loaderMap;
 
 	static MatrixLoaderFactory instance;

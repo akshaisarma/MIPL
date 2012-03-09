@@ -25,17 +25,17 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 	Status status;
 	String uri;
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		/* Unit Tests */
 		PrimitiveMatrix<Double> pm = new PrimitiveMatrix<Double>();
-		PrimitiveMatrix<Integer> pm_int = new PrimitiveMatrix<Integer>();
-		pm_int.setValue(10, 0, 300);
+		PrimitiveMatrix<Integer> pmint = new PrimitiveMatrix<Integer>();
+		pmint.setValue(10, 0, 300);
 
-		double newdata[] = new double[100];
-		PrimitiveMatrix<Double> pm_with_array = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(10, 10, newdata));
-		pm_with_array.setValue(0, 0, 3.244); // without this line, pda will be null
-		PrimitiveDoubleArray pda = (PrimitiveDoubleArray) pm_with_array.getData();
-		double arr[] = pda.getData();
+		double[] newdata = new double[100];
+		PrimitiveMatrix<Double> pmarray = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(10, 10, newdata));
+		pmarray.setValue(0, 0, 3.244); // without this line, pda will be null
+		PrimitiveDoubleArray pda = (PrimitiveDoubleArray) pmarray.getData();
+		double[] arr = pda.getData();
 		System.out.println(arr[0]);
 	}
 
@@ -87,6 +87,7 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		if (data == null) {
 			// throw new DataRequestedToSparseMatrix();
 			// or, transform into a full matrix
+			;
 		}
 		return data;
 	}

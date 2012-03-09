@@ -108,8 +108,8 @@ public class CSVMatrixLoader extends MatrixLoader {
 		/*
 		 * Replace booleans with 1 or 0 and replace commas with space.
 		 */
-		line = line.replaceAll("\"?[yY]es\"?","1");
-		line = line.replaceAll("\"?[nN]o\"?","0");
+		line = line.replaceAll("\"?[yY]es\"?", "1");
+		line = line.replaceAll("\"?[nN]o\"?", "0");
 		return line;
 	}
 
@@ -129,10 +129,10 @@ public class CSVMatrixLoader extends MatrixLoader {
 				int rows = pda.getPaddedRow();
 				int cols = pda.getPaddedCol();
 				for (int i = 0; i < rows; i++)  {
-					String oneLine = ""	;
+					String oneLine = "";
 					for (int j = 0; j < cols; j++)
-						oneLine = oneLine + data[i*cols + j] + ",";
-					oneLine = oneLine.substring(0, oneLine.length()-1);
+						oneLine = oneLine + data[i * cols + j] + ",";
+					oneLine = oneLine.substring(0, oneLine.length() - 1);
 					outputWriter.write(oneLine + "\n");
 				}
 			}
@@ -145,8 +145,8 @@ public class CSVMatrixLoader extends MatrixLoader {
 				for (int i = 0; i < rows; i++)  {
 					String oneLine = "";
 					for (int j = 0; j < cols; j++)
-						oneLine = oneLine + data[i*cols + j] + ",";
-					oneLine = oneLine.substring(0, oneLine.length()-1);
+						oneLine = oneLine + data[i * cols + j] + ",";
+					oneLine = oneLine.substring(0, oneLine.length() - 1);
 					outputWriter.write(oneLine + "\n");
 				}
 			}
@@ -160,7 +160,7 @@ public class CSVMatrixLoader extends MatrixLoader {
 		}
 	}
 
-	private <T> PrimitiveArray copyToArray (Scanner matrixScan,
+	private <T> PrimitiveArray copyToArray(Scanner matrixScan,
 					String line, Class<T> type)throws NumberFormatException {
 		int numberOfCols = 0;
 		int numberOfRows = 1;
@@ -168,7 +168,7 @@ public class CSVMatrixLoader extends MatrixLoader {
 		line = changeFormat(line);
 		String rowValues[] = line.trim().split(",");
 		numberOfCols = rowValues.length;
-		ArrayList <T> values = new ArrayList<T>();
+		ArrayList<T> values = new ArrayList<T>();
 		if (type == java.lang.Double.class) {
 			for (int i = 0; i < rowValues.length; i++)
 				values.add((T) new Double(Double.parseDouble(rowValues[i])));
@@ -207,7 +207,7 @@ public class CSVMatrixLoader extends MatrixLoader {
 			int j = 0;
 			for (int i = 0; i < values.size(); i++) {
 				/* Skip padded parts */
-				while (j%paddedCol > (numberOfCols-1))
+				while (j % paddedCol > (numberOfCols - 1))
 					data[j++] = 0;
 				data[j++] = (double) (Double) values.get(i);
 			}
@@ -220,14 +220,14 @@ public class CSVMatrixLoader extends MatrixLoader {
 			int j = 0;
 			for (int i = 0; i < values.size(); i++) {
 				/* Skip padded parts */
-				while (j%paddedCol > (numberOfCols-1))
+				while (j % paddedCol > (numberOfCols - 1))
 					data[j++] = 0;
 				data[j++] = (int) (Integer) values.get(i);
 			}
 			return loadedArray;
 		}
 		else {
-			// Add new types here.
+			;// Add new types here.
 		}
 		return null;
 	}

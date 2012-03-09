@@ -23,9 +23,9 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
-		double data1[] = a1.getData();
-		double data2[] = a2.getData();
-		double data[] = result.getData();
+		double[] data1 = a1.getData();
+		double[] data2 = a2.getData();
+		double[] data = result.getData();
 
 		int i;
 		int j;
@@ -47,8 +47,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	public PrimitiveArray add(final PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
-		double data1[] = a1.getData();
-		double data[] = result.getData();
+		double[] data1 = a1.getData();
+		double[] data = result.getData();
 
 		int i;
 		int j;
@@ -97,26 +97,26 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 	}
-	public void add_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void addassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 	}
-	public void add_and_assign(PrimitiveArray arg1, double arg2) {
+	public void addassign(PrimitiveArray arg1, double arg2) {
 	}
-	public void sub_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void subassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 	}
-	public void sub_and_assign(PrimitiveArray arg1, double arg2) {
+	public void subassign(PrimitiveArray arg1, double arg2) {
 	}
 
-	public void cellmult_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void cellmultassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 	}
-	public void mult_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void multassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 	}
-	public void mult_and_assign(PrimitiveArray arg1, double arg2) {
+	public void multassign(PrimitiveArray arg1, double arg2) {
 	}
-	public void celldiv_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void celldivassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 	}
-	public void div_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void divassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 	}
-	public void div_and_assign(PrimitiveArray arg1, double arg2) {
+	public void divassign(PrimitiveArray arg1, double arg2) {
 	}
 
 	public PrimitiveArray transpose(final PrimitiveArray arg1) {
@@ -132,10 +132,10 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	public double mean(final PrimitiveArray arg1) {
 		return 0;
 	}
-	public PrimitiveArray row_sum(final PrimitiveArray arg1) {
+	public PrimitiveArray rowsum(final PrimitiveArray arg1) {
 		return null;
 	}
-	public PrimitiveArray row_mean(final PrimitiveArray arg1) {
+	public PrimitiveArray rowmean(final PrimitiveArray arg1) {
 		return null;
 	}
 }

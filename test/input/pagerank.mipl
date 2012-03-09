@@ -7,15 +7,12 @@
 #              algorithm and uses it.
 
 pagerank(G, P, U) {
-g = read(G).
-	p = read(P).
-	u = read(U).
-
-	alpha = 0.85.
-	mat_iterationo = 20.
-	i = 0.
-	while (i < max_iteration) {
-		p = alpha * (g * p) + (1 - alpha) * (ones * u * p).
+	Alpha = 0.85.
+	Max_iteration = 20.
+	I = 0.
+	while (I < Max_iteration) {
+		P = alpha * (G * P) + (1 - Alpha) * (ones * U * P).
+		I = I + 1.
 	}
 }
 

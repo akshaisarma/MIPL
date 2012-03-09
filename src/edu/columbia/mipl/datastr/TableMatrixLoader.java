@@ -90,9 +90,9 @@ public class TableMatrixLoader extends MatrixLoader {
 				int rows = pda.getPaddedRow();
 				int cols = pda.getPaddedCol();
 				for (int i = 0; i < rows; i++)  {
-					String oneLine = ""	;
+					String oneLine = "";
 					for (int j = 0; j < cols; j++)
-						oneLine = oneLine + data[i*cols + j] + "\t";
+						oneLine = oneLine + data[i * cols + j] + "\t";
 					outputWriter.write(oneLine.trim() + "\n");
 				}
 			}
@@ -105,7 +105,7 @@ public class TableMatrixLoader extends MatrixLoader {
 				for (int i = 0; i < rows; i++)  {
 					String oneLine = "";
 					for (int j = 0; j < cols; j++)
-						oneLine = oneLine + data[i*cols + j] + "\t";
+						oneLine = oneLine + data[i * cols + j] + "\t";
 					outputWriter.write(oneLine.trim() + "\n");
 				}
 			}
@@ -119,13 +119,13 @@ public class TableMatrixLoader extends MatrixLoader {
 		}
 	}
 
-	private <T> PrimitiveArray copyToArray (Scanner matrixScan,
+	private <T> PrimitiveArray copyToArray(Scanner matrixScan,
 					String line, Class<T> type)throws NumberFormatException {
 		int numberOfCols = 0;
 		int numberOfRows = 1;
 		String rowValues[] = line.trim().split("\\s+");
 		numberOfCols = rowValues.length;
-		ArrayList <T> values = new ArrayList<T>();
+		ArrayList<T> values = new ArrayList<T>();
 		if (type == java.lang.Double.class) {
 			for (int i = 0; i < rowValues.length; i++)
 				values.add((T) new Double(Double.parseDouble(rowValues[i])));
@@ -163,7 +163,7 @@ public class TableMatrixLoader extends MatrixLoader {
 			int j = 0;
 			for (int i = 0; i < values.size(); i++) {
 				/* Skip padded parts */
-				while (j%paddedCol > (numberOfCols-1))
+				while (j % paddedCol > (numberOfCols - 1))
 					data[j++] = 0;
 				data[j++] = (double) (Double) values.get(i);
 			}
@@ -176,7 +176,7 @@ public class TableMatrixLoader extends MatrixLoader {
 			int j = 0;
 			for (int i = 0; i < values.size(); i++) {
 				/* Skip padded parts */
-				while (j%paddedCol > (numberOfCols-1))
+				while (j % paddedCol > (numberOfCols - 1))
 					data[j++] = 0;
 				data[j++] = (int) (Integer) values.get(i);
 			}

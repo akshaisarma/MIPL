@@ -12,19 +12,19 @@ import java.util.*;
 
 public abstract class PrimitiveArray {
 	/* align the matrix size to 4 in order to benefit from HW acceleration */
-	final int PADDING_ALIGN = 4;
+	final int paddingAlign = 4;
 	int paddedRow;
 	int paddedCol;
 
 	int row;
 	int col;
 
-	final int INCREASE_RATE = 2;
+	final int increaseRate = 2;
 
 	int getPaddedLength(int length) {
 		// This should make 1, 2, 3, or 4 => 4
 		//                 // This should make 5, 6, 7, or 8 => 8
-		return ((length - 1) & ~(PADDING_ALIGN - 1)) + PADDING_ALIGN;
+		return ((length - 1) & ~(paddingAlign - 1)) + paddingAlign;
 	}
 
 	int flattenIndex(int row, int col) {
@@ -53,7 +53,7 @@ public abstract class PrimitiveArray {
 
 	public void increaseRow(int n) {
 		if (row + n > paddedRow) {
-			paddedRow = (row + n) * INCREASE_RATE;
+			paddedRow = (row + n) * increaseRate;
 			increaseRowInternal();
 		}
 

@@ -59,23 +59,23 @@ public class ClMatrixOperations extends DefaultMatrixOperations {
 //	public PrimitiveArray div(final PrimitiveArray arg1, final double arg2);
 
 //	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2);
-//	public void add_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2);
-//	public void add_and_assign(PrimitiveArray arg1, double arg2);
-//	public void sub_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2);
-//	public void sub_and_assign(PrimitiveArray arg1, double arg2);
+//	public void addassign(PrimitiveArray arg1, final PrimitiveArray arg2);
+//	public void addassign(PrimitiveArray arg1, double arg2);
+//	public void subassign(PrimitiveArray arg1, final PrimitiveArray arg2);
+//	public void subassign(PrimitiveArray arg1, double arg2);
 
-//	public void cellmult_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2);
-//	public void mult_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2);
-//	public void mult_and_assign(PrimitiveArray arg1, double arg2);
-//	public void celldiv_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2);
-//	public void div_and_assign(PrimitiveArray arg1, final PrimitiveArray arg2);
-//	public void div_and_assign(PrimitiveArray arg1, double arg2);
+//	public void cellmultassign(PrimitiveArray arg1, final PrimitiveArray arg2);
+//	public void multassign(PrimitiveArray arg1, final PrimitiveArray arg2);
+//	public void multassign(PrimitiveArray arg1, double arg2);
+//	public void celldivassign(PrimitiveArray arg1, final PrimitiveArray arg2);
+//	public void divassign(PrimitiveArray arg1, final PrimitiveArray arg2);
+//	public void divassign(PrimitiveArray arg1, double arg2);
 
 //	public PrimitiveArray transpose(final PrimitiveArray arg1);
 //	public PrimitiveArray inverse(final PrimitiveArray arg1);
 
 //	public double sum(final PrimitiveArray arg1);
 //	public double mean(final PrimitiveArray arg1);
-//	public PrimitiveArray row_sum(final PrimitiveArray arg1);
-//	public PrimitiveArray row_mean(final PrimitiveArray arg1);
+//	public PrimitiveArray rowsum(final PrimitiveArray arg1);
+//	public PrimitiveArray rowmean(final PrimitiveArray arg1);
 }
