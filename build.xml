@@ -9,15 +9,17 @@
     <property name="test_result" location="test_result" />
     <property name="dist" location="dist" />
 
-    <target name="mipl" description="MIPL compiler" depends="checkstyle">
+    <target name="mipl" description="MIPL compiler">
         <mkdir dir="${build}" />
         <javac srcdir="${src}" destdir="${build}" classpath="" />
+	<antcall target="checkstyle"/>
     </target>
 
     <target name="test_ds" depends="mipl" description="Data Structure Testing">
         <mkdir dir="${test_result}" />
+        <mkdir dir="${dist}" />
         <jar jarfile="${dist}/mipl_ds.${DSTAMP}.jar">
-            <fileset dir="${build}/edu/columbia/mipl/ds/" />
+            <fileset dir="${build}/edu/columbia/mipl/datastr/" />
         </jar>
         <javac srcdir="${test}/testing_ds" destdir="${test_result}"
             classpath="${dist}/mipl_ds.${DSTAMP}.jar" />

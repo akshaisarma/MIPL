@@ -25,6 +25,9 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 	Status status;
 	String uri;
 
+	int sparseRow;
+	int sparseCol;
+
 	public static void main(String[] args) {
 		/* Unit Tests */
 		PrimitiveMatrix<Double> pm = new PrimitiveMatrix<Double>();
@@ -66,11 +69,24 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		}
 	}
 
+	public int getRow() {
+		if (status == Status.PM_STATUS_LOADED_FULL)
+			return data.getCol();
+		return sparseRow;
+	}
+
+	public int getCol() {
+		if (status == Status.PM_STATUS_LOADED_FULL)
+			return data.getCol();
+		return sparseCol;
+	}
+
 	void increaseRow() {
 		data.increaseRow();
 	}
 
 	void increaseRow(int n) {
+		assert (status == Status.PM_STATUS_LOADED_FULL);
 		data.increaseRow(n);
 	}
 
@@ -104,7 +120,7 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		// status == REMOTE : similar to LOCAL or MatrixFactory returns a remote matrix loader;
 	}
 
-	void setValue(int row, int col, T value) /* throws OutOfBoundExcpetion */ {
+	public void setValue(int row, int col, T value) /* throws OutOfBoundExcpetion */ {
 		loadMatrix();
 
 		if (status == Status.PM_STATUS_LOADED_SPARSE) {

@@ -22,16 +22,41 @@ public class Expression {
 	};
 	Type type;
 
-	String variableName;
+	Term variable;
 	double value;
 
 	Expression left;
 	Expression right;
 
+	public Expression(Type type, Term term) {
+		assert (type == Type.EXPR_TYPE_VARIABLE);
+		assert (term.getType() == Term.Type.TERM_TYPE_VARIABLE);
+
+		variable = term;
+	}
+
+	public Expression(Type type, int value) {
+		this(type, (double) value);
+	}
+
+	public Expression(Type type, double value) {
+		assert (type == Type.EXPR_TYPE_INTEGER || type == Type.EXPR_TYPE_DOUBLE);
+		
+		this.value = value;
+	}
+
+	public Expression(Type type, Expression expr1, Expression expr2) {
+		assert (type == Type.EXPR_TYPE_MINUS || type == Type.EXPR_TYPE_PLUS ||
+			type == Type.EXPR_TYPE_MULTI || type == Type.EXPR_TYPE_DIVIDE);
+
+		left = expr1;
+		right = expr2;
+	}
+
 	double calculateValue(VariableStack vs) /* throws InsuffArgInitException, NonArithmeticArgException */ {
 		switch (type) {
 			case EXPR_TYPE_VARIABLE:
-				Term term  = vs.getValue(variableName);
+				Term term  = vs.get(variable);
 				if (term == null)
 					/* throw new InsuffArgInitException() */;
 				if (term.getType() != Term.Type.TERM_TYPE_NUMBER)
