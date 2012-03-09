@@ -21,7 +21,7 @@ public class Fact extends Knowledge  {
 		Term matrix;
 		int i;
 
-		if (term.getType() != Term.Type.TERM_TYPE_TERM)
+		if (term.getType() != Term.Type.TERM)
 			/* throw new InvalidFactDefinitionException() */;
 
 		know = KnowledgeTableFactory.getKnowledgeTable().get(term.getName());
@@ -40,16 +40,16 @@ public class Fact extends Knowledge  {
 			/* throw new UnmergeableFactsException() */;
 		}
 
-		matrix = new Term(Term.Type.TERM_TYPE_MATRIX, term.getName(), new PrimitiveDoubleArray(2, prev.getArguments().size()));
+		matrix = new Term(Term.Type.MATRIX, term.getName(), new PrimitiveDoubleArray(2, prev.getArguments().size()));
 		i = 0;
 		for (Term t : prev.getArguments()) {
-			if (t.getType() != Term.Type.TERM_TYPE_NUMBER)
+			if (t.getType() != Term.Type.NUMBER)
 				/* throw new UnmergeableFactsException() */;
 			matrix.getMatrix().setValue(0, i, t.getValue());
 		}
 		i = 0;
 		for (Term t : term.getArguments()) {
-			if (t.getType() != Term.Type.TERM_TYPE_NUMBER)
+			if (t.getType() != Term.Type.NUMBER)
 				/* throw new UnmergeableFactsException() */;
 			matrix.getMatrix().setValue(1, i, t.getValue());
 		}

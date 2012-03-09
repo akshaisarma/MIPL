@@ -11,4 +11,10 @@ package edu.columbia.mipl.runtime;
 import java.util.*;
 
 public class VariableStack extends HashMap<Term, Term> {
+	VariableStack() {
+	}
+
+	VariableStack(VariableStack vs) {
+		super(vs);
+	}
 }

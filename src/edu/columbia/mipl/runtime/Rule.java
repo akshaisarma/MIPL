@@ -11,26 +11,26 @@ package edu.columbia.mipl.runtime;
 import java.util.*;
 
 public class Rule extends Knowledge {
-	Term target;
+	Term term;
 	Term source;
 
-	public Rule(Term target, Term source) {
+	public Rule(Term term, Term source) {
 		Knowledge know;
 
-		if (target.getType() != Term.Type.TERM_TYPE_TERM)
+		if (term.getType() != Term.Type.TERM)
 			/* throw new InvalidRuleDefinitionException() */;
-		know = KnowledgeTableFactory.getKnowledgeTable().get(target.getName());
+		know = KnowledgeTableFactory.getKnowledgeTable().get(term.getName());
 		if (know == null) {
-			this.target = target;
+			this.term = term;
 			this.source = source;
-			KnowledgeTableFactory.getKnowledgeTable().put(target.getName(), this);
+			KnowledgeTableFactory.getKnowledgeTable().put(term.getName(), this);
 			return;
 		}
 		/* throw new RuleRedefineException() */;
 	}
 
-	Term getTarget() {
-		return target;
+	Term getTerm() {
+		return term;
 	}
 
 	Term getSource() {

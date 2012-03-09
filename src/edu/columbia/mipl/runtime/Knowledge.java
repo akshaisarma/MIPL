@@ -11,4 +11,5 @@ package edu.columbia.mipl.runtime;
 import java.util.*;
 
 public abstract class Knowledge {
+	abstract Term getTerm();
 }

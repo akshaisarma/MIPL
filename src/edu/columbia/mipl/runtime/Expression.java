@@ -12,13 +12,13 @@ import java.util.*;
 
 public class Expression {
 	public enum Type {
-		EXPR_TYPE_VARIABLE,
-		EXPR_TYPE_INTEGER,
-		EXPR_TYPE_DOUBLE,
-		EXPR_TYPE_MINUS,
-		EXPR_TYPE_PLUS,
-		EXPR_TYPE_MULTI,
-		EXPR_TYPE_DIVIDE,
+		VARIABLE,
+		INTEGER,
+		DOUBLE,
+		MINUS,
+		PLUS,
+		MULTI,
+		DIVIDE,
 	};
 	Type type;
 
@@ -29,8 +29,8 @@ public class Expression {
 	Expression right;
 
 	public Expression(Type type, Term term) {
-		assert (type == Type.EXPR_TYPE_VARIABLE);
-		assert (term.getType() == Term.Type.TERM_TYPE_VARIABLE);
+		assert (type == Type.VARIABLE);
+		assert (term.getType() == Term.Type.VARIABLE);
 
 		variable = term;
 	}
@@ -40,14 +40,14 @@ public class Expression {
 	}
 
 	public Expression(Type type, double value) {
-		assert (type == Type.EXPR_TYPE_INTEGER || type == Type.EXPR_TYPE_DOUBLE);
+		assert (type == Type.INTEGER || type == Type.DOUBLE);
 		
 		this.value = value;
 	}
 
 	public Expression(Type type, Expression expr1, Expression expr2) {
-		assert (type == Type.EXPR_TYPE_MINUS || type == Type.EXPR_TYPE_PLUS ||
-			type == Type.EXPR_TYPE_MULTI || type == Type.EXPR_TYPE_DIVIDE);
+		assert (type == Type.MINUS || type == Type.PLUS ||
+			type == Type.MULTI || type == Type.DIVIDE);
 
 		left = expr1;
 		right = expr2;
@@ -55,28 +55,28 @@ public class Expression {
 
 	double calculateValue(VariableStack vs) /* throws InsuffArgInitException, NonArithmeticArgException */ {
 		switch (type) {
-			case EXPR_TYPE_VARIABLE:
+			case VARIABLE:
 				Term term  = vs.get(variable);
 				if (term == null)
 					/* throw new InsuffArgInitException() */;
-				if (term.getType() != Term.Type.TERM_TYPE_NUMBER)
+				if (term.getType() != Term.Type.NUMBER)
 					/* throw new NonArithmeticArgException() */;
 
 				value = term.getValue();
 				break;
-			case EXPR_TYPE_INTEGER:
-			case EXPR_TYPE_DOUBLE:
+			case INTEGER:
+			case DOUBLE:
 				break;
-			case EXPR_TYPE_MINUS:
+			case MINUS:
 				value = left.calculateValue(vs) - right.calculateValue(vs);
 				break;
-			case EXPR_TYPE_PLUS:
+			case PLUS:
 				value = left.calculateValue(vs) + right.calculateValue(vs);
 				break;
-			case EXPR_TYPE_MULTI:
+			case MULTI:
 				value = left.calculateValue(vs) * right.calculateValue(vs);
 				break;
-			case EXPR_TYPE_DIVIDE:
+			case DIVIDE:
 				value = left.calculateValue(vs) / right.calculateValue(vs);
 				break;
 		}

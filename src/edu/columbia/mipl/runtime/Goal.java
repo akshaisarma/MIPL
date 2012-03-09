@@ -17,4 +17,14 @@ public class Goal extends Stack<Term> {
 		targetArguments = initialGoal.getArguments();
 		push(initialGoal);
 	}
+
+	Goal(Goal clone) {
+		addAll(clone);
+		targetArguments = new ArrayList<Term>();
+		targetArguments.addAll(clone.targetArguments);
+	}
+
+	List<Term> getTargetArguments() {
+		return targetArguments;
+	}
 }

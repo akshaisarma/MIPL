@@ -15,20 +15,20 @@ import edu.columbia.mipl.datastr.*;
 
 public class Term {
 	public enum Type {
-		TERM_TYPE_IS,
-		TERM_TYPE_EQ,
-		TERM_TYPE_LT,
-		TERM_TYPE_LE,
-		TERM_TYPE_GT,
-		TERM_TYPE_GE,
-		TERM_TYPE_NE,
-		TERM_TYPE_MATRIX,
-		TERM_TYPE_TERM,
-		TERM_TYPE_ANDTERMS,
-		TERM_TYPE_ORTERMS,
-		TERM_TYPE_NOTTERM,
-		TERM_TYPE_NUMBER,
-		TERM_TYPE_VARIABLE,
+		IS,
+		EQ,
+		LT,
+		LE,
+		GT,
+		GE,
+		NE,
+		MATRIX,
+		TERM,
+		ANDTERMS,
+		ORTERMS,
+		NOTTERM,
+		NUMBER,
+		VARIABLE,
 	};
 	Type type;
 	boolean hasVariables = false;
@@ -43,9 +43,9 @@ public class Term {
 	Term term2;
 
 	Term(Type type, Expression expr1, Expression expr2) {
-		assert (type == Type.TERM_TYPE_EQ || type == Type.TERM_TYPE_LT ||
-			type == Type.TERM_TYPE_LE || type == Type.TERM_TYPE_GT ||
-			type == Type.TERM_TYPE_GE || type == Type.TERM_TYPE_NE);
+		assert (type == Type.EQ || type == Type.LT ||
+			type == Type.LE || type == Type.GT ||
+			type == Type.GE || type == Type.NE);
 
 		this.type = type;
 		this.expr1 = expr1;
@@ -54,7 +54,7 @@ public class Term {
 
 	/* X is Y - 1 */
 	Term(Type type, Term variable, Expression expr) {
-		assert (type == Type.TERM_TYPE_IS);
+		assert (type == Type.IS);
 
 		this.type = type;
 		term1 = variable;
@@ -62,7 +62,7 @@ public class Term {
 	}
 
 	Term(Type type, double value) {
-		assert (type == Type.TERM_TYPE_NUMBER);
+		assert (type == Type.NUMBER);
 
 		this.type = type;
 		this.value = value;
@@ -77,7 +77,7 @@ public class Term {
 	}
 
 	Term(Type type, String name, PrimitiveMatrix matrix) {
-		assert (type == Type.TERM_TYPE_MATRIX);
+		assert (type == Type.MATRIX);
 
 		this.type = type;
 		this.name = name;
@@ -85,7 +85,7 @@ public class Term {
 	}
 
 	Term(Type type, Term term1, Term term2) {
-		assert (type == Type.TERM_TYPE_ANDTERMS || type == Type.TERM_TYPE_ORTERMS);
+		assert (type == Type.ANDTERMS || type == Type.ORTERMS);
 
 		this.type = type;
 		this.term1 = term1;
@@ -95,7 +95,7 @@ public class Term {
 	}
 
 	Term(Type type, String name, List<Term> arguments) {
-		assert (type == Type.TERM_TYPE_TERM || type == Type.TERM_TYPE_NOTTERM);
+		assert (type == Type.TERM || type == Type.NOTTERM);
 
 		this.type = type;
 		this.name = name;
@@ -110,7 +110,7 @@ public class Term {
 	}
 
 	Term(Type type, String name) {
-		assert (type == Type.TERM_TYPE_VARIABLE);
+		assert (type == Type.VARIABLE);
 
 		this.type = type;
 		this.name = name;
@@ -123,7 +123,7 @@ public class Term {
 	}
 
 	double getValue() {
-		assert (type == Type.TERM_TYPE_NUMBER);
+		assert (type == Type.NUMBER);
 
 		return value;
 	}
@@ -144,6 +144,14 @@ public class Term {
 		return matrix;
 	}
 
+	Term getTerm1() {
+		return term1;
+	}
+
+	Term getTerm2() {
+		return term2;
+	}
+
 	static boolean checkStoreVS(VariableStack vs, Term term1, Term term2) {
 		Term prev = vs.get(term1);
 		if (prev != null && !prev.match(term2, vs))
@@ -156,24 +164,24 @@ public class Term {
 		int i;
 		int j;
 
-		assert (type == Type.TERM_TYPE_VARIABLE || type == Type.TERM_TYPE_NUMBER ||
-			type == Type.TERM_TYPE_TERM || type == Type.TERM_TYPE_MATRIX);
-		assert (term.getType() == Type.TERM_TYPE_VARIABLE || term.getType() == Type.TERM_TYPE_NUMBER ||
-			term.getType() == Type.TERM_TYPE_TERM || term.getType() == Type.TERM_TYPE_MATRIX);
-		assert (type != Type.TERM_TYPE_MATRIX || term.getType() != Type.TERM_TYPE_MATRIX);
+		assert (type == Type.VARIABLE || type == Type.NUMBER ||
+			type == Type.TERM || type == Type.MATRIX);
+		assert (term.getType() == Type.VARIABLE || term.getType() == Type.NUMBER ||
+			term.getType() == Type.TERM || term.getType() == Type.MATRIX);
+		assert (type != Type.MATRIX || term.getType() != Type.MATRIX);
 
-		if (type == Type.TERM_TYPE_VARIABLE) {
+		if (type == Type.VARIABLE) {
 			return checkStoreVS(vs, this, term);
 		}
-		if (term.getType() == Type.TERM_TYPE_VARIABLE) {
+		if (term.getType() == Type.VARIABLE) {
 			return term.match(this, vs);
 		}
 
 		switch(type) {
-			case TERM_TYPE_TERM:
-				if (term.getType() == Type.TERM_TYPE_MATRIX)
+			case TERM:
+				if (term.getType() == Type.MATRIX)
 					return term.match(this, vs);
-				if (term.getType() != Type.TERM_TYPE_TERM)
+				if (term.getType() != Type.TERM)
 					return false;
 				if (!name.equals(term.getName()))
 					return false;
@@ -184,27 +192,27 @@ public class Term {
 						return false;
 				return true;
 
-			case TERM_TYPE_NUMBER:
-				if (term.getType() != Type.TERM_TYPE_NUMBER)
+			case NUMBER:
+				if (term.getType() != Type.NUMBER)
 					return false;
 				return value == term.getValue();
 
-			case TERM_TYPE_MATRIX:
-				if (term.getType() != Type.TERM_TYPE_TERM)
+			case MATRIX:
+				if (term.getType() != Type.TERM)
 					return false;
 				if (!name.equals(term.getName()))
 					return false;
 				if (matrix.getCol() != term.getArguments().size())
 					return false;
 				for (j = 0; j < arguments.size(); j++) {
-					if (arguments.get(j).getType() != Type.TERM_TYPE_NUMBER &&
-							arguments.get(j).getType() != Type.TERM_TYPE_VARIABLE)
+					if (arguments.get(j).getType() != Type.NUMBER &&
+							arguments.get(j).getType() != Type.VARIABLE)
 						return false;
 				}
 				for (i = 0; i < matrix.getRow(); i++) {
 					for (j = 0; j < arguments.size(); j++) {
-						if (arguments.get(j).getType() == Type.TERM_TYPE_VARIABLE) {
-							if (!checkStoreVS(vs, arguments.get(j), new Term(Type.TERM_TYPE_NUMBER, matrix.getValue(i, j))))
+						if (arguments.get(j).getType() == Type.VARIABLE) {
+							if (!checkStoreVS(vs, arguments.get(j), new Term(Type.NUMBER, matrix.getValue(i, j))))
 								break;
 							continue;
 						}
@@ -221,12 +229,12 @@ public class Term {
 
 	boolean deduce(List<Term> targetVariables, Solvable solver, VariableStack vs) {
 		switch (type) {
-			case TERM_TYPE_IS:
-//				vs.setValue(term1, new Term(Type.TERM_TYPE_NUMBER), expr.calculateValue(vs));
+			case IS:
+//				vs.setValue(term1, new Term(Type.NUMBER), expr.calculateValue(vs));
 				break;
-			case TERM_TYPE_TERM:
+			case TERM:
 				break;
-			case TERM_TYPE_ANDTERMS:
+			case ANDTERMS:
 //				term1.deduce();
 //				term2.deduce();
 				break;
