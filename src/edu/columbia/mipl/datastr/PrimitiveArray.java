@@ -47,6 +47,20 @@ public abstract class PrimitiveArray {
 		return paddedCol;
 	}
 
+	public void increaseCol() {
+		increaseCol(1);
+	}
+
+	public void increaseCol(int n) {
+		assert (row == 1);
+		if (col + n > paddedCol) {
+			paddedCol = (col + n) * increaseRate;
+			reallocateSize();
+		}
+
+		col += n;
+	}
+
 	public void increaseRow() {
 		increaseRow(1);
 	}
@@ -54,13 +68,24 @@ public abstract class PrimitiveArray {
 	public void increaseRow(int n) {
 		if (row + n > paddedRow) {
 			paddedRow = (row + n) * increaseRate;
-			increaseRowInternal();
+			reallocateSize();
 		}
 
 		row += n;
 	}
 
-	abstract void increaseRowInternal();
+	public void mergeVertically(PrimitiveArray source) {
+		assert (col == source.getCol());
+		int prevRow = row;
+		increaseRow(source.getRow());
+
+		copyRange(source, 0, source.getRow(), 0, source.getCol(), prevRow, col);
+	}
+
+	abstract public void copyRange(PrimitiveArray source, int srcRow, int srcCol,
+			int dstRow, int dstCol, int nRows, int nCols);
+
+	abstract void reallocateSize();
 
 	abstract void setValue(int row, int col, Object value);
 	abstract Object getValue(int row, int col);

@@ -10,9 +10,16 @@
     <property name="dist" location="dist" />
 
     <target name="mipl" description="MIPL compiler">
-        <mkdir dir="${build}" />
-        <javac srcdir="${src}" destdir="${build}" classpath="" />
-	<antcall target="checkstyle"/>
+	    <mkdir dir="${build}" />
+	    <javac srcdir="${src}" destdir="${build}" >
+		    <classpath>
+			    <pathelement path="${classpath}"/>
+			    <fileset dir="${lib}">
+				    <include name="**/*.jar"/>
+			    </fileset>
+		    </classpath>
+	    </javac>
+	    <antcall target="checkstyle"/>
     </target>
 
     <target name="test_ds" depends="mipl" description="Data Structure Testing">
@@ -25,7 +32,7 @@
             classpath="${dist}/mipl_ds.${DSTAMP}.jar" />
     </target>
 
-    <target name="delete" description="Clean Project">
+    <target name="clean" description="Clean Project">
         <delete dir="${build}" />
         <delete dir="${dist}" />
         <delete dir="${test_result}" />

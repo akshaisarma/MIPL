@@ -9,7 +9,6 @@
 package edu.columbia.mipl.datastr;
 
 import java.util.*;
-import java.lang.reflect.*;
 
 public class PrimitiveIntArray extends PrimitiveArray {
 	int data[];
@@ -34,7 +33,7 @@ public class PrimitiveIntArray extends PrimitiveArray {
 		this.data = data;
 	}
 
-	public void increaseRowInternal() {
+	public void reallocateSize() {
 		data = Arrays.copyOf(data, paddedCol * paddedRow);
 	}
 
