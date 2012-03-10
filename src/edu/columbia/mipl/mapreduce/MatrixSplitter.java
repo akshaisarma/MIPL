@@ -26,7 +26,7 @@ public class MatrixSplitter {
 	static final int NUM_MATRIX_SPLIT = 8;
 	static final int MIN_MATRIX_SIZE = NUM_MATRIX_SPLIT * 8;
 
-	public static class MatrixSplitMapper extends MapReduceBase
+	public static class MatrixMapper extends MapReduceBase
 			implements Mapper<LongWritable, Text, LongWritable, WritableArray> {
 
 		private static final LongWritable newKey = new LongWritable();
@@ -64,7 +64,7 @@ public class MatrixSplitter {
 		}
 	}
 
-	public static class MatrixSplitReducer extends MapReduceBase
+	public static class MatrixReducer extends MapReduceBase
 			implements Reducer<LongWritable, WritableArray, WritableIndex, WritableArray> {
 
 		public void reduce(LongWritable key, Iterator<WritableArray> values,
@@ -113,14 +113,14 @@ public class MatrixSplitter {
 
 		conf.setJobName("MatrixSplitter");
 
-		conf.setOutputKeyClass(Text.class);
-		conf.setOutputValueClass(Text.class);
+		conf.setOutputKeyClass(WritableIndex.class);
+		conf.setOutputValueClass(WritableArray.class);
 
 		FileInputFormat.addInputPath(conf, new Path("input"));
 		FileOutputFormat.setOutputPath(conf, new Path("output"));
 
-		conf.setMapperClass(MatrixSplitMapper.class);
-		conf.setReducerClass(MatrixSplitReducer.class);
+		conf.setMapperClass(MatrixMapper.class);
+		conf.setReducerClass(MatrixReducer.class);
 
 		client.setConf(conf);
 
