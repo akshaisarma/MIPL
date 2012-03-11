@@ -46,6 +46,25 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return true;
 	}
 
+	public void printMatrix(final PrimitiveArray array) {
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) array;
+
+		double[] data = a1.getData();
+		int pos;
+		int offset = 0;
+
+		for (int i = 0; i < a1.getRow(); ++i) {
+			pos = offset;
+			for (int j = 0; j < a1.getCol(); ++j) {
+				System.out.print(data[pos] + " ");
+				pos++;
+			}
+			offset += a1.getPaddedRow();
+			System.out.println("|");
+		}
+		System.out.println("----------------------------");
+	}
+
 	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		if (!checkDimensionSame(arg1, arg2))
 			/* throw new UncompatiableMatrixDimensionException() */;
@@ -151,19 +170,22 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 		int i;
 		int j;
-		int pos = 0;
+		int offset = 0;
+		int pos;
 
 		for (i = 0; i < result.getRow(); i++) {
+			pos = offset;
 			for (j = 0; j < result.getCol(); j++) {
 				double res = 0;
 				for (int k = 0; k < arg1.getCol(); k++) {
 					double a1val = (Double) a1.getValue(i, k);
-					double a2val = (Double) a2.getValue(j, k);
+					double a2val = (Double) a2.getValue(k, j);
 					res += a1val * a2val;
 				}
 				data[pos] = res;
 				pos++;
 			}
+			offset += arg1.getPaddedRow();
 		}
 		return result;
 	}

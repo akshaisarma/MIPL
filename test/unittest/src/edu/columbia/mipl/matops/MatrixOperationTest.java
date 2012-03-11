@@ -60,7 +60,7 @@ public class MatrixOperationTest extends TestCase {
 	public void testMatrixMult_1x3_3x1_1x1() {
 		final PrimitiveDoubleArray mat1x3_1 = new PrimitiveDoubleArray(1, 3, data1x3_1);
 		final PrimitiveDoubleArray mat3x1_2 = new PrimitiveDoubleArray(3, 1, data3x1_2);
-		final PrimitiveDoubleArray mat1x1_3_mult_1_2 = new PrimitiveDoubleArray(3, 3, data1x1_mult_1_2);
+		final PrimitiveDoubleArray mat1x1_3_mult_1_2 = new PrimitiveDoubleArray(1, 1, data1x1_mult_1_2);
 
 		PrimitiveArray mat = matOpObj.mult((PrimitiveArray)mat1x3_1, 
 						   (PrimitiveArray)mat3x1_2);
