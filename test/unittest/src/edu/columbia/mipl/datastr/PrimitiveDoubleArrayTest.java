@@ -9,9 +9,9 @@ import edu.columbia.mipl.datastr.*;
 import edu.columbia.mipl.matops.*;
 
 public class PrimitiveDoubleArrayTest extends TestCase {
-	double data3x3_1[] = {1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0};
+	double data3x3_1[] = {1, 2, 3, 1, 2, 3,  1, 2, 3};
 	double data1x3_1[] = {1, 2, 3};
-	double data3x1_1[] = {1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0,};
+	double data3x1_1[] = {1, 2, 3};
 	double data1x1_1[] = {14};
 
 	public static void main(String args[]) {
@@ -21,19 +21,19 @@ public class PrimitiveDoubleArrayTest extends TestCase {
 	protected void setUp() {
 	}
 
-	public void testMatex_3x3() {
+	public void testMatrix_3x3() {
 		boolean result = true;
 		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, data3x3_1);
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				if (data3x3_1[i*4 + j] != (Double)mat3x3_1.getValue(i, j))
+				if (data3x3_1[i*3 + j] != (Double)mat3x3_1.getValue(i, j))
 					result = false;
 			}
 		}
 		assertTrue(result == true);
 	}
 
-	public void testMatex_1x3() {
+	public void testMatrix_1x3() {
 		boolean result = true;
 		final PrimitiveDoubleArray mat1x3_1 = new PrimitiveDoubleArray(1, 3, data1x3_1);
 		for (int i = 0; i < 3; i++) {
@@ -47,7 +47,7 @@ public class PrimitiveDoubleArrayTest extends TestCase {
 		boolean result = true;
 		final PrimitiveDoubleArray mat3x1_1 = new PrimitiveDoubleArray(3, 1, data3x1_1);
 		for (int i = 0; i < 3; i++) {
-			if (data3x1_1[i * 4] != (Double)mat3x1_1.getValue(i, 0))
+			if (data3x1_1[i] != (Double)mat3x1_1.getValue(i, 0))
 				result = false;
 		}
 		assertTrue(result == true);

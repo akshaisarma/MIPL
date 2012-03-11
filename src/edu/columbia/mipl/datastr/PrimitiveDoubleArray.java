@@ -22,13 +22,37 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 	}
 
 	public PrimitiveDoubleArray(int row, int col, double data[]) /* throws UnalignedMatrixSizeException */ {
+		this(row, col, data, false);
+	}
+
+	public PrimitiveDoubleArray(int row, int col, double data[], boolean padded) /* throws UnalignedMatrixSizeException */ {
 		this.row = row;
 		this.col = col;
+
 		paddedRow = getPaddedLength(row);
 		paddedCol = getPaddedLength(col);
 
+		if (!padded) {
+			if (data != null && data.length != row * col)
+				assert (false);
+		}
+		else if (data.length != paddedRow * paddedCol) {
+			assert (false);
+		}
+
 		if (data == null)
 			data = new double[paddedRow * paddedCol];
+		else if (!padded) {
+			int i;
+			int j;
+			double[] newData = new double[paddedRow * paddedCol];
+			for (i = 0; i < row; i++) {
+				for (j = 0; j < col; j++) {
+					newData[i * paddedCol + j] = data[i * col + j];
+				}
+			}
+			data = newData;
+		}
 
 		this.data = data;
 	}
