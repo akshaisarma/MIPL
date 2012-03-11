@@ -15,9 +15,11 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	boolean checkDimensionSame(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		return (arg1.getRow() == arg2.getRow() && arg1.getCol() == arg2.getCol());
 	}
+
 	boolean checkDimensionMutipliable(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		return (arg1.getCol() == arg2.getRow());
 	}
+
 	public boolean checkMatrixSame(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		boolean sameDimension = this.checkDimensionSame(arg1, arg2);
 		if (!sameDimension)
