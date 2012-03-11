@@ -45,4 +45,31 @@ public class PrimitiveIntArray extends PrimitiveArray {
 	public Object getValue(int row, int col) {
 		return (Object) (Integer) data[flattenIndex(row, col)];
 	}
+	public void copyRange(PrimitiveArray src, int srcRow, int srcCol, int dstRow, int dstCol, int nRows, int nCols) {
+		PrimitiveIntArray source = (PrimitiveIntArray) src;
+
+		assert (nRows + dstRow <= row);
+		assert (nCols + dstCol <= col);
+		assert (nRows + srcRow <= source.getRow());
+		assert (nCols + srcCol <= source.getCol());
+
+		int i;
+		int j;
+
+		int[] srcData = source.getData();
+		int srcPaddedCol = source.getPaddedCol();
+
+		if (paddedCol == srcPaddedCol && srcCol == 0 && dstRow == 0 &&
+				nCols == source.getCol() && nCols == col) {
+			System.arraycopy(srcData, srcRow * srcPaddedCol, data, dstRow * paddedCol, paddedCol * nRows);
+			return;
+				}
+
+		for (i = 0; i < nRows; i++) {
+			for (j = 0; j < nCols; j++) {
+				data[(dstRow + i) * paddedCol + dstCol + j] = srcData[(srcRow + i) * srcPaddedCol + srcCol + j];
+			}
+		}
+	}
+
 }

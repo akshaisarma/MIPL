@@ -73,10 +73,10 @@ public class Term {
 	}
 
 	Term(Type type, String name, PrimitiveArray data) {
-		this(type, name, new PrimitiveMatrix(data));
+		this(type, name, new PrimitiveMatrix<Double>(data));
 	}
 
-	Term(Type type, String name, PrimitiveMatrix matrix) {
+	Term(Type type, String name, PrimitiveMatrix<Double> matrix) {
 		assert (type == Type.MATRIX);
 
 		this.type = type;
@@ -99,6 +99,9 @@ public class Term {
 
 		this.type = type;
 		this.name = name;
+		if (arguments == null)
+			arguments = new ArrayList<Term>();
+
 		this.arguments = arguments;
 
 		for (Term t : arguments) {

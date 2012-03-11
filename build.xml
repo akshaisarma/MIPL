@@ -6,8 +6,9 @@
     <property name="tool" location="tools" />
     <property name="build" location="build" />
     <property name="test" location="test" />
-    <property name="test_result" location="test_result" />
     <property name="dist" location="dist" />
+
+    <target name="build" depends="unittest" description="Build Process including coding style check and unit test" />
 
     <target name="mipl" description="MIPL compiler">
 	    <mkdir dir="${build}" />
@@ -20,22 +21,43 @@
 		    </classpath>
 	    </javac>
 	    <antcall target="checkstyle"/>
+	    <mkdir dir="${dist}" />
+	    <jar jarfile="${dist}/mipl.${DSTAMP}.jar">
+		    <fileset dir="${build}/" />
+	    </jar>
     </target>
 
-    <target name="test_ds" depends="mipl" description="Data Structure Testing">
-        <mkdir dir="${test_result}" />
-        <mkdir dir="${dist}" />
-        <jar jarfile="${dist}/mipl_ds.${DSTAMP}.jar">
-            <fileset dir="${build}/edu/columbia/mipl/datastr/" />
-        </jar>
-        <javac srcdir="${test}/testing_ds" destdir="${test_result}"
-            classpath="${dist}/mipl_ds.${DSTAMP}.jar" />
+    <target name="utbuild" depends="mipl" description="JUnit Unit Test Build">
+	    <mkdir dir="${test}/unittest/build" />
+	    <javac srcdir="${test}/unittest/src" destdir="${test}/unittest/build" >
+		    <classpath>
+			    <pathelement path="${classpath}"/>
+			    <fileset dir="${lib}">
+				    <include name="**/*.jar"/>
+			    </fileset>
+			    <pathelement location="${build}"/>
+		    </classpath>
+	    </javac>
+    </target>
+
+    <target name="unittest" depends="utbuild" description="JUnit Unit Test">
+	    <java classname="edu.columbia.mipl.runtime.RuntimeTest">
+		    <!--arg value="-h"/-->
+		    <classpath>
+			    <pathelement path="${classpath}"/>
+			    <fileset dir="${lib}">
+				    <include name="**/*.jar"/>
+			    </fileset>
+			    <pathelement location="${build}"/>
+			    <pathelement location="${test}/unittest/build"/>
+		    </classpath>
+	    </java>
     </target>
 
     <target name="clean" description="Clean Project">
         <delete dir="${build}" />
         <delete dir="${dist}" />
-        <delete dir="${test_result}" />
+	<delete dir="${test}/unittest/build" />
     </target>
 
     <taskdef resource="checkstyletask.properties" classpath="${tool}/checkstyle-5.5-all.jar" />
@@ -47,5 +69,18 @@
         </checkstyle>
     </target>
 
+    <target name="strict" depends="clean" description="Strict Build with -Xlint Option">
+	    <mkdir dir="${build}" />
+	    <javac srcdir="${src}" destdir="${build}" >
+		    <compilerarg value="-Xlint"/>
+		    <classpath>
+			    <pathelement path="${classpath}"/>
+			    <fileset dir="${lib}">
+				    <include name="**/*.jar"/>
+			    </fileset>
+		    </classpath>
+	    </javac>
+	    <antcall target="checkstyle"/>
+    </target>
 
 </project>

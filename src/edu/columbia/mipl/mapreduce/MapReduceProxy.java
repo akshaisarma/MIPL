@@ -22,11 +22,11 @@ public class MapReduceProxy {
 		this.outputPath = outputPath;
 	}
 
-	private void job(Class jobClass, Class keyClass, Class valueClass, Class mapClass, Class reduceClass) {
+	private void job(Class jobClass, Class keyClass, Class valueClass, Class<? extends org.apache.hadoop.mapred.Mapper> mapClass, Class<? extends org.apache.hadoop.mapred.Reducer> reduceClass) {
 		job(jobClass, keyClass, valueClass, mapClass, reduceClass, false);
 	}
 
-	private void job(Class jobClass, Class keyClass, Class valueClass, Class mapClass, Class reduceClass, boolean output) {
+	private void job(Class jobClass, Class keyClass, Class valueClass, Class<? extends org.apache.hadoop.mapred.Mapper> mapClass, Class<? extends org.apache.hadoop.mapred.Reducer> reduceClass, boolean output) {
 		cntJob++;
 		JobClient client = new JobClient();
 		JobConf conf = new JobConf(jobClass);
