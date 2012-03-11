@@ -15,6 +15,27 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	boolean checkDimensionSame(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		return (arg1.getRow() == arg2.getRow() && arg1.getCol() == arg2.getCol());
 	}
+	boolean checkDimensionMutipliable(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+		return (arg1.getCol() == arg2.getRow());
+	}
+	public boolean checkMatrixSame(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+		boolean sameDimension = this.checkDimensionSame(arg1, arg2);
+		if (!sameDimension)
+			return sameDimension;
+
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
+
+		double[] data1 = a1.getData();
+		double[] data2 = a2.getData();
+
+		for (int i = 0; i < a1.getRow(); ++i)
+			for (int j = 0; j < a1.getCol(); ++j)
+				if (data1[i * a1.getRow() + j] != data2[i * a1.getRow() + j])
+					return false;
+
+		return true;
+	}
 
 	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		if (!checkDimensionSame(arg1, arg2))
@@ -29,16 +50,13 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 		int i;
 		int j;
-		int offset = 0;
-		int pos;
+		int pos = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
-			pos = offset;
 			for (j = 0; j < arg1.getCol(); j++) {
 				data[pos] = data1[pos] + data2[pos];
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
 		}
 
 		return result;
@@ -52,37 +70,111 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 		int i;
 		int j;
-		int offset = 0;
-		int pos;
+		int pos = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
-			pos = offset;
 			for (j = 0; j < arg1.getCol(); j++) {
 				data[pos] = data1[pos] + arg2;
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
 		}
 
 		return result;
 	}
 
 	public PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		return null;
+		if (!checkDimensionSame(arg1, arg2))
+			/* throw new UncompatiableMatrixDimensionException() */;
+
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
+		double[] data1 = a1.getData();
+		double[] data2 = a2.getData();
+		double[] data = result.getData();
+
+		int i;
+		int j;
+		int pos = 0;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			for (j = 0; j < arg1.getCol(); j++) {
+				data[pos] = data1[pos] - data2[pos];
+				pos++;
+			}
+		}
+		return result;
 	}
 
 	public PrimitiveArray sub(final PrimitiveArray arg1, double arg2) {
-		return null;
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
+		double[] data1 = a1.getData();
+		double[] data = result.getData();
+
+		int i;
+		int j;
+		int pos = 0;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			for (j = 0; j < arg1.getCol(); j++) {
+				data[pos] = data1[pos] - arg2;
+				pos++;
+			}
+		}
+		return result;
 	}
 
 	public PrimitiveArray cellmult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		return null;
 	}
 	public PrimitiveArray mult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		return null;
+		if (!checkDimensionMutipliable(arg1, arg2))
+			/* throw new UncompatiableMatrixDimensionException() */;
+
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg2.getCol());
+		double[] data = result.getData();
+
+		int i;
+		int j;
+		int pos = 0;
+
+		for (i = 0; i < result.getRow(); i++) {
+			for (j = 0; j < result.getCol(); j++) {
+				double res = 0;
+				for (int k = 0; k < arg1.getCol(); k++) {
+					double a1val = (Double) a1.getValue(i, k);
+					double a2val = (Double) a2.getValue(j, k);
+					res += a1val * a2val;
+				}
+				data[pos] = res;
+				pos++;
+			}
+		}
+		return result;
 	}
 	public PrimitiveArray mult(final PrimitiveArray arg1, final double arg2) {
-		return null;
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
+		double[] data1 = a1.getData();
+		double[] data = result.getData();
+
+		int i;
+		int j;
+		int offset = 0;
+		int pos;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
+			for (j = 0; j < arg1.getCol(); j++) {
+				data[pos] = data1[pos] * arg2;
+				pos++;
+			}
+			offset += arg1.getPaddedRow();
+		}
+		return result;
 	}
 
 	public PrimitiveArray celldiv(final PrimitiveArray arg1, final PrimitiveArray arg2) {
@@ -92,7 +184,28 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return null;
 	}
 	public PrimitiveArray div(final PrimitiveArray arg1, final double arg2) {
-		return null;
+		if (arg2 == 0)
+			/* throw new divideByZeroException() */;
+
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
+		double[] data1 = a1.getData();
+		double[] data = result.getData();
+
+		int i;
+		int j;
+		int offset = 0;
+		int pos;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
+			for (j = 0; j < arg1.getCol(); j++) {
+				data[pos] = data1[pos] / arg2;
+				pos++;
+			}
+			offset += arg1.getPaddedRow();
+		}
+		return result;
 	}
 
 	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
