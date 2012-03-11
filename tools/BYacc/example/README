@@ -1,0 +1,22 @@
+Simple example taken from JFlex examples.
+
+
+JFlex requires a private reference to the parser in order for BYacc/J to work.
+BYacc/J requires a int yylex() method, which is provided by JFlex.
+
+------------------------------------------------------------------
+Run jflex on calc.flex: Outputs Yylex.java
+
+jflex calc.flex
+------------------------------------------------------------------
+Run yacc.linux on calc.y: Outputs Parser.java ParserVal.java
+
+yacc.linux -J calc.y
+------------------------------------------------------------------
+Compile:
+
+javac Parser.java Yylex.java
+------------------------------------------------------------------
+Run:
+
+java Parser
