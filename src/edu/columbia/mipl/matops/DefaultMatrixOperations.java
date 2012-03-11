@@ -28,11 +28,18 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 		double[] data1 = a1.getData();
 		double[] data2 = a2.getData();
+		int pos;
+		int offset = 0;
 
-		for (int i = 0; i < a1.getRow(); ++i)
-			for (int j = 0; j < a1.getCol(); ++j)
-				if (data1[i * a1.getRow() + j] != data2[i * a1.getRow() + j])
+		for (int i = 0; i < a1.getRow(); ++i) {
+			pos = offset;
+			for (int j = 0; j < a1.getCol(); ++j) {
+				if (data1[pos] != data2[pos])
 					return false;
+				pos++;
+			}
+			offset += arg1.getPaddedRow();
+		}
 
 		return true;
 	}
@@ -50,13 +57,16 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 		int i;
 		int j;
-		int pos = 0;
+		int pos;
+		int offset = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
 			for (j = 0; j < arg1.getCol(); j++) {
 				data[pos] = data1[pos] + data2[pos];
 				pos++;
 			}
+			offset += arg1.getPaddedRow();
 		}
 
 		return result;
