@@ -10,6 +10,8 @@ import edu.columbia.mipl.datastr.*;
 
 public class MapReduceProxy {
 	/* refer to : http://gdfm.me/2011/06/10/iterative-algorithms-in-hadoop/ */
+	/* giving properties : http://grokbase.com/t/hadoop/mapreduce-user/119f7mv2ft/passing-a-global-variable-into-a-mapper */
+	/* properties can be used of scalar value delivery ex) 5 + Matrix  ex) reversedIndex for 2nd argurment of Multiplication */
 	String inputPath;
 	String outputPath;
 	String currentPath;
