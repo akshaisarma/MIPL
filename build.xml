@@ -40,9 +40,8 @@
 	    </javac>
     </target>
 
-    <target name="unittest" depends="utbuild" description="JUnit Unit Test">
-	    <java classname="edu.columbia.mipl.runtime.RuntimeTest">
-		    <!--arg value="-h"/-->
+    <target name="unittest" depends="utbuild" description="JUnit Unit Test For Single Module">
+	    <junit printsummary="true" failureproperty="junit.failure">
 		    <classpath>
 			    <pathelement path="${classpath}"/>
 			    <fileset dir="${lib}">
@@ -51,7 +50,17 @@
 			    <pathelement location="${build}"/>
 			    <pathelement location="${test}/unittest/build"/>
 		    </classpath>
-	    </java>
+		    <batchtest todir="${test}/unittest/build">
+			    <fileset dir="${test}/unittest/build"/>
+			    <formatter type="xml"/>
+		    </batchtest>
+	    </junit>
+	    <!--mkdir dir="test/unit_output"/>
+	    <junitreport todir="test">
+		    <fileset dir="test/unit_output"/>
+		    <report todir="test-reports"/>
+	    </junitreport-->
+	    <fail if="junit.failure" message="Unit test(s) failed.  See reports!"/>
     </target>
 
     <target name="clean" description="Clean Project">
