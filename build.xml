@@ -1,4 +1,4 @@
-<project name="MIPL" default="mipl" basedir=".">
+<project name="MIPL" default="unittest" basedir=".">
     <tstamp/>
     <property name="src" location="src" />
     <property name="docs" location="docs" />
