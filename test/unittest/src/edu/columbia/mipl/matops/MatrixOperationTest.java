@@ -9,14 +9,14 @@ import edu.columbia.mipl.datastr.*;
 import edu.columbia.mipl.matops.*;
 
 public class MatrixOperationTest extends TestCase {
-	double data3x3_1[] = {1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0};
-	double data3x3_2[] = {2, 4, 6, 0, 2, 4, 6, 0, 2, 4, 6, 0};
-	double data3x3_add_1_2[] = {3, 6, 9, 0, 3, 6, 9, 0, 3, 6, 9, 0};
-	double data3x3_mult_1_2[] = {12, 24, 36, 0, 12, 24, 36, 0, 12, 24, 36, 0};
+	double data3x3_1[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+	double data3x3_2[] = {2, 4, 6, 2, 4, 6, 2, 4, 6};
+	double data3x3_add_1_2[] = {3, 6, 9, 3, 6, 9, 3, 6, 9};
+	double data3x3_mult_1_2[] = {12, 24, 36, 12, 24, 36, 12, 24, 36};
 
-	double data1x3_1[] = {1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0};
-	double data3x1_2[] = {1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	double data1x1_mult_1_2[] = {14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	double data1x3_1[] = {1, 2, 3};
+	double data3x1_2[] = {1, 2, 3};
+	double data1x1_mult_1_2[] = {14};
 	protected DefaultMatrixOperations matOpObj;
 
 	public static void main(String args[]) {
