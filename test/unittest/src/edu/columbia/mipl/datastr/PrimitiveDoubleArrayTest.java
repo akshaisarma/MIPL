@@ -1,3 +1,12 @@
+/**
+ * MIPL: Mining Integrated Programming Language
+ *
+ * File: PrimitiveDoubleArrayTest.java
+ * Author: Jin Hyung Park (jp2105)
+ * Reviewer: Young Hoon Jung (yj2244)
+ * Description: PrimitiveDoubleArray Test Unit
+ *
+ */
 package edu.columbia.mipl.datastr;
 
 import java.util.*;
