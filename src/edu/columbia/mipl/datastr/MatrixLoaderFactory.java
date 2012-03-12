@@ -20,21 +20,43 @@ public final class MatrixLoaderFactory {
 
 	static {
 		instance = new MatrixLoaderFactory();
+
+		for (String name : getLoaderClassNames()) {
+			installLoader(name);
+		}
 	}
 
-	public static MatrixLoaderFactory getInstance() {
-		return instance;
+	static List<String> getLoaderClassNames() {
+		// TODO: should read from config files or directory
+		List<String> names = new ArrayList();
+		names.add("edu.columbia.mipl.datastr.CSVMatrixLoader");
+		names.add("edu.columbia.mipl.datastr.TableMatrixLoader");
+
+		return names;
+	}
+
+	static void installLoader(String name) {
+		Class<MatrixLoader> matrixLoaderClass;
+		MatrixLoader loader;
+		try {
+			matrixLoaderClass = (Class<MatrixLoader>) Class.forName(name);
+			//matrixLoaderClass = (Class<MatrixLoader>) ClassLoader.getSystemClassLoader().loadClass(name);
+			loader = matrixLoaderClass.newInstance();
+			installMatrixLoader(loader.getLoaderName(), loader);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private MatrixLoaderFactory() {
-		loaderMap = new HashMap();
+		loaderMap = new HashMap<String, MatrixLoader>();
 	}
 
-	void installMatrixLoader(String loader, MatrixLoader instance) {
-		loaderMap.put(loader.toLowerCase(), instance);
+	static void installMatrixLoader(String name, MatrixLoader loader) {
+		MatrixLoaderFactory.instance.loaderMap.put(name.toLowerCase(), loader);
 	}
 
-	MatrixLoader getMatrixLoader(String loader) {
-		return loaderMap.get(loader.toLowerCase());
+	static MatrixLoader getMatrixLoader(String name) {
+		return MatrixLoaderFactory.instance.loaderMap.get(name.toLowerCase());
 	}
 }

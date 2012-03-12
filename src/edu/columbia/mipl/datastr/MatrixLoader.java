@@ -19,10 +19,6 @@ public abstract class MatrixLoader {
 	 * @return PrimitiveMatrix loaded matrix
 	 */
 
-	MatrixLoader() {
-		MatrixLoaderFactory.getInstance().installMatrixLoader(getLoaderName(), this);
-	}
-
 	abstract PrimitiveMatrix loadMatrix(String file);
 	abstract void saveMatrix(String file, PrimitiveMatrix matrix);
 

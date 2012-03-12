@@ -39,7 +39,6 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		pmarray.setValue(0, 0, 3.244); // without this line, pda will be null
 		PrimitiveDoubleArray pda = (PrimitiveDoubleArray) pmarray.getData();
 		double[] arr = pda.getData();
-		System.out.println(arr[0]);
 	}
 
 	Map<String, T> sparseList;
