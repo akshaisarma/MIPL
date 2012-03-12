@@ -1,3 +1,6 @@
+%{
+import java.io.*;
+%}
 %token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
@@ -242,15 +245,47 @@ unary_operator
 	| '!'
 	;
 %%
-#include <stdio.h>
 
-extern char yytext[];
-extern int column;
+private Yylex lexer;
 
-yyerror(s)
-char *s;
-{
-	fflush(stdout);
-	printf("\n%*s\n%*s\n", column, "^", column, s);
+private int yylex () {
+	int yyl_return = -1;
+	try {
+		yylval = new ParserVal(0);
+		yyl_return = lexer.yylex();
+	}
+	catch (IOException e) {
+		System.err.println("IO error :"+e);
+	}
+	return yyl_return;
+}
+
+public void yyerror (String error) {
+	System.err.println ("Error: " + error);
+}
+
+public Parser(Reader r) {
+	lexer = new Yylex(r, this);
+}
+
+static boolean interactive;
+
+public static void parse() throws IOException {
+	parse(null);
+}
+
+public static void parse(String filename) throws IOException {
+	Parser yyparser;
+	if (filename == null) {
+		// parse a file
+		yyparser = new Parser(new FileReader(filename));
+	}
+	else {
+		// interactive mode
+		interactive = true;
+		yyparser = new Parser(new InputStreamReader(System.in));
+	}
+
+	yyparser.yyparse();
 }
 

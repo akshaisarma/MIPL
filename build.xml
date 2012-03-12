@@ -22,7 +22,7 @@
 	    </javac>
 	    <antcall target="checkstyle"/>
 	    <mkdir dir="${dist}" />
-	    <jar jarfile="${dist}/mipl.${DSTAMP}.jar">
+	    <jar jarfile="${dist}/mipl-1.0-${DSTAMP}.jar">
 		    <fileset dir="${build}/" />
 	    </jar>
     </target>
@@ -72,10 +72,10 @@
     <taskdef resource="checkstyletask.properties" classpath="${tool}/checkstyle-5.5-all.jar" />
 
     <target name="checkstyle" description="Generates a report of code convention violations.">
-        <checkstyle config="${docs}/sun_checks.xml">
-            <fileset dir="src" includes="**/*.java"/>
-            <formatter type="plain"/>
-        </checkstyle>
+	    <checkstyle config="${docs}/sun_checks.xml">
+		    <fileset dir="${src}" includes="**/*.java" excludes="edu/columbia/mipl/syntax/*.java" />
+		    <formatter type="plain"/>
+	    </checkstyle>
     </target>
 
     <target name="strict" depends="clean" description="Strict Build with -Xlint Option">
@@ -90,6 +90,30 @@
 		    </classpath>
 	    </javac>
 	    <antcall target="checkstyle"/>
+    </target>
+
+    <target name="parser" description="Generates Yylex.java and Parser.java using JFlex and BYacc/J from mipl.l and mipl.y">
+	    <java jar="${tool}/JFlex-Bare/JFlex.jar" fork="true" failonerror="true">
+		    <arg value="${src}/grammar/mipl.l" />
+		    <arg value="-d" />
+		    <arg value="${src}/edu/columbia/mipl/syntax" />
+		    <arg value="--nobak" />
+	    </java>
+	    <exec executable="${tool}/BYacc/yacc.linux">
+		    <arg value="-d" />
+		    <arg value="-J" />
+		    <arg value="-Jfinal" />
+		    <arg value="-Jpackage=edu.columbia.mipl.syntax" />
+		    <arg value="${src}/grammar/mipl.y" />
+	    </exec>
+	    <move todir="${src}/edu/columbia/mipl/syntax">
+		    <filelist dir=".">
+			    <file name="Parser.java"/>
+			    <file name="ParserVal.java"/>
+			    <file name="ParserTokens.java"/>
+		    </filelist>
+	    </move>
+
     </target>
 
 </project>
