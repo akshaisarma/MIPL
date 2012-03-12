@@ -10,7 +10,7 @@
 
     <target name="build" depends="unittest" description="Build Process including coding style check and unit test" />
 
-    <target name="mipl" description="MIPL compiler">
+    <target name="mipl" depends="parser" description="MIPL compiler">
 	    <mkdir dir="${build}" />
 	    <javac srcdir="${src}" destdir="${build}" >
 		    <classpath>
@@ -67,7 +67,15 @@
         <delete dir="${build}" />
         <delete dir="${dist}" />
 	<delete dir="${test}/unittest/build" />
-    </target>
+	<delete includes="${src}/edu/columbia/mipl/syntax/*.java">
+		<fileset dir="${src}/edu/columbia/mipl/syntax" includes="*.java" />
+	</delete>
+	<exec executable="make">
+		<arg value="-C" />
+		<arg value="${tool}/byaccj1.15/src" />
+		<arg value="clean" />
+	</exec>
+</target>
 
     <taskdef resource="checkstyletask.properties" classpath="${tool}/checkstyle-5.5-all.jar" />
 
@@ -93,13 +101,17 @@
     </target>
 
     <target name="parser" description="Generates Yylex.java and Parser.java using JFlex and BYacc/J from mipl.l and mipl.y">
-	    <java jar="${tool}/JFlex-Bare/JFlex.jar" fork="true" failonerror="true">
+	    <java jar="${tool}/JFlex.jar" fork="true" failonerror="true">
 		    <arg value="${src}/grammar/mipl.l" />
 		    <arg value="-d" />
 		    <arg value="${src}/edu/columbia/mipl/syntax" />
 		    <arg value="--nobak" />
 	    </java>
-	    <exec executable="${tool}/BYacc/yacc.linux">
+	    <exec executable="make">
+		    <arg value="-C" />
+		    <arg value="${tool}/byaccj1.15/src" />
+	    </exec>
+	    <exec executable="${tool}/byaccj1.15/src/yacc">
 		    <arg value="-d" />
 		    <arg value="-J" />
 		    <arg value="-Jfinal" />
