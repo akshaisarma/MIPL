@@ -1,9 +1,9 @@
-/**
+/*
  * MIPL: Mining Integrated Programming Language
  *
  * File: DefaultMatrixOperations.java
- * Author: 
- * Reviewer: 
+ * Author: Jin Hyung Park <jp2105@columbia.edu>
+ * Reviewer: Young Hoon Jung <yj2244@columbia.edu>
  * Description: Matrix Operations Default Implementations
  *
  */
@@ -126,13 +126,16 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 		int i;
 		int j;
-		int pos = 0;
+		int pos;
+		int offset = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
 			for (j = 0; j < arg1.getCol(); j++) {
 				data[pos] = data1[pos] - data2[pos];
 				pos++;
 			}
+			offset += arg1.getPaddedRow();
 		}
 		return result;
 	}
@@ -145,13 +148,16 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 		int i;
 		int j;
-		int pos = 0;
+		int pos;
+		int offset = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
 			for (j = 0; j < arg1.getCol(); j++) {
 				data[pos] = data1[pos] - arg2;
 				pos++;
 			}
+			offset += arg1.getPaddedRow();
 		}
 		return result;
 	}
@@ -243,6 +249,13 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+		if (!checkDimensionSame(arg1, arg2))
+			/* throw new UncompatiableMatrixDimensionException() */;
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
+		for (int i = 0; i < arg1.getRow(); ++i)
+			for (int j = 0; j < arg1.getCol(); ++j)
+				a1.setValue(i, j, a2.getValue(i, j));
 	}
 	public void addassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 	}
@@ -267,10 +280,49 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray transpose(final PrimitiveArray arg1) {
-		return null;
+		int pos, offset = 0;
+		int row = arg1.getRow();
+		int col = arg1.getCol();
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		double data[] = a1.getData();
+		double dataT[] = new double[data.length];
+		PrimitiveDoubleArray matT = new PrimitiveDoubleArray(col, row, dataT);
+		for (int i = 0; i < row; ++i) {
+			pos = offset;
+			for (int j = 0; j < col; ++j) {
+				matT.setValue(j, i, (Double) data[pos]);
+				pos++;
+			}
+			offset += arg1.getPaddedRow();
+		}
+		return matT;
 	}
 	public PrimitiveArray inverse(final PrimitiveArray arg1) {
-		return null;
+		int row = arg1.getRow();
+		int col = arg1.getCol();
+		int n = row;
+		if (row != col)
+			/* throw new UncompatiableMatrixDimensionException() */;
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		double data[] = a1.getData();
+		double dataI[] = new double[data.length];
+		PrimitiveDoubleArray matI = new PrimitiveDoubleArray(row, col, dataI);
+
+		this.assign((PrimitiveArray) matI, arg1);
+
+		for (int k = 0; k < n - 1; ++k) {
+			for (int j = k + 1; j < n; ++j) {
+				double tmp = (Double) matI.getValue(k, j) / (Double) matI.getValue(k, k);
+				matI.setValue(k, j, (Double) tmp);
+				for (int i = k + 1; i < n; ++i) {
+					double tmp2 = (Double) matI.getValue(i, j) - 
+					(Double) matI.getValue(i, k) * (Double) matI.getValue(k, j);
+					matI.setValue(i, j, (Double) tmp2);
+				}
+			}
+		}
+
+		return matI;
 	}
 
 	public double sum(final PrimitiveArray arg1) {
