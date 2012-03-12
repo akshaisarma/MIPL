@@ -97,6 +97,9 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 	}
 
 	public boolean equalsDimensionally(final PrimitiveArray arg) {
+		if (!(arg instanceof PrimitiveDoubleArray))
+			return false;
+
 		return (row == arg.getRow() && col == arg.getCol());
 	}
 
@@ -138,5 +141,4 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 		}
 		System.out.println("----------------------------");
 	}
-
 }

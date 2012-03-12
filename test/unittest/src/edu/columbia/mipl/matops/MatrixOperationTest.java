@@ -40,9 +40,8 @@ public class MatrixOperationTest extends TestCase {
 
 	public void testMatrixSame() {
 		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, data3x3_1);
-		boolean result = matOpObj.checkMatrixSame((PrimitiveArray)mat3x3_1, 
-							  (PrimitiveArray)mat3x3_1);
-		assertTrue(result == true);
+
+		assertTrue(mat3x3_1.equalsSemantically(mat3x3_1));
 	}
 
 	public void testMatrixAdd() {
@@ -51,9 +50,8 @@ public class MatrixOperationTest extends TestCase {
 		final PrimitiveDoubleArray mat3x3_3_add_1_2 = new PrimitiveDoubleArray(3, 3, data3x3_add_1_2);
 		PrimitiveArray mat = matOpObj.add((PrimitiveArray)mat3x3_1, 
 						  (PrimitiveArray)mat3x3_2);
-		boolean result = matOpObj.checkMatrixSame((PrimitiveArray)mat, 
-							  (PrimitiveArray)mat3x3_3_add_1_2);
-		assertTrue(result == true);
+
+		assertTrue(mat.equalsSemantically(mat3x3_3_add_1_2));
 	}
 
 	public void testMatrixSub() {
@@ -62,9 +60,8 @@ public class MatrixOperationTest extends TestCase {
 		final PrimitiveDoubleArray mat3x3_3_sub_1_2 = new PrimitiveDoubleArray(3, 3, data3x3_sub_1_2);
 		PrimitiveArray mat = matOpObj.sub((PrimitiveArray)mat3x3_1, 
 						  (PrimitiveArray)mat3x3_2);
-		boolean result = matOpObj.checkMatrixSame((PrimitiveArray)mat, 
-							  (PrimitiveArray)mat3x3_3_sub_1_2);
-		assertTrue(result == true);
+
+		assertTrue(mat.equalsSemantically(mat3x3_3_sub_1_2));
 	}
 
 	public void testMatrixMult_3x3() {
@@ -74,9 +71,8 @@ public class MatrixOperationTest extends TestCase {
 
 		PrimitiveArray mat = matOpObj.mult((PrimitiveArray)mat3x3_1, 
 						   (PrimitiveArray)mat3x3_2);
-		boolean result = matOpObj.checkMatrixSame((PrimitiveArray)mat, 
-							  (PrimitiveArray)mat3x3_3_mult_1_2);
-		assertTrue(result == true);
+
+		assertTrue(mat.equalsSemantically(mat3x3_3_mult_1_2));
 	}
 
 	public void testMatrixMult_1x3_3x1_1x1() {
@@ -86,9 +82,8 @@ public class MatrixOperationTest extends TestCase {
 
 		PrimitiveArray mat = matOpObj.mult((PrimitiveArray)mat1x3_1, 
 						   (PrimitiveArray)mat3x1_2);
-		boolean result = matOpObj.checkMatrixSame((PrimitiveArray)mat, 
-							  (PrimitiveArray)mat1x1_3_mult_1_2);
-		assertTrue(result == true);
+
+		assertTrue(mat.equalsSemantically(mat1x1_3_mult_1_2));
 	}
 
 	public void testMatrixMult_3x3_by_scalar() {
@@ -96,9 +91,8 @@ public class MatrixOperationTest extends TestCase {
 		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, data3x3_1);
 		final PrimitiveDoubleArray mat3x3_2 = new PrimitiveDoubleArray(3, 3, data3x3_2);
 		PrimitiveArray mat = matOpObj.mult((PrimitiveArray)mat3x3_1, scalar);
-		boolean result = matOpObj.checkMatrixSame((PrimitiveArray)mat, 
-							  (PrimitiveArray)mat3x3_2);
-		assertTrue(result == true);
+
+		assertTrue(mat.equalsSemantically(mat3x3_2));
 	}
 
 	public void testMatrix_Assign() {
@@ -107,18 +101,16 @@ public class MatrixOperationTest extends TestCase {
 		final PrimitiveDoubleArray mat3x3_2 = new PrimitiveDoubleArray(3, 3, data3x3_1);
 
 		matOpObj.assign((PrimitiveArray)mat3x3_1, (PrimitiveArray)mat3x3_2);
-		boolean result = matOpObj.checkMatrixSame((PrimitiveArray)mat3x3_1, 
-							  (PrimitiveArray)mat3x3_2);
-		assertTrue(result == true);
+
+		assertTrue(mat3x3_1.equalsSemantically(mat3x3_2));
 	}
 
 	public void testMatrix_Transpose() {
 		final PrimitiveDoubleArray mat1x3_1 = new PrimitiveDoubleArray(1, 3, data1x3_1);
 		final PrimitiveDoubleArray mat3x1_1 = new PrimitiveDoubleArray(3, 1, data3x1_2);
 		PrimitiveArray mat = matOpObj.transpose((PrimitiveArray)mat1x3_1);
-		boolean result = matOpObj.checkMatrixSame(mat, (PrimitiveArray)mat3x1_1);
 
-		assertTrue(result == true);
+		assertTrue(mat.equalsSemantically(mat3x1_1));
 	}
 	public void testMatrix_Inverse() {
 		final PrimitiveDoubleArray mat3x3_3 = new PrimitiveDoubleArray(3, 3, data3x3_3);

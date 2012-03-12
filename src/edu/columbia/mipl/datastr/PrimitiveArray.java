@@ -89,4 +89,8 @@ public abstract class PrimitiveArray {
 
 	abstract void setValue(int row, int col, Object value);
 	abstract Object getValue(int row, int col);
+
+	public abstract boolean equalsSemantically(final PrimitiveArray arg);
+	public abstract boolean equalsDimensionally(final PrimitiveArray arg);
+	public abstract void printMatrix();
 }

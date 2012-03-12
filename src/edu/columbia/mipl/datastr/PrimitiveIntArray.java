@@ -72,4 +72,49 @@ public class PrimitiveIntArray extends PrimitiveArray {
 		}
 	}
 
+	public boolean equalsDimensionally(final PrimitiveArray arg) {
+		if (arg instanceof PrimitiveIntArray)
+			return false;
+
+		return (row == arg.getRow() && col == arg.getCol());
+	}
+
+	public boolean equalsSemantically(final PrimitiveArray arg) {
+		if (!equalsDimensionally(arg))
+			return false;
+
+		PrimitiveIntArray a = (PrimitiveIntArray) arg;
+
+		int[] data1 = a.getData();
+		int pos;
+		int offset = 0;
+
+		for (int i = 0; i < row; ++i) {
+			pos = offset;
+			for (int j = 0; j < col; ++j) {
+				if (data[pos] != data1[pos])
+					return false;
+				pos++;
+			}
+			offset += paddedRow;
+		}
+
+		return true;
+	}
+
+	public void printMatrix() {
+		int pos;
+		int offset = 0;
+
+		for (int i = 0; i < row; ++i) {
+			pos = offset;
+			for (int j = 0; j < col; ++j) {
+				System.out.print(data[pos] + " ");
+				pos++;
+			}
+			offset += paddedRow;
+			System.out.println("|");
+		}
+		System.out.println("----------------------------");
+	}
 }

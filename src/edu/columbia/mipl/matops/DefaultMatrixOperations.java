@@ -12,61 +12,12 @@ package edu.columbia.mipl.matops;
 import edu.columbia.mipl.datastr.*;
 
 public class DefaultMatrixOperations implements MatrixOperations {
-	boolean checkDimensionSame(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		return (arg1.getRow() == arg2.getRow() && arg1.getCol() == arg2.getCol());
-	}
-
 	boolean checkDimensionMutipliable(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		return (arg1.getCol() == arg2.getRow());
 	}
 
-	public boolean checkMatrixSame(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		boolean sameDimension = this.checkDimensionSame(arg1, arg2);
-		if (!sameDimension)
-			return sameDimension;
-
-		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
-		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
-
-		double[] data1 = a1.getData();
-		double[] data2 = a2.getData();
-		int pos;
-		int offset = 0;
-
-		for (int i = 0; i < a1.getRow(); ++i) {
-			pos = offset;
-			for (int j = 0; j < a1.getCol(); ++j) {
-				if (data1[pos] != data2[pos])
-					return false;
-				pos++;
-			}
-			offset += arg1.getPaddedRow();
-		}
-
-		return true;
-	}
-
-	public void printMatrix(final PrimitiveArray array) {
-		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) array;
-
-		double[] data = a1.getData();
-		int pos;
-		int offset = 0;
-
-		for (int i = 0; i < a1.getRow(); ++i) {
-			pos = offset;
-			for (int j = 0; j < a1.getCol(); ++j) {
-				System.out.print(data[pos] + " ");
-				pos++;
-			}
-			offset += a1.getPaddedRow();
-			System.out.println("|");
-		}
-		System.out.println("----------------------------");
-	}
-
 	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!checkDimensionSame(arg1, arg2))
+		if (!arg1.equalsDimensionally(arg2))
 			/* throw new UncompatiableMatrixDimensionException() */;
 
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
@@ -114,7 +65,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!checkDimensionSame(arg1, arg2))
+		if (!arg1.equalsDimensionally(arg2))
 			/* throw new UncompatiableMatrixDimensionException() */;
 
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
@@ -249,7 +200,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!checkDimensionSame(arg1, arg2))
+		if (!arg1.equalsDimensionally(arg2))
 			/* throw new UncompatiableMatrixDimensionException() */;
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;

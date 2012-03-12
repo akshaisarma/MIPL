@@ -29,6 +29,9 @@ public class MatrixLoadTest extends TestCase {
 
 		final PrimitiveDoubleArray mat3x3_2 = (PrimitiveDoubleArray) array;
 
+		mat3x3_1.printMatrix();
+		mat3x3_2.printMatrix();
+
 		assertTrue(mat3x3_1.equalsSemantically(mat3x3_2));
 	}
 
