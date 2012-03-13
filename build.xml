@@ -12,7 +12,7 @@
 
     <target name="mipl" depends="parser" description="MIPL compiler">
 	    <mkdir dir="${build}" />
-	    <javac srcdir="${src}" destdir="${build}" >
+	    <javac srcdir="${src}" destdir="${build}" debug="on" debuglevel="lines,vars,source">
 		    <classpath>
 			    <pathelement path="${classpath}"/>
 			    <fileset dir="${lib}">
@@ -29,7 +29,7 @@
 
     <target name="utbuild" depends="mipl" description="JUnit Unit Test Build">
 	    <mkdir dir="${test}/unittest/build" />
-	    <javac srcdir="${test}/unittest/src" destdir="${test}/unittest/build" >
+	    <javac srcdir="${test}/unittest/src" destdir="${test}/unittest/build" debug="on" debuglevel="lines,vars,source">
 		    <classpath>
 			    <pathelement path="${classpath}"/>
 			    <fileset dir="${lib}">
@@ -88,7 +88,7 @@
 
     <target name="strict" depends="clean" description="Strict Build with -Xlint Option">
 	    <mkdir dir="${build}" />
-	    <javac srcdir="${src}" destdir="${build}" >
+	    <javac srcdir="${src}" destdir="${build}" debug="on" debuglevel="lines,vars,source">
 		    <compilerarg value="-Xlint"/>
 		    <classpath>
 			    <pathelement path="${classpath}"/>
@@ -111,10 +111,11 @@
 		    <arg value="-C" />
 		    <arg value="${tool}/byaccj1.15/src" />
 	    </exec>
-	    <exec executable="${tool}/byaccj1.15/src/yacc">
+	    <exec executable="${tool}/byaccj1.15/src/yacc" failonerror="true">
 		    <arg value="-d" />
 		    <arg value="-J" />
 		    <arg value="-Jfinal" />
+		    <arg value="-Jsemantic=java.lang.Object" />
 		    <arg value="-Jpackage=edu.columbia.mipl.syntax" />
 		    <arg value="${src}/grammar/mipl.y" />
 	    </exec>

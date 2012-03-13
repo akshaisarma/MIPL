@@ -11,7 +11,11 @@
  */
 
 import java.io.*;
+import java.util.*;
+
+import edu.columbia.mipl.runtime.*;
 %}
+
 %token IDENTIFIER STRING_LITERAL 
 %token LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN SUB_ASSIGN
@@ -19,7 +23,7 @@ import java.io.*;
 %token IF ELSE DO WHILE
 
 %token REGEX VARIABLE NOT LARROW_OP IS
-%token <dval> NUMBER
+%token NUMBER
 
 %token NULL
 
@@ -62,66 +66,65 @@ rule
 	;
 
 or_terms
-	: and_terms
-	| or_terms ';' and_terms
+	: and_terms			/* Default Action $$ = $1 */
+	| or_terms ';' and_terms	{ $$ = new Term(Term.Type.ORTERMS, (Term) $1, (Term) $3); }
 	;
 
 and_terms
-	: term
-	| and_terms ',' term
+	: term				/* Default Action $$ = $1 */
+	| and_terms ',' term		{ $$ = new Term(Term.Type.ANDTERMS, (Term) $1, (Term) $3); }
 	;
 
 term /*% load into edu.columbia.mipl.runtime.Term */
-	: NUMBER
-	| IDENTIFIER
-	| IDENTIFIER '(' arg_list ')'
-	| IDENTIFIER '(' '*' ')'
-	| VARIABLE
-        | REGEX
-        | REGEX '(' arg_list ')'
-        | REGEX '(' '*' ')'
-        | NOT term
-        | VARIABLE IS term_expr
-        | term_expr '<' term_expr
-        | term_expr '>' term_expr
-        | term_expr LE_OP term_expr
-        | term_expr GE_OP term_expr
-        | term_expr '=' term_expr
-        | term_expr NE_OP term_expr
+	: NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
+	| IDENTIFIER			{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
+	| IDENTIFIER '(' arg_list ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
+	| IDENTIFIER '(' '*' ')'	{ $$ = new Term(Term.Type.QUERYALL, (String) $1); }
+	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same line */
+        | REGEX				{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, new ArrayList<Term>()); }
+        | REGEX '(' arg_list ')'	{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, (List<Term>) $3); }
+        | REGEX '(' '*' ')'		{ $$ = new Term(Term.Type.REGEXQUERYALL, (String) $1); }
+        | NOT term			{ $$ = new Term(Term.Type.NOTTERM, (Term) $2); }
+        | VARIABLE IS term_expr		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), (Expression) $3); } /* TODO: Should check VariableMatcher for the same line */
+        | VARIABLE IS term		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), (Term) $3); } /* TODO: Should check VariableMatcher for the same line */
+        | term_expr '<' term_expr	{ $$ = new Term(Term.Type.LT, (Expression) $1, (Expression) $3); }
+        | term_expr '>' term_expr	{ $$ = new Term(Term.Type.GT, (Expression) $1, (Expression) $3); }
+        | term_expr LE_OP term_expr	{ $$ = new Term(Term.Type.LE, (Expression) $1, (Expression) $3); }
+        | term_expr GE_OP term_expr	{ $$ = new Term(Term.Type.GE, (Expression) $1, (Expression) $3); }
+        | term_expr EQ_OP term_expr	{ $$ = new Term(Term.Type.EQ, (Expression) $1, (Expression) $3); }
+        | term_expr NE_OP term_expr	{ $$ = new Term(Term.Type.NE, (Expression) $1, (Expression) $3); }
         ;
 
 term_expr /*% load into edu.columbia.mipl.runtime.Expression */
-	: term_expr '+' term_fact
-	| term_expr '-' term_fact
-	| term_fact
+	: term_expr '+' term_fact	{ $$ = new Expression(Expression.Type.PLUS, (Expression) $1, (Expression) $3); }
+	| term_expr '-' term_fact	{ $$ = new Expression(Expression.Type.MINUS, (Expression) $1, (Expression) $3); }
+	| term_fact			/* Default Action $$ = $1 */
 	;
 
 term_fact
-	: term_fact '*' term_term
-	| term_fact '/' term_term
-	| term_term
+	: term_fact '*' term_term	{ $$ = new Expression(Expression.Type.MULTI, (Expression) $1, (Expression) $3); }
+	| term_fact '/' term_term	{ $$ = new Expression(Expression.Type.DIVIDE, (Expression) $1, (Expression) $3); }
+	| term_term			/* Default Action $$ = $1 */
 	;
 
 term_term
-	: VARIABLE
-	| NUMBER
-	| IDENTIFIER
-	| REGEX
-	| '(' term_expr ')'
+	: VARIABLE			{ $$ = new Expression(Expression.Type.VARIABLE, new Term(Term.Type.VARIABLE, (String) $1)); } /* TODO: Should check VariableMatcher for the same line */
+	| NUMBER			{ $$ = new Expression(Expression.Type.DOUBLE, (Double) $1); }
+	| '(' term_expr ')'		{ $$ = $2; }
 	;
 
 arg_cand
-	: IDENTIFIER
-	| IDENTIFIER '(' arg_list ')'
-	| VARIABLE
-	| '_'
-	| NUMBER
-        | STRING_LITERAL
+	: IDENTIFIER			{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
+	| IDENTIFIER '(' arg_list ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
+	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same line */
+	| '_'				{ $$ = new Term(Term.Type.VARIABLE, "_"); }
+	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
+        | STRING_LITERAL		{ $$ = new Term(Term.Type.STRING, (String) $1); }
 	;
 
 arg_list
-	: arg_cand
-	| arg_list ',' arg_cand
+	: arg_cand			{ if (!($$ instanceof List)) $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $1); }
+	| arg_list ',' arg_cand		{ if (!($$ instanceof List)) $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $3); }
 	;
 
 job
@@ -275,7 +278,7 @@ private boolean parseSuccess = true;
 private int yylex () {
 	int yyl_return = -1;
 	try {
-		yylval = new ParserVal(0);
+		yylval = new Term(Term.Type.NUMBER, 0.0);
 		yyl_return = lexer.yylex();
 	}
 	catch (IOException e) {

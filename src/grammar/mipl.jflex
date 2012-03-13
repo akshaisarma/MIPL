@@ -11,6 +11,8 @@
 
 package edu.columbia.mipl.syntax;
 
+import edu.columbia.mipl.runtime.*;
+
 %%
 
 %public
@@ -37,6 +39,10 @@ package edu.columbia.mipl.syntax;
 
 	public int getColumn() {
 		return yycolumn + 1;
+	}
+
+	private String getTrimmedString(String input) {
+		return input.substring(1, input.length() - 1);
 	}
 %}
 
@@ -95,7 +101,7 @@ LARROW_OP = <- |
 "not" { return ParserTokens.NOT; }
 "is" { return ParserTokens.IS; }
 
-{STRING_LITERAL} { return ParserTokens.STRING_LITERAL; }
+{STRING_LITERAL} { yyparser.yylval = getTrimmedString(yytext()); return ParserTokens.STRING_LITERAL; }
 
 \#.*\n { /* Ignore Comments */ }
 
@@ -118,13 +124,12 @@ LARROW_OP = <- |
 {ADD_ASSIGN} { return ParserTokens.ADD_ASSIGN; }
 {SUB_ASSIGN} { return ParserTokens.SUB_ASSIGN; }
 
-{REGEX} { return ParserTokens.REGEX; }
+{REGEX} { yyparser.yylval = getTrimmedString(yytext()); return ParserTokens.REGEX; }
 
-{VARIABLE} { return ParserTokens.VARIABLE; }
+{VARIABLE} { yyparser.yylval = yytext(); return ParserTokens.VARIABLE; }
 
-{NUMBER}  { yyparser.yylval = new ParserVal(Double.parseDouble(yytext()));
-	return ParserTokens.NUMBER; }
+{NUMBER}  { yyparser.yylval = Double.parseDouble(yytext()); return ParserTokens.NUMBER; }
 
-{IDENTIFIER} { return ParserTokens.IDENTIFIER; }
+{IDENTIFIER} { yyparser.yylval = yytext(); return ParserTokens.IDENTIFIER; }
 
 . { throw new java.io.IOException("Illegal character <" + yytext() + ">"); } 

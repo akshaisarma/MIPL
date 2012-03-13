@@ -23,12 +23,16 @@ public class Term {
 		GE,
 		NE,
 		MATRIX,
+		REGEXTERM,
 		TERM,
 		ANDTERMS,
 		ORTERMS,
 		NOTTERM,
 		NUMBER,
 		VARIABLE,
+		QUERYALL,
+		REGEXQUERYALL,
+		STRING,
 	};
 	Type type;
 	boolean hasVariables = false;
@@ -42,7 +46,7 @@ public class Term {
 	Term term1;
 	Term term2;
 
-	Term(Type type, Expression expr1, Expression expr2) {
+	public Term(Type type, Expression expr1, Expression expr2) {
 		assert (type == Type.EQ || type == Type.LT ||
 			type == Type.LE || type == Type.GT ||
 			type == Type.GE || type == Type.NE);
@@ -53,7 +57,7 @@ public class Term {
 	}
 
 	/* X is Y - 1 */
-	Term(Type type, Term variable, Expression expr) {
+	public Term(Type type, Term variable, Expression expr) {
 		assert (type == Type.IS);
 
 		this.type = type;
@@ -61,22 +65,22 @@ public class Term {
 		expr1 = expr;
 	}
 
-	Term(Type type, double value) {
+	public Term(Type type, double value) {
 		assert (type == Type.NUMBER);
 
 		this.type = type;
 		this.value = value;
 	}
 
-	Term(Type type, int value) {
+	public Term(Type type, int value) {
 		this(type, (double) value);
 	}
 
-	Term(Type type, String name, PrimitiveArray data) {
+	public Term(Type type, String name, PrimitiveArray data) {
 		this(type, name, new PrimitiveMatrix<Double>(data));
 	}
 
-	Term(Type type, String name, PrimitiveMatrix<Double> matrix) {
+	public Term(Type type, String name, PrimitiveMatrix<Double> matrix) {
 		assert (type == Type.MATRIX);
 
 		this.type = type;
@@ -84,7 +88,7 @@ public class Term {
 		this.matrix = matrix;
 	}
 
-	Term(Type type, Term term1, Term term2) {
+	public Term(Type type, Term term1, Term term2) {
 		assert (type == Type.ANDTERMS || type == Type.ORTERMS);
 
 		this.type = type;
@@ -94,8 +98,15 @@ public class Term {
 		hasVariables = (term1.containVariables() || term2.containVariables());
 	}
 
-	Term(Type type, String name, List<Term> arguments) {
-		assert (type == Type.TERM || type == Type.NOTTERM);
+	public Term(Type type, Term term) {
+		assert (type == Type.NOTTERM);
+
+		this.type = type;
+		this.term1 = term;
+	}
+
+	public Term(Type type, String name, List<Term> arguments) {
+		assert (type == Type.TERM || type == Type.REGEXTERM);
 
 		this.type = type;
 		this.name = name;
@@ -112,46 +123,48 @@ public class Term {
 		}
 	}
 
-	Term(Type type, String name) {
-		assert (type == Type.VARIABLE);
+	public Term(Type type, String name) {
+		assert (type == Type.QUERYALL || type == Type.REGEXQUERYALL ||
+			type == Type.VARIABLE || type == Type.STRING);
 
 		this.type = type;
 		this.name = name;
 
-		hasVariables = true;
+		if (type == Type.VARIABLE)
+			hasVariables = true;
 	}
 
-	Type getType() {
+	public Type getType() {
 		return type;
 	}
 
-	double getValue() {
+	public double getValue() {
 		assert (type == Type.NUMBER);
 
 		return value;
 	}
 
-	boolean containVariables() {
+	public boolean containVariables() {
 		return hasVariables;
 	}
 
-	String getName() {
+	public String getName() {
 		return name;
 	}
 
-	List<Term> getArguments() {
+	public List<Term> getArguments() {
 		return arguments;
 	}
 
-	PrimitiveMatrix<Double> getMatrix() {
+	public PrimitiveMatrix<Double> getMatrix() {
 		return matrix;
 	}
 
-	Term getTerm1() {
+	public Term getTerm1() {
 		return term1;
 	}
 
-	Term getTerm2() {
+	public Term getTerm2() {
 		return term2;
 	}
 
