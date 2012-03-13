@@ -146,6 +146,12 @@ public class Term {
 		return type;
 	}
 
+	public void setValue(double value) {
+		assert (type == Type.NUMBER);
+
+		this.value = value;
+	}
+
 	public double getValue() {
 		assert (type == Type.NUMBER);
 

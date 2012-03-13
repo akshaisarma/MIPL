@@ -12,9 +12,7 @@ import java.util.*;
 
 public class Expression {
 	public enum Type {
-		VARIABLE,
-		INTEGER,
-		DOUBLE,
+		TERM,
 		MINUS,
 		PLUS,
 		MULTI,
@@ -29,8 +27,8 @@ public class Expression {
 	Expression right;
 
 	public Expression(Type type, Term term) {
-		assert ((type == Type.VARIABLE && term.getType() == Term.Type.VARIABLE) ||
-			(type == Type.DOUBLE && term.getType() == Term.Type.NUMBER));
+		assert (type == Type.TERM && 
+			(term.getType() == Term.Type.VARIABLE || term.getType() == Term.Type.NUMBER));
 
 		this.type = type;
 		this.term = term;
@@ -41,9 +39,9 @@ public class Expression {
 	}
 
 	public Expression(Type type, double value) {
-		assert (type == Type.INTEGER || type == Type.DOUBLE);
+		assert (type == Type.TERM && term.getType() == Term.Type.NUMBER);
 		
-		this.value = value;
+		term.setValue(value);
 	}
 
 	public Expression(Type type, Expression expr1, Expression expr2) {
@@ -63,7 +61,7 @@ public class Expression {
 
 	double calculateValue(VariableStack vs) /* throws InsuffArgInitException, NonArithmeticArgException */ {
 		switch (type) {
-			case VARIABLE:
+			case TERM:
 				Term term  = vs.get(this.term);
 				if (term == null)
 					/* throw new InsuffArgInitException() */;
@@ -71,9 +69,6 @@ public class Expression {
 					/* throw new NonArithmeticArgException() */;
 
 				value = term.getValue();
-				break;
-			case INTEGER:
-			case DOUBLE:
 				break;
 			case MINUS:
 				value = left.calculateValue(vs) - right.calculateValue(vs);

@@ -106,8 +106,8 @@ term_fact
 	;
 
 term_term
-	: VARIABLE			{ $$ = new Expression(Expression.Type.VARIABLE, new Term(Term.Type.VARIABLE, (String) $1)); } /* TODO: Should check VariableMatcher for the same line */
-	| NUMBER			{ $$ = new Expression(Expression.Type.DOUBLE, new Term(Term.Type.NUMBER, (Double) $1)); }
+	: VARIABLE			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); } /* TODO: Should check VariableMatcher for the same line */
+	| NUMBER			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
 	| '(' term_expr ')'		{ $$ = $2; }
 	;
 
@@ -121,150 +121,147 @@ arg_cand
 	;
 
 arg_list
-	: arg_cand			{ if (!($$ instanceof List)) $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $1); }
-	| arg_list ',' arg_cand		{ if (!($$ instanceof List)) $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $3); }
+	: arg_cand			{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $1); }
+	| arg_list ',' arg_cand		{ $$ = $1; ((List<Term>) $$).add((Term) $3);}
 	;
 
 job
-	: IDENTIFIER '(' arg_list ')' '{' stmt_list '}'
+	: IDENTIFIER '(' arg_list ')' '{' stmt_list '}' 	{ $$ = new Job((List<Term>) $3, (List<JobStmt>) $6); }
 	;
 
 stmt
-	: selection_stmt
-	| compound_stmt
-	| return_stmt
-	| expr_stmt
-	| iteration_stmt
+	: selection_stmt		/* Default Action $$ = $1 */
+	| compound_stmt			/* Default Action $$ = $1 */
+	| return_stmt			/* Default Action $$ = $1 */
+	| expr_stmt			/* Default Action $$ = $1 */
+	| iteration_stmt		/* Default Action $$ = $1 */
 	;
 
 stmt_list
-	: stmt
-	| stmt_list stmt
+	: stmt				{ $$ = new ArrayList<JobStmt>(); ((List<JobStmt>) $$).add((JobStmt) $1); }
+	| stmt_list stmt		{ $$ = $1; ((List<JobStmt>) $$).add((JobStmt) $2); }
 	;
 
 compound_stmt
-	: '{' '}'
-	| '{' stmt_list '}'
+	: '{' '}'			{ $$ = new JobStmt(JobStmt.Type.NULL); }
+	| '{' stmt_list '}'		{ $$ = new JobStmt(JobStmt.Type.COMPOUND, (List<JobStmt>) $2); }
 	;
 
 return_stmt
-	: '@' expr '.'
+	: '@' expr '.'			{ $$ = new JobStmt(JobStmt.Type.RETURN, (JobExpr) $2); }
 	;
 
 expr_stmt
-	: expr '.'
+	: expr '.'			{ $$ = new JobStmt(JobStmt.Type.EXPR, (JobExpr) $1); }
 	;
 
 selection_stmt
-	: IF '(' expr ')' stmt
-	| IF '(' expr ')' stmt ELSE stmt
+	: IF '(' expr ')' stmt			{ $$ = new JobStmt(JobStmt.Type.IF, (JobExpr) $3, (JobStmt) $5); }
+	| IF '(' expr ')' stmt ELSE stmt	{ $$ = new JobStmt(JobStmt.Type.IF, (JobExpr) $3, (JobStmt) $5, (JobStmt) $7); }
 	;
 
 iteration_stmt
-	: WHILE '(' expr ')' stmt
-	| DO stmt WHILE '(' expr ')' '.'
+	: WHILE '(' expr ')' stmt		{ $$ = new JobStmt(JobStmt.Type.WHILE, (JobExpr) $3, (JobStmt) $5); }
+	| DO stmt WHILE '(' expr ')' '.'	{ $$ = new JobStmt(JobStmt.Type.DOWHILE, (JobExpr) $5, (JobStmt) $2); }
 	;
 
 expr
-	: assignment_expr
-	| expr ',' assignment_expr
+	: assign_expr		/* Default Action $$ = $1 */
+	| expr ',' assign_expr	{ $$ = new JobExpr(JobExpr.Type.COMPOUND, (JobExpr) $1, (JobExpr) $3); }
 	;
 
-assignment_expr
-	: logical_or_expr
-	| unary_expr assignment_operator assignment_expr
+assign_expr
+	: logical_or_expr			/* Default Action $$ = $1 */
+	| unary_expr assign_op assign_expr	{ $$ = new JobExpr((JobExpr.Type) $2, (JobExpr) $1, (JobExpr) $3); }
 	;
 
-assignment_operator
-	: '='
-	| LARROW_OP
-	| MUL_ASSIGN
-	| DIV_ASSIGN
-	| MOD_ASSIGN
-	| ADD_ASSIGN
-	| SUB_ASSIGN
+assign_op
+	: '='			{ $$ = JobExpr.Type.ASSIGN; }
+	| LARROW_OP		{ $$ = JobExpr.Type.ASSIGN; }
+	| MUL_ASSIGN		{ $$ = JobExpr.Type.MULASSIGN; }
+	| DIV_ASSIGN		{ $$ = JobExpr.Type.DIVASSIGN; }
+	| MOD_ASSIGN		{ $$ = JobExpr.Type.MODASSIGN; }
+	| ADD_ASSIGN		{ $$ = JobExpr.Type.ADDASSIGN; }
+	| SUB_ASSIGN		{ $$ = JobExpr.Type.SUBASSIGN; }
 	;
 
 
 logical_or_expr
-	: logical_and_expr
-	| logical_or_expr OR_OP logical_and_expr
+	: logical_and_expr				/* Default Action $$ = $1 */
+	| logical_or_expr OR_OP logical_and_expr	{ $$ = new JobExpr(JobExpr.Type.OR, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 logical_and_expr
-	: equality_expr
-	| logical_and_expr AND_OP equality_expr
+	: equality_expr					/* Default Action $$ = $1 */
+	| logical_and_expr AND_OP equality_expr		{ $$ = new JobExpr(JobExpr.Type.AND, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 equality_expr
-	: relational_expr
-	| equality_expr EQ_OP relational_expr
-	| equality_expr NE_OP relational_expr
+	: relational_expr				/* Default Action $$ = $1 */
+	| equality_expr EQ_OP relational_expr		{ $$ = new JobExpr(JobExpr.Type.EQ, (JobExpr) $1, (JobExpr) $3); }
+	| equality_expr NE_OP relational_expr		{ $$ = new JobExpr(JobExpr.Type.NE, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 relational_expr
-	: additive_expr
-	| relational_expr '<' additive_expr
-	| relational_expr '>' additive_expr
-	| relational_expr LE_OP additive_expr
-	| relational_expr GE_OP additive_expr
+	: additive_expr					/* Default Action $$ = $1 */
+	| relational_expr '<' additive_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
+	| relational_expr '>' additive_expr		{ $$ = new JobExpr(JobExpr.Type.GT, (JobExpr) $1, (JobExpr) $3); }
+	| relational_expr LE_OP additive_expr		{ $$ = new JobExpr(JobExpr.Type.LE, (JobExpr) $1, (JobExpr) $3); }
+	| relational_expr GE_OP additive_expr		{ $$ = new JobExpr(JobExpr.Type.GE, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 additive_expr
-	: multiplicative_expr
-	| additive_expr '+' multiplicative_expr
-	| additive_expr '-' multiplicative_expr
+	: multiplicative_expr				/* Default Action $$ = $1 */
+	| additive_expr '+' multiplicative_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
+	| additive_expr '-' multiplicative_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 multiplicative_expr
-	: unary_expr
-	| multiplicative_expr '*' unary_expr
-	| multiplicative_expr '/' unary_expr
-	| multiplicative_expr '%' unary_expr
+	: unary_expr					/* Default Action $$ = $1 */
+	| multiplicative_expr '*' unary_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_expr '/' unary_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_expr '%' unary_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 unary_expr
-	: postfix_expr
-	| unary_operator unary_expr
+	: postfix_expr				/* Default Action $$ = $1 */
+	| '+' unary_expr			/* Default Action $$ = $1 */
+	| '-' unary_expr			{ $$ = new JobExpr(JobExpr.Type.NEGATE, (JobExpr) $2); }
 	;
-
-argument_expr_list
-	: assignment_expr
-	| argument_expr_list ',' assignment_expr
-	;
-
 
 primary_expr
-	: IDENTIFIER
-	| VARIABLE
-	| NUMBER
-	| STRING_LITERAL
-	| '(' expr ')'
+	: IDENTIFIER				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>())); }
+	| VARIABLE				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); }
+	| NUMBER				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
+//	| STRING_LITERAL
+	| '(' expr ')'				/* Default Action $$ = $1 */
+	;
+
+array_idx_elmt
+	: '~'					{ $$ = new ArrayIndex(0, true); }
+	| '~' NUMBER				{ $$ = new ArrayIndex(0, (long) (double) (Double) $2); }
+	| NUMBER				{ $$ = new ArrayIndex((long) (double) (Double) $1); } 
+	| NUMBER '~'				{ $$ = new ArrayIndex((long) (double) (Double) $1, true); }
+	| NUMBER '~' NUMBER			{ $$ = new ArrayIndex((long) (double) (Double) $1, (long) (double) (Double) $3); }
 	;
 
 array_idx_list
-	: array_idx_element ',' array_idx_element
-	;
-
-array_idx_element
-	: 
-	| assignment_expr
-	| assignment_expr ':'
-	| ':' assignment_expr
-	| assignment_expr ':' assignment_expr
+	: array_idx_elmt			{ $$ = new ArrayList<ArrayIndex>(); ((ArrayList<ArrayIndex>) $$).add((ArrayIndex) $1); };
+	| array_idx_list ',' array_idx_elmt	{ $$ = $1; ((ArrayList<ArrayIndex>) $$).add((ArrayIndex) $3); }
 	;
 
 postfix_expr
-	: primary_expr
-	| postfix_expr '[' array_idx_list ']'
-	| postfix_expr '(' ')'
-	| postfix_expr '(' argument_expr_list ')'
+	: primary_expr							/* Default Action $$ = $1 */
+	| VARIABLE '[' array_idx_list ']' '[' array_idx_list ']'	{ $$ = new JobExpr(JobExpr.Type.ARRAY, new Term(Term.Type.VARIABLE, (String) $1), (List<ArrayIndex>) $3, (List<ArrayIndex>) $6); }
+	| IDENTIFIER '(' argument_expr_list ')'				{ $$ = new JobExpr(JobExpr.Type.JOBCALL, (String) $1, (List<JobExpr>) $3); }
 	;
 
-unary_operator
-	: '+'
-	| '-'
+argument_expr_list
+	:					{ $$ = new ArrayList<JobExpr>(); }
+	| assign_expr				{ $$ = new ArrayList<JobExpr>(); ((List<JobExpr>) $$).add((JobExpr) $1); }
+	| argument_expr_list ',' assign_expr	{ $$ = $1; ((List<JobExpr>) $$).add((JobExpr) $3); }
 	;
+
 %%
 
 private Yylex lexer;
@@ -276,7 +273,7 @@ private boolean parseSuccess = true;
 private int yylex () {
 	int yyl_return = -1;
 	try {
-		yylval = new Term(Term.Type.NUMBER, 0.0);
+		yylval = null; //new Term(Term.Type.NUMBER, 0.0);
 		yyl_return = lexer.yylex();
 	}
 	catch (IOException e) {

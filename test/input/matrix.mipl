@@ -12,7 +12,7 @@ grade("tom", 100, 100, 94, 92).
 weight(0.2, 0.1, 0.3, 0.4).
 
 calculate_weighted_grade(G, W) {
- @ bind(G[0,], G[1:,] * transpose(W)).
+ @ bind(G[0][~], G[1~][~] * transpose(W)).
 }
 
 # facts grade and weight turn into matrix
