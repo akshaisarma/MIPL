@@ -33,6 +33,7 @@ public class Term {
 		QUERYALL,
 		REGEXQUERYALL,
 		STRING,
+		EXPRESSION,
 	};
 	Type type;
 	boolean hasVariables = false;
@@ -132,6 +133,13 @@ public class Term {
 
 		if (type == Type.VARIABLE)
 			hasVariables = true;
+	}
+
+	public Term(Type type, Expression expr) {
+		assert (type == Type.EXPRESSION);
+
+		this.type = type;
+		this.expr1 = expr;
 	}
 
 	public Type getType() {

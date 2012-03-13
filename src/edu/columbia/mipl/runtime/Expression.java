@@ -22,17 +22,18 @@ public class Expression {
 	};
 	Type type;
 
-	Term variable;
+	Term term;
 	double value;
 
 	Expression left;
 	Expression right;
 
 	public Expression(Type type, Term term) {
-		assert (type == Type.VARIABLE);
-		assert (term.getType() == Term.Type.VARIABLE);
+		assert ((type == Type.VARIABLE && term.getType() == Term.Type.VARIABLE) ||
+			(type == Type.DOUBLE && term.getType() == Term.Type.NUMBER));
 
-		variable = term;
+		this.type = type;
+		this.term = term;
 	}
 
 	public Expression(Type type, int value) {
@@ -53,10 +54,17 @@ public class Expression {
 		right = expr2;
 	}
 
+	public Term getTerm() {
+		if (term != null)
+			return term;
+
+		return new Term(Term.Type.EXPRESSION, this);
+	}
+
 	double calculateValue(VariableStack vs) /* throws InsuffArgInitException, NonArithmeticArgException */ {
 		switch (type) {
 			case VARIABLE:
-				Term term  = vs.get(variable);
+				Term term  = vs.get(this.term);
 				if (term == null)
 					/* throw new InsuffArgInitException() */;
 				if (term.getType() != Term.Type.NUMBER)

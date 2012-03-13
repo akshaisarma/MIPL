@@ -76,16 +76,14 @@ and_terms
 	;
 
 term /*% load into edu.columbia.mipl.runtime.Term */
-	: NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
-	| IDENTIFIER			{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
+	: IDENTIFIER			{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
 	| IDENTIFIER '(' arg_list ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
 	| IDENTIFIER '(' '*' ')'	{ $$ = new Term(Term.Type.QUERYALL, (String) $1); }
-	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same line */
         | REGEX				{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, new ArrayList<Term>()); }
         | REGEX '(' arg_list ')'	{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, (List<Term>) $3); }
         | REGEX '(' '*' ')'		{ $$ = new Term(Term.Type.REGEXQUERYALL, (String) $1); }
         | NOT term			{ $$ = new Term(Term.Type.NOTTERM, (Term) $2); }
-        | VARIABLE IS term_expr		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), (Expression) $3); } /* TODO: Should check VariableMatcher for the same line */
+        | term_expr			{ $$ = ((Expression) $1).getTerm(); }
         | VARIABLE IS term		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), (Term) $3); } /* TODO: Should check VariableMatcher for the same line */
         | term_expr '<' term_expr	{ $$ = new Term(Term.Type.LT, (Expression) $1, (Expression) $3); }
         | term_expr '>' term_expr	{ $$ = new Term(Term.Type.GT, (Expression) $1, (Expression) $3); }
@@ -109,7 +107,7 @@ term_fact
 
 term_term
 	: VARIABLE			{ $$ = new Expression(Expression.Type.VARIABLE, new Term(Term.Type.VARIABLE, (String) $1)); } /* TODO: Should check VariableMatcher for the same line */
-	| NUMBER			{ $$ = new Expression(Expression.Type.DOUBLE, (Double) $1); }
+	| NUMBER			{ $$ = new Expression(Expression.Type.DOUBLE, new Term(Term.Type.NUMBER, (Double) $1)); }
 	| '(' term_expr ')'		{ $$ = $2; }
 	;
 
