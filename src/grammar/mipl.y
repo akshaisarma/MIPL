@@ -1,19 +1,27 @@
 %{
+/**
+ * MIPL: Mining Integrated Programming Language
+ *
+ * File: Parser*.java / mipl.y
+ * Author: YoungHoon Jung <yj2244@columbia.edu>
+ * Reviewer: Akshai Sarma <as4107@columbia.edu>
+ * Description: Automatically generated parser from mipl.y
+ *              PLEASE DO NOT MODIFY THIS Parser*.java FILE,
+ *              INSTEAD, MODIFY mipl.y
+ */
+
 import java.io.*;
 %}
-%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
-%token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
-%token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
-%token XOR_ASSIGN OR_ASSIGN TYPE_NAME
+%token IDENTIFIER STRING_LITERAL 
+%token LE_OP GE_OP EQ_OP NE_OP
+%token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN SUB_ASSIGN
 
-%token TYPEDEF EXTERN STATIC AUTO REGISTER
-%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
-%token STRUCT UNION ENUM ELLIPSIS
+%token IF ELSE DO WHILE
 
-%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+%token REGEX VARIABLE NOT LARROW_OP IS
+%token <dval> NUMBER
 
-%token REGEX VARIABLE INTEGER NUMBER NOT LARROW_OP IS NEWLINE
+%token NULL
 
 %start program
 %%
@@ -69,7 +77,6 @@ term /*% load into edu.columbia.mipl.runtime.Term */
 	| IDENTIFIER '(' arg_list ')'
 	| IDENTIFIER '(' '*' ')'
 	| VARIABLE
-	| NEWLINE
         | REGEX
         | REGEX '(' arg_list ')'
         | REGEX '(' '*' ')'
@@ -120,6 +127,7 @@ job
 
 stmt
 	: selection_stmt
+	| compound_stmt
 	| return_stmt
 	| expr_stmt
 	| iteration_stmt
@@ -128,6 +136,11 @@ stmt
 stmt_list
 	: stmt
 	| stmt_list stmt
+	;
+
+compound_stmt
+	: '{' '}'
+	| '{' stmt_list '}'
 	;
 
 return_stmt
@@ -141,7 +154,6 @@ expr_stmt
 selection_stmt
 	: IF '(' expr ')' stmt
 	| IF '(' expr ')' stmt ELSE stmt
-	| SWITCH '(' expr ')' stmt
 	;
 
 iteration_stmt
@@ -156,8 +168,19 @@ expr
 
 assignment_expr
 	: logical_or_expr
-	| unary_expr LARROW_OP assignment_expr
+	| unary_expr assignment_operator assignment_expr
 	;
+
+assignment_operator
+	: '='
+	| LARROW_OP
+	| MUL_ASSIGN
+	| DIV_ASSIGN
+	| MOD_ASSIGN
+	| ADD_ASSIGN
+	| SUB_ASSIGN
+	;
+
 
 logical_or_expr
 	: logical_and_expr
@@ -198,8 +221,6 @@ multiplicative_expr
 
 unary_expr
 	: postfix_expr
-	| INC_OP unary_expr
-	| DEC_OP unary_expr
 	| unary_operator unary_expr
 	;
 
@@ -211,6 +232,7 @@ argument_expr_list
 
 primary_expr
 	: IDENTIFIER
+	| VARIABLE
 	| NUMBER
 	| STRING_LITERAL
 	| '(' expr ')'
@@ -232,21 +254,17 @@ postfix_expr
 	| postfix_expr '[' array_idx_list ']'
 	| postfix_expr '(' ')'
 	| postfix_expr '(' argument_expr_list ')'
-	| postfix_expr INC_OP
-	| postfix_expr DEC_OP
 	;
 
 unary_operator
-	: '&'
-	| '*'
-	| '+'
+	: '+'
 	| '-'
-	| '~'
-	| '!'
 	;
 %%
 
 private Yylex lexer;
+
+private String filename = null;
 
 private int yylex () {
 	int yyl_return = -1;
@@ -260,32 +278,31 @@ private int yylex () {
 	return yyl_return;
 }
 
+private String getFilename() {
+	if (filename == null)
+		return "System.in";
+	else
+		return filename;
+}
+
 public void yyerror (String error) {
 	System.err.println ("Error: " + error);
+	System.err.println (getFilename() + ":" + lexer.getLine() + ":" + lexer.getColumn());
+
+	throw new Error("Syntax Error: " + lexer.yytext());
 }
 
 public Parser(Reader r) {
 	lexer = new Yylex(r, this);
 }
 
-static boolean interactive;
-
-public static void parse() throws IOException {
-	parse(null);
+public static void parse(InputStream in) throws IOException {
+	new Parser(new InputStreamReader(System.in)).yyparse();
 }
 
-public static void parse(String filename) throws IOException {
-	Parser yyparser;
-	if (filename == null) {
-		// parse a file
-		yyparser = new Parser(new FileReader(filename));
-	}
-	else {
-		// interactive mode
-		interactive = true;
-		yyparser = new Parser(new InputStreamReader(System.in));
-	}
-
-	yyparser.yyparse();
+public static void parse(String file) throws IOException {
+	Parser parser = new Parser(new FileReader(file));
+	parser.yyparse();
+	parser.filename = file;
 }
 

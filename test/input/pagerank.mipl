@@ -11,7 +11,7 @@ pagerank(G, P, U) {
 	Max_iteration = 20.
 	I = 0.
 	while (I < Max_iteration) {
-		P = alpha * (G * P) + (1 - Alpha) * (ones * U * P).
+		P = Alpha * (G * P) + (1 - Alpha) * (ones * U * P).
 		I = I + 1.
 	}
 }
