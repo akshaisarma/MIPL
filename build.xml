@@ -122,7 +122,6 @@
 	    <move todir="${src}/edu/columbia/mipl/syntax">
 		    <filelist dir=".">
 			    <file name="Parser.java"/>
-			    <file name="ParserVal.java"/>
 			    <file name="ParserTokens.java"/>
 		    </filelist>
 	    </move>
