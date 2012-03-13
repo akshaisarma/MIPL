@@ -32,8 +32,8 @@ program
 	;
 
 lines
-	: lines line
-	| line
+	: lines line		{ /* ProgramList.add(line); */ }
+	| line		{ /* ProgramList.add(line); */ }
 	;
 
 line
@@ -54,7 +54,7 @@ maf_list
 	;
 
 query
-	: term '?'
+	: or_terms '?'
 	;
 
 rule
@@ -81,7 +81,7 @@ term /*% load into edu.columbia.mipl.runtime.Term */
         | REGEX '(' arg_list ')'
         | REGEX '(' '*' ')'
         | NOT term
-        | IDENTIFIER IS term_expr
+        | VARIABLE IS term_expr
         | term_expr '<' term_expr
         | term_expr '>' term_expr
         | term_expr LE_OP term_expr
@@ -102,9 +102,11 @@ term_fact
 	| term_term
 	;
 
-term_term:
+term_term
+	: VARIABLE
 	| NUMBER
 	| IDENTIFIER
+	| REGEX
 	| '(' term_expr ')'
 	;
 
@@ -112,6 +114,7 @@ arg_cand
 	: IDENTIFIER
 	| IDENTIFIER '(' arg_list ')'
 	| VARIABLE
+	| '_'
 	| NUMBER
         | STRING_LITERAL
 	;
@@ -239,13 +242,14 @@ primary_expr
 	;
 
 array_idx_list
-	: array_idx_element
-	| array_idx_list ',' array_idx_element
+	: array_idx_element ',' array_idx_element
 	;
 
 array_idx_element
-	: assignment_expr
+	: 
+	| assignment_expr
 	| assignment_expr ':'
+	| ':' assignment_expr
 	| assignment_expr ':' assignment_expr
 	;
 
@@ -265,6 +269,8 @@ unary_operator
 private Yylex lexer;
 
 private String filename = null;
+
+private boolean parseSuccess = true;
 
 private int yylex () {
 	int yyl_return = -1;
@@ -289,20 +295,26 @@ public void yyerror (String error) {
 	System.err.println ("Error: " + error);
 	System.err.println (getFilename() + ":" + lexer.getLine() + ":" + lexer.getColumn());
 
-	throw new Error("Syntax Error: " + lexer.yytext());
+	parseSuccess = false;
+//	throw new java.io.IOException("Syntax Error: " + lexer.yytext());
 }
 
 public Parser(Reader r) {
 	lexer = new Yylex(r, this);
+	parseSuccess = true;
 }
 
-public static void parse(InputStream in) throws IOException {
-	new Parser(new InputStreamReader(System.in)).yyparse();
-}
-
-public static void parse(String file) throws IOException {
-	Parser parser = new Parser(new FileReader(file));
+public static boolean parse(InputStream in) throws IOException {
+	Parser parser = new Parser(new InputStreamReader(System.in));
 	parser.yyparse();
-	parser.filename = file;
+
+	return parser.parseSuccess;
 }
 
+public static boolean parse(String file) throws IOException {
+	Parser parser = new Parser(new FileReader(file));
+	parser.filename = file;
+	parser.yyparse();
+
+	return parser.parseSuccess;
+}

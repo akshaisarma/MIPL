@@ -9,10 +9,10 @@
 # a function that returns two or three values
 multi_return(A, B, C) {
  if (A == 1) {
-  @(B + C)
+  @(B + C).
  }
- @C
- @B
+ @C.
+ @B.
 }
 
 [sum, c, b] <- multi_return(1, x, y).

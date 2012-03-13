@@ -32,11 +32,11 @@ package edu.columbia.mipl.syntax;
 	}
 
 	public int getLine() {
-		return yyline;
+		return yyline + 1;
 	}
 
 	public int getColumn() {
-		return yycolumn;
+		return yycolumn + 1;
 	}
 %}
 
@@ -60,7 +60,8 @@ SUB_ASSIGN = \-=
 REGEX = \^.*\$
 VARIABLE = [A-Z][a-zA-Z_]*
 NUMBER = [0-9]+(.[0-9]+)?([Ee][+-]?[0-9]+)?
-LARROW_OP = <-
+LARROW_OP = <- |
+	:-
 
 %%
 
@@ -83,6 +84,7 @@ LARROW_OP = <-
 "@" | 
 "%" | 
 ":" | 
+"_" | 
 "(" | 
 ")"    { return (int) yycharat(0); }
 
@@ -99,6 +101,7 @@ LARROW_OP = <-
 
 " "  |
 "\t" |
+"\r" |
 "\n" { /* Ignore White Spaces */ } 
 
 {LE_OP} { return ParserTokens.LE_OP; }
@@ -124,4 +127,4 @@ LARROW_OP = <-
 
 {IDENTIFIER} { return ParserTokens.IDENTIFIER; }
 
-. { throw new Error("Illegal character <" + yytext() + ">"); } 
+. { throw new java.io.IOException("Illegal character <" + yytext() + ">"); } 
