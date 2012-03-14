@@ -1,10 +1,10 @@
 /*
  * MIPL: Mining Integrated Programming Language
  *
- * File: CodeGenerator.java
+ * File: ProgramExecutor.java
  * Author: YoungHoon Jung <yj2244@columbia.edu>
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
- * Description: CodeGenerator
+ * Description: ProgramExecutor
  */
 package edu.columbia.mipl.codegen;
 
@@ -13,22 +13,11 @@ import java.util.*;
 import edu.columbia.mipl.runtime.*;
 import edu.columbia.mipl.runtime.traverse.*;
 
-public class CodeGenerator extends RuntimeTraverser {
-	InstructionWriter writer;
-
-	public CodeGenerator() {
-		String target = "JVM"; /* read this from Configuration */
-		writer = InstructionWriterFactory.getInstructionWriter(target);
+public class ProgramExecutor extends RuntimeTraverser {
+	public ProgramExecutor() {
 	}
 
 	public void reachTerm(Term term) {
-		switch (term.getType()) {
-			case NUMBER:
-				writer.createTerm(Term.Type.NUMBER, term.getValue());
-				break;
-			case TERM:
-				break;
-		}
 	}
 
 	public void reachExpression(Expression expr) {
@@ -53,6 +42,5 @@ public class CodeGenerator extends RuntimeTraverser {
 	}
 
 	public void finish() {
-		writer.finish();
 	}
 }

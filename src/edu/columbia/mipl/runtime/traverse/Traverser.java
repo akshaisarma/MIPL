@@ -12,4 +12,5 @@ import java.util.*;
 
 public interface Traverser {
 	void reach(Traversable target);
+	void finish();
 }
