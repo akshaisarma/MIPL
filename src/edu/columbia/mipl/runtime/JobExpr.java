@@ -10,7 +10,9 @@ package edu.columbia.mipl.runtime;
 
 import java.util.*;
 
-public class JobExpr {
+import edu.columbia.mipl.runtime.traverse.*;
+
+public class JobExpr extends Traversable {
 	public enum Type {
 		COMPOUND,
 		ASSIGN,
@@ -57,6 +59,8 @@ public class JobExpr {
 
 		this.type = type;
 		this.term = term;
+
+		add(term);
 	}
 
 	public JobExpr(Type type, String name, List<JobExpr> exprs) {
@@ -65,6 +69,8 @@ public class JobExpr {
 		this.type = type;
 		this.name = name;
 		this.exprs = exprs;
+
+		addAll(exprs);
 	}
 
 	public JobExpr(Type type, Term term, List<ArrayIndex> indices1, List<ArrayIndex> indices2) {
@@ -74,6 +80,8 @@ public class JobExpr {
 		this.term = term;
 		this.indices1 = indices1;
 		this.indices2 = indices2;
+
+		add(term);
 	}
 
 	public JobExpr(Type type, JobExpr expr) {
@@ -81,6 +89,8 @@ public class JobExpr {
 
 		this.type = type;
 		this.expr1 = expr;
+
+		add(expr);
 	}
 
 	public JobExpr(Type type, JobExpr target, JobExpr source) {
@@ -92,6 +102,9 @@ public class JobExpr {
 		this.type = type;
 		this.expr1 = target;
 		this.expr2 = source;
+
+		add(target);
+		add(source);
 	}
 
 	public JobExpr(Type type, JobExpr target, JobExpr left, JobExpr right) {
@@ -106,5 +119,9 @@ public class JobExpr {
 		this.expr1 = target;
 		this.expr2 = left;
 		this.expr3 = right;
+
+		add(target);
+		add(left);
+		add(right);
 	}
 }

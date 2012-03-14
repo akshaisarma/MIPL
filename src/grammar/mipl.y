@@ -32,37 +32,37 @@ import edu.columbia.mipl.runtime.*;
 
 
 program
-	: lines
+	: commands
 	;
 
-lines
-	: lines line		{ /* ProgramList.add(line); */ }
-	| line		{ /* ProgramList.add(line); */ }
+commands
+	: commands command		{ /* ProgramList.add(command); */ }
+	| command		{ /* ProgramList.add(command); */ }
 	;
 
-line
-	: fact
-	| query
-	| rule
-	| job
+command
+	: fact				/* Default Action $$ = $1 */
+	| query				/* Default Action $$ = $1 */
+	| rule				/* Default Action $$ = $1 */
+	| job				/* Default Action $$ = $1 */
 	;
 
 fact
-	: term '.'
-	| '[' maf_list ']' LARROW_OP IDENTIFIER '(' arg_list ')' '.'
+	: term '.'							{ $$ = new Fact((Term) $1); }
+	| '[' maf_list ']' LARROW_OP IDENTIFIER '(' arg_list ')' '.'	{ $$ = new Fact((String) $5, (List<String>) $2, (List<Term>) $7); }
 	;
 
 maf_list
-	: maf_list ',' IDENTIFIER
-	| IDENTIFIER
+	: maf_list ',' IDENTIFIER	{ $$ = $1; ((List<String>) $$).add((String) $3); }
+	| IDENTIFIER			{ $$ = new ArrayList<String>(); ((List<String>) $$).add((String) $1); }
 	;
 
 query
-	: or_terms '?'
+	: or_terms '?'			{ $$ = new Query((Term) $1); }
 	;
 
 rule
-	: term LARROW_OP or_terms '.'
+	: term LARROW_OP or_terms '.'	{ $$ = new Rule((Term) $1, (Term) $3); }
 	;
 
 or_terms
@@ -84,7 +84,7 @@ term /*% load into edu.columbia.mipl.runtime.Term */
         | REGEX '(' '*' ')'		{ $$ = new Term(Term.Type.REGEXQUERYALL, (String) $1); }
         | NOT term			{ $$ = new Term(Term.Type.NOTTERM, (Term) $2); }
         | term_expr			{ $$ = ((Expression) $1).getTerm(); }
-        | VARIABLE IS term		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), (Term) $3); } /* TODO: Should check VariableMatcher for the same line */
+        | VARIABLE IS term		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), (Term) $3); } /* TODO: Should check VariableMatcher for the same command */
         | term_expr '<' term_expr	{ $$ = new Term(Term.Type.LT, (Expression) $1, (Expression) $3); }
         | term_expr '>' term_expr	{ $$ = new Term(Term.Type.GT, (Expression) $1, (Expression) $3); }
         | term_expr LE_OP term_expr	{ $$ = new Term(Term.Type.LE, (Expression) $1, (Expression) $3); }
@@ -106,7 +106,7 @@ term_fact
 	;
 
 term_term
-	: VARIABLE			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); } /* TODO: Should check VariableMatcher for the same line */
+	: VARIABLE			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); } /* TODO: Should check VariableMatcher for the same command */
 	| NUMBER			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
 	| '(' term_expr ')'		{ $$ = $2; }
 	;
@@ -114,7 +114,7 @@ term_term
 arg_cand
 	: IDENTIFIER			{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
 	| IDENTIFIER '(' arg_list ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
-	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same line */
+	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same command */
 	| '_'				{ $$ = new Term(Term.Type.VARIABLE, "_"); }
 	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
         | STRING_LITERAL		{ $$ = new Term(Term.Type.STRING, (String) $1); }
@@ -126,7 +126,7 @@ arg_list
 	;
 
 job
-	: IDENTIFIER '(' arg_list ')' '{' stmt_list '}' 	{ $$ = new Job((List<Term>) $3, (List<JobStmt>) $6); }
+	: IDENTIFIER '(' arg_list ')' '{' stmt_list '}' 	{ $$ = new Job((String) $1, (List<Term>) $3, (List<JobStmt>) $6); }
 	;
 
 stmt
@@ -246,8 +246,8 @@ array_idx_elmt
 	;
 
 array_idx_list
-	: array_idx_elmt			{ $$ = new ArrayList<ArrayIndex>(); ((ArrayList<ArrayIndex>) $$).add((ArrayIndex) $1); };
-	| array_idx_list ',' array_idx_elmt	{ $$ = $1; ((ArrayList<ArrayIndex>) $$).add((ArrayIndex) $3); }
+	: array_idx_elmt			{ $$ = new ArrayList<ArrayIndex>(); ((List<ArrayIndex>) $$).add((ArrayIndex) $1); };
+	| array_idx_list ',' array_idx_elmt	{ $$ = $1; ((List<ArrayIndex>) $$).add((ArrayIndex) $3); }
 	;
 
 postfix_expr

@@ -10,6 +10,11 @@ package edu.columbia.mipl.runtime;
 
 import java.util.*;
 
-public abstract class Knowledge {
-	abstract Term getTerm();
+public abstract class Knowledge extends Command {
+	abstract String getName();
+
+	Knowledge registerKnowledge() {
+		return KnowledgeTableFactory.getKnowledgeTable().put(getName(), this);
+	}
+
 }

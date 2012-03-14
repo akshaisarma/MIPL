@@ -10,7 +10,9 @@ package edu.columbia.mipl.runtime;
 
 import java.util.*;
 
-public class JobStmt {
+import edu.columbia.mipl.runtime.traverse.*;
+
+public class JobStmt extends Traversable {
 	public enum Type {
 		IF,
 		WHILE,
@@ -46,6 +48,11 @@ public class JobStmt {
 		this.expr = expr;
 		this.stmt1 = stmt1;
 		this.stmt2 = stmt2;
+
+		add(expr);
+		add(stmt1);
+		if (stmt2 != null)
+			add(stmt2);
 	}
 
 	public JobStmt(Type type, JobExpr expr) {
@@ -53,6 +60,8 @@ public class JobStmt {
 
 		this.type = type;
 		this.expr = expr;
+
+		add(expr);
 	}
 
 	public JobStmt(Type type, List<JobStmt> stmts) {
@@ -60,5 +69,7 @@ public class JobStmt {
 
 		this.type = type;
 		this.stmts = stmts;
+
+		addAll(stmts);
 	}
 }

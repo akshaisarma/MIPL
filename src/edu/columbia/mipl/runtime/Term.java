@@ -13,7 +13,9 @@ import java.lang.reflect.*;
 
 import edu.columbia.mipl.datastr.*;
 
-public class Term {
+import edu.columbia.mipl.runtime.traverse.*;
+
+public class Term extends Traversable {
 	public enum Type {
 		IS,
 		EQ,

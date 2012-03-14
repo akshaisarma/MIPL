@@ -10,7 +10,9 @@ package edu.columbia.mipl.runtime;
 
 import java.util.*;
 
-public class Expression {
+import edu.columbia.mipl.runtime.traverse.*;
+
+public class Expression extends Traversable {
 	public enum Type {
 		TERM,
 		MINUS,

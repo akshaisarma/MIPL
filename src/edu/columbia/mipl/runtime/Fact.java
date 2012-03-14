@@ -13,51 +13,42 @@ import java.util.*;
 import edu.columbia.mipl.datastr.*;
 
 public class Fact extends Knowledge  {
+	public enum Type {
+		FACT,
+		MATRIXASFACTS,
+	};
+	Type type;
+
 	Term term;
+	String name;
+	List<String> names;
+	List<Term> terms;
 
 	public Fact(Term term) {
-		Knowledge know;
-		Term prev;
-		Term matrix;
-		int i;
+		assert (term.getType() == Term.Type.TERM);
 
-		if (term.getType() != Term.Type.TERM)
-			/* throw new InvalidFactDefinitionException() */;
+		this.term = term;
+		name = term.getName();
+		type = Type.FACT;
 
-		know = KnowledgeTableFactory.getKnowledgeTable().get(term.getName());
-		if (know == null) {
-			this.term = term;
-			KnowledgeTableFactory.getKnowledgeTable().put(term.getName(), this);
-			return;
-		}
-
-		if (know instanceof Rule) {
-			/* throw new TermRedefineExistingRuleException() */;
-		}
-
-		prev = ((Fact) know).getTerm();
-		if (prev.containVariables() || prev.getArguments().size() != term.getArguments().size()) {
-			/* throw new UnmergeableFactsException() */;
-		}
-
-		matrix = new Term(Term.Type.MATRIX, term.getName(), new PrimitiveDoubleArray(2, prev.getArguments().size()));
-		i = 0;
-		for (Term t : prev.getArguments()) {
-			if (t.getType() != Term.Type.NUMBER)
-				/* throw new UnmergeableFactsException() */;
-			matrix.getMatrix().setValue(0, i, t.getValue());
-		}
-		i = 0;
-		for (Term t : term.getArguments()) {
-			if (t.getType() != Term.Type.NUMBER)
-				/* throw new UnmergeableFactsException() */;
-			matrix.getMatrix().setValue(1, i, t.getValue());
-		}
-		this.term = matrix;
-		KnowledgeTableFactory.getKnowledgeTable().put(term.getName(), this);
+		add(term);
 	}
 
-	Term getTerm() {
+	public Fact(String name, List<String> names, List<Term> terms) {
+		this.name = name;
+		this.names = names;
+		this.terms = terms;
+
+		type = Type.MATRIXASFACTS;
+
+		addAll(terms);
+	}
+
+	public Term getTerm() {
 		return term;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

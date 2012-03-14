@@ -36,10 +36,11 @@ public class SolvableBinder extends Binder implements Solvable {
 			if (know == null)
 				return false;
 
+			/*
 			newTerm = know.getTerm();
 			if (!currentGoal.match(newTerm, vs))
 				return false;
-	
+			*/
 			if (know instanceof Fact) {
 				solver.solve(goal, vs);
 				return true;
