@@ -225,7 +225,7 @@ multiplicative_expr
 
 unary_expr
 	: postfix_expr				/* Default Action $$ = $1 */
-	| '+' unary_expr			/* Default Action $$ = $1 */
+	| '+' unary_expr			{ $$ = $2; }
 	| '-' unary_expr			{ $$ = new JobExpr(JobExpr.Type.NEGATE, (JobExpr) $2); }
 	;
 
@@ -234,7 +234,7 @@ primary_expr
 	| VARIABLE				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); }
 	| NUMBER				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
 //	| STRING_LITERAL
-	| '(' expr ')'				/* Default Action $$ = $1 */
+	| '(' expr ')'				{ $$ = $2; }
 	;
 
 array_idx_elmt

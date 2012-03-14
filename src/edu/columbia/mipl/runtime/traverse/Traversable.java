@@ -11,15 +11,20 @@ package edu.columbia.mipl.runtime.traverse;
 import java.util.*;
 
 public class Traversable extends ArrayList<Traversable> {
-	enum TraverseType {
+	enum Method {
 		PRE,
 		IN,
 		POST,
 	};
-	private final TraverseType defaultTraverse = TraverseType.POST;
+	/* Should be read from Configuration */
+	private final Method defaultMethod = Method.POST;
 
 	public void traverse(Traverser traverser) {
-		switch (defaultTraverse) {
+		traverse(traverser, defaultMethod);
+	}
+
+	public void traverse(Traverser traverser, Method method) {
+		switch (method) {
 			case PRE:
 				preTraverse(traverser);
 				return;

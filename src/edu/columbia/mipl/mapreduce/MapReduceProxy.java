@@ -13,6 +13,11 @@ public class MapReduceProxy {
 	/* giving properties : http://grokbase.com/t/hadoop/mapreduce-user/119f7mv2ft/passing-a-global-variable-into-a-mapper */
 	/* properties can be used of scalar value delivery ex) 5 + Matrix  ex) reversedIndex for 2nd argurment of Multiplication */
 
+	/* 2.10. How do I change final output file name with the desired name rather than in partitions like part-00000, part-00001?
+	 *  
+	 *  You can subclass the OutputFormat.java class and write your own. You can look at the code of TextOutputFormat MultipleOutputFormat.java etc. for reference. It might be the case that you only need to do minor changes to any of the existing Output Format classes. To do that you can just subclass that class and override the methods you need to change. 
+	 */
+
 	private void job(Class jobClass, Class keyClass, Class valueClass, 
 			Class<? extends org.apache.hadoop.mapred.Mapper> mapClass,
 			Class<? extends org.apache.hadoop.mapred.Reducer> reduceClass,
