@@ -61,6 +61,18 @@ public class Expression extends Traversable {
 		return new Term(Term.Type.EXPRESSION, this);
 	}
 
+	public Type getType() {
+		return type;
+	}
+
+	public Expression getExpr1() {
+		return left;
+	}
+
+	public Expression getExpr2() {
+		return right;
+	}
+
 	double calculateValue(VariableStack vs) /* throws InsuffArgInitException, NonArithmeticArgException */ {
 		switch (type) {
 			case TERM:

@@ -46,40 +46,94 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	}
 
 	public void createTerm(Term.Type type, Term term1, Expression expr1) {
-
+	// Term.Type.IS
 	}
 
 	public void createTerm(Term.Type type, Expression expr1, Expression expr2) {
+		switch (type) {
+			case EQ:
+				break;
+			case LT:
+				break;
+			case LE:
+				break;
+			case GT:
+				break;
+			case GE:
+				break;
+			case NE:
+				break;
+		}
 
 	}
 
 	public void createTerm(Term.Type type, String name,
 										PrimitiveMatrix<Double> matrix) {
-
+	// Term.Type.MATRIX
 	}
 
 	public void createTerm(Term.Type type, Term term1, Term term2) {
-
+		switch (type) {
+			case ANDTERMS:
+				break;
+			case ORTERMS:
+				break;
+		}
 	}
 
 	public void createTerm(Term.Type type, Term term1) {
-
-	}
-
-	public void createTerm(Term.Type type, double value) {
-
+	// Term.Type.NOTTERM
 	}
 
 	public void createTerm(Term.Type type, String name, List<Term> arguments) {
+		switch (type) {
+			case REGEXTERM:
+				break;
+			case TERM:
+				break;
+		}
+	}
+
+	public void createTerm(Term.Type type, double value) {
+	// Term.Type.NUMBER
 
 	}
 
 	public void createTerm(Term.Type type, String name) {
-	
+		switch (type) {
+			case VARIABLE:
+				break;
+			case QUERYALL:
+				break;
+			case REGEXQUERYALL:
+				break;
+			case STRING:
+				break;
+		}
 	}
 
 	public void createTerm(Term.Type type, Expression expr1) {
-	
+	// Term.Type.EXPRESSION
+
+	}
+
+	public void createExpression(Expression.Type type, Term term1) {
+	// Term.Type.Term
+
+	}
+
+	public void createExpression(Expression.Type type, Expression expr1,
+									Expression expr2) {
+		switch (type) {
+			case MINUS:
+				break;
+			case PLUS:
+				break;
+			case MULTI:
+				break;
+			case DIVIDE:
+				break;
+		}
 	}
 
 // ObjectType i_stream = new ObjectType("java.io.InputStream");

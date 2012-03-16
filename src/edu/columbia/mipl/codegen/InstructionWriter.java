@@ -40,5 +40,9 @@ public abstract class InstructionWriter {
 	public abstract void createTerm(Term.Type type, String name);
 	public abstract void createTerm(Term.Type type, Expression expr1);
 
+	public abstract void createExpression(Expression.Type type, Term term);
+	public abstract void createExpression(Expression.Type type, Expression expr1,
+											Expression expr2);
+
 	public abstract void finish();
 }

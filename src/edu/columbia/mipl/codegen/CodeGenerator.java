@@ -46,11 +46,11 @@ public class CodeGenerator extends RuntimeTraverser {
 									term.getTerm2());
 				break;
 			case NOTTERM:
-				writer.createTerm(term.getType(), term.getTerm1());
+				writer.createTerm(Term.Type.NOTTERM, term.getTerm1());
 				break;
 			case REGEXTERM:
 			case TERM:
-				writer.createTerm(Term.Type.TERM, term.getName(),
+				writer.createTerm(term.getType(), term.getName(),
 									term.getArguments());
 				break;
 			case NUMBER:
@@ -68,6 +68,18 @@ public class CodeGenerator extends RuntimeTraverser {
 	}
 
 	public void reachExpression(Expression expr) {
+		switch (expr.getType()) {
+			case TERM:
+				writer.createExpression(Expression.Type.TERM, expr.getTerm());
+				break;
+			case MINUS:
+			case PLUS:
+			case MULTI:
+			case DIVIDE:
+				writer.createExpression(expr.getType(), expr.getExpr1(),
+											expr.getExpr2());
+				break;
+		}
 	}
 
 	public void reachFact(Fact fact) {
