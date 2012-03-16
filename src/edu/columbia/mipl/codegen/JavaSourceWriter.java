@@ -1,8 +1,9 @@
 /*
  * MIPL: Mining Integrated Programming Language
  *
- * File: JavaSourceWriter.java
- * Author: YoungHoon Jung <yj2244@columbia.edu>
+ * File: InstructionWriter.java
+ * Author A: YoungHoon Jung <yj2244@columbia.edu>
+ * Author B: Akshai Sarma <as4107@columbia.edu>
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
  * Description: JavaSourceWriter
  */

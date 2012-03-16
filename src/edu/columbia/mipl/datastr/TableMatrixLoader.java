@@ -6,7 +6,6 @@
  * Reviewer: Wonjoon Song <dws2127@columbia.edu>
  * Description: Table Matrix Loader implementing Matrix Loader
  * 				Only supports either integer or double matrices
- *
  */
 
 package edu.columbia.mipl.datastr;

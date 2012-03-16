@@ -1,10 +1,11 @@
 /*
  * MIPL: Mining Integrated Programming Language
  *
- * File: CodeGenerator.java
- * Author: YoungHoon Jung <yj2244@columbia.edu>
+ * File: InstructionWriter.java
+ * Author A: YoungHoon Jung <yj2244@columbia.edu>
+ * Author B: Akshai Sarma <as4107@columbia.edu>
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
- * Description: CodeGenerator
+ * Description: Code Generator
  */
 package edu.columbia.mipl.codegen;
 
