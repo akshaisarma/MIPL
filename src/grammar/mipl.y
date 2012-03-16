@@ -117,7 +117,7 @@ arg_cand
 	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same command */
 	| '_'				{ $$ = new Term(Term.Type.VARIABLE, "_"); }
 	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
-        | STRING_LITERAL		{ $$ = new Term(Term.Type.STRING, (String) $1); }
+	| STRING_LITERAL	{ $$ = new Term(Term.Type.STRING, (String) $1); }
 	;
 
 arg_list
@@ -178,11 +178,11 @@ assign_expr
 assign_op
 	: '='			{ $$ = JobExpr.Type.ASSIGN; }
 	| LARROW_OP		{ $$ = JobExpr.Type.ASSIGN; }
-	| MUL_ASSIGN		{ $$ = JobExpr.Type.MULASSIGN; }
-	| DIV_ASSIGN		{ $$ = JobExpr.Type.DIVASSIGN; }
-	| MOD_ASSIGN		{ $$ = JobExpr.Type.MODASSIGN; }
-	| ADD_ASSIGN		{ $$ = JobExpr.Type.ADDASSIGN; }
-	| SUB_ASSIGN		{ $$ = JobExpr.Type.SUBASSIGN; }
+	| MUL_ASSIGN	{ $$ = JobExpr.Type.MULASSIGN; }
+	| DIV_ASSIGN	{ $$ = JobExpr.Type.DIVASSIGN; }
+	| MOD_ASSIGN	{ $$ = JobExpr.Type.MODASSIGN; }
+	| ADD_ASSIGN	{ $$ = JobExpr.Type.ADDASSIGN; }
+	| SUB_ASSIGN	{ $$ = JobExpr.Type.SUBASSIGN; }
 	;
 
 

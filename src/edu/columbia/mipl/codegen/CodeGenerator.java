@@ -128,6 +128,46 @@ public class CodeGenerator extends RuntimeTraverser {
 	}
 
 	public void reachJobExpr(JobExpr jexpr) {
+		switch (jexpr.getType()) {
+			case COMPOUND:
+			case ASSIGN:
+			case MULASSIGN:
+			case DIVASSIGN:
+			case MODASSIGN:
+			case ADDASSIGN:
+			case SUBASSIGN:
+			case OR:
+			case AND:
+			case EQ:
+			case NE:
+			case LT:
+			case GT:
+			case LE:
+			case GE:
+			case ADD:
+			case SUB:
+			case MULT:
+			case DIV:
+			case MOD:
+				writer.createJobExpr(jexpr.getType(), jexpr.getExpr1(),
+										jexpr.getExpr2());
+				break;
+			case NEGATE:
+				writer.createJobExpr(JobExpr.Type.NEGATE, jexpr.getExpr1());
+				break;
+			case ARRAY:
+				writer.createJobExpr(JobExpr.Type.ARRAY, jexpr.getTerm(),
+										jexpr.getIndices1(),
+										jexpr.getIndices2());
+				break;
+			case JOBCALL:
+				writer.createJobExpr(JobExpr.Type.JOBCALL, jexpr.getName(),
+										jexpr.getExprs());
+				break;
+			case TERM:
+				writer.createJobExpr(JobExpr.Type.TERM, jexpr.getTerm());
+				break;
+		}
 	}
 
 	public void finish() {

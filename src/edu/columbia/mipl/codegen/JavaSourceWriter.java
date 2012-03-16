@@ -186,6 +186,74 @@ public class JavaSourceWriter extends InstructionWriter {
 
 	}
 
+	public void createJobExpr(JobExpr.Type type, JobExpr expr1,	JobExpr expr2) {
+		switch (type) {
+			case COMPOUND:
+				break;
+			case ASSIGN:
+				break;
+			case MULASSIGN:
+				break;
+			case DIVASSIGN:
+				break;
+			case MODASSIGN:
+				break;
+			case ADDASSIGN:
+				break;
+			case SUBASSIGN:
+				break;
+			case OR:
+				break;
+			case AND:
+				break;
+			case EQ:
+				break;
+			case NE:
+				break;
+			case LT:
+				break;
+			case GT:
+				break;
+			case LE:
+				break;
+			case GE:
+				break;
+			case ADD:
+				break;
+			case SUB:
+				break;
+			case MULT:
+				break;
+			case DIV:
+				break;
+			case MOD:
+				break;
+		}
+	}
+
+	public void createJobExpr(JobExpr.Type type, JobExpr expr1) {
+	// JobExpr.Type.NEGATE
+
+	}
+
+	public void createJobExpr(JobExpr.Type type, Term term,
+										List<ArrayIndex> indices1,
+										List<ArrayIndex> indices2) {
+	// JobExpr.Type.ARRAY
+
+	}
+
+	public void createJobExpr(JobExpr.Type type, String name,
+										List<JobExpr> exprs) {
+	// JobExpr.Type.JOBCALL
+
+	}
+
+	public void createJobExpr(JobExpr.Type type, Term term) {
+	// JobExpr.Type.TERM
+
+	}
+
 	public void finish() {
 		try {
 			out.write("	}\n");

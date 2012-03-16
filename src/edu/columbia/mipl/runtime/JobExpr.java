@@ -45,10 +45,9 @@ public class JobExpr extends Traversable {
 
 	JobExpr expr1;
 	JobExpr expr2;
-	JobExpr expr3;
 
 	List<ArrayIndex> indices1;
-	List<ArrayIndex> indices2;	
+	List<ArrayIndex> indices2;
 
 	String name;
 
@@ -95,10 +94,13 @@ public class JobExpr extends Traversable {
 
 	public JobExpr(Type type, JobExpr target, JobExpr source) {
 		assert (type == Type.ASSIGN || type == Type.MULASSIGN ||
-			type == Type.DIVASSIGN || type == Type.MODASSIGN ||
-			type == Type.ADDASSIGN || type == Type.SUBASSIGN ||
-			type == Type.COMPOUND);
-
+				type == Type.DIVASSIGN || type == Type.MODASSIGN ||
+				type == Type.ADDASSIGN || type == Type.SUBASSIGN ||
+				type == Type.COMPOUND || type == Type.OR ||
+				type == Type.AND || type == Type.EQ || type == Type.NE ||
+				type == Type.LT || type == Type.GT || type == Type.LE ||
+				type == Type.GE || type == Type.ADD || type == Type.SUB ||
+				type == Type.MULT || type == Type.DIV || type == Type.MOD);
 		this.type = type;
 		this.expr1 = target;
 		this.expr2 = source;
@@ -107,21 +109,35 @@ public class JobExpr extends Traversable {
 		add(source);
 	}
 
-	public JobExpr(Type type, JobExpr target, JobExpr left, JobExpr right) {
-		assert (type == Type.ASSIGN || type == Type.MULASSIGN ||
-			type == Type.OR || type == Type.AND || type == Type.EQ ||
-			type == Type.NE || type == Type.LT || type == Type.GT ||
-			type == Type.LE || type == Type.GE || type == Type.ADD ||
-			type == Type.SUB || type == Type.MULT || type == Type.DIV ||
-			type == Type.MOD);
+	public Type getType() {
+		return type;
+	}
 
-		this.type = type;
-		this.expr1 = target;
-		this.expr2 = left;
-		this.expr3 = right;
+	public List<JobExpr> getExprs() {
+		return exprs;
+	}
 
-		add(target);
-		add(left);
-		add(right);
+	public JobExpr getExpr1() {
+		return expr1;
+	}
+
+	public JobExpr getExpr2() {
+		return expr2;
+	}
+
+	public List<ArrayIndex> getIndices1() {
+		return indices1;
+	}
+
+	public List<ArrayIndex> getIndices2() {
+		return indices2;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Term getTerm() {
+		return term;
 	}
 }
