@@ -23,10 +23,46 @@ public class CodeGenerator extends RuntimeTraverser {
 
 	public void reachTerm(Term term) {
 		switch (term.getType()) {
+			case IS:
+				writer.createTerm(Term.Type.IS, term.getTerm1(),
+									term.getExpr1());
+				break;
+			case EQ:
+			case LT:
+			case LE:
+			case GT:
+			case GE:
+			case NE:
+				writer.createTerm(term.getType(), term.getExpr1(),
+									term.getExpr2());
+				break;
+			case MATRIX:
+				writer.createTerm(Term.Type.MATRIX, term.getName(),
+									term.getMatrix());
+				break;
+			case ANDTERMS:
+			case ORTERMS:
+				writer.createTerm(term.getType(), term.getTerm1(),
+									term.getTerm2());
+				break;
+			case NOTTERM:
+				writer.createTerm(term.getType(), term.getTerm1());
+				break;
+			case REGEXTERM:
+			case TERM:
+				writer.createTerm(Term.Type.TERM, term.getName(),
+									term.getArguments());
+				break;
 			case NUMBER:
 				writer.createTerm(Term.Type.NUMBER, term.getValue());
 				break;
-			case TERM:
+			case VARIABLE:
+			case QUERYALL:
+			case REGEXQUERYALL:
+			case STRING:
+				writer.createTerm(term.getType(), term.getName());
+			case EXPRESSION:
+				writer.createTerm(Term.Type.EXPRESSION, term.getExpr1());
 				break;
 		}
 	}

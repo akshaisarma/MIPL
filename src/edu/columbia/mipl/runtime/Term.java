@@ -184,6 +184,14 @@ public class Term extends Traversable {
 		return term2;
 	}
 
+	public Expression getExpr1() {
+		return expr1;
+	}
+
+	public Expression getExpr2() {
+		return expr2;
+	}
+
 	static boolean checkStoreVS(VariableStack vs, Term term1, Term term2) {
 		Term prev = vs.get(term1);
 		if (prev != null && !prev.match(term2, vs))

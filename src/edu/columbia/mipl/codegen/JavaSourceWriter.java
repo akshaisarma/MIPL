@@ -12,12 +12,13 @@ import java.io.*;
 import java.util.*;
 
 import edu.columbia.mipl.runtime.*;
+import edu.columbia.mipl.datastr.*;
 
 public class JavaSourceWriter extends InstructionWriter {
 
 	Stack<String> stack;
 	Writer out;
-	
+
 	public JavaSourceWriter() {
 		String output = "MiplProgram"; /* Should be read from Configuration */
 
@@ -44,7 +45,37 @@ public class JavaSourceWriter extends InstructionWriter {
 		stack.push("new Term(Term.Type.NUMBER, " + value + ")");
 	}
 
-	public void createTerm(Term.Type type, String name, List<Term> args) {
+	public void createTerm(Term.Type type, Term term1, Expression expr1) {
+
+	}
+
+	public void createTerm(Term.Type type, Expression expr1, Expression expr2) {
+
+	}
+
+	public void createTerm(Term.Type type, String name,
+										PrimitiveMatrix<Double> matrix) {
+
+	}
+
+	public void createTerm(Term.Type type, Term term1, Term term2) {
+
+	}
+
+	public void createTerm(Term.Type type, Term term1) {
+
+	}
+
+	public void createTerm(Term.Type type, String name, List<Term> arguments) {
+
+	}
+
+	public void createTerm(Term.Type type, String name) {
+
+	}
+
+	public void createTerm(Term.Type type, Expression expr1) {
+
 	}
 
 	public void finish() {
