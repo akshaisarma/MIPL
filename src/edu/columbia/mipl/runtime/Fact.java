@@ -51,4 +51,16 @@ public class Fact extends Knowledge  {
 	public String getName() {
 		return name;
 	}
+
+	public List<String> getNames() {
+		return names;
+	}
+
+	public List<Term> getTerms() {
+		return terms;
+	}
+
+	public Type getType() {
+		return type;
+	}
 }

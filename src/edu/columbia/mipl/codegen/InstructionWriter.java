@@ -44,5 +44,22 @@ public abstract class InstructionWriter {
 	public abstract void createExpression(Expression.Type type, Expression expr1,
 											Expression expr2);
 
+	public abstract void createFact(Fact.Type type, Term term);
+	public abstract void createFact(Fact.Type type, String name,
+										List<String> names, List<Term> terms);
+
+	public abstract void createRule(Term term, Term source);
+
+	public abstract void createQuery(Term term);
+
+	public abstract void createJob(String name, List<Term> args,
+									List<JobStmt> stmts);
+
+	public abstract void createJobStmt(JobStmt.Type type, JobExpr expr,
+										JobStmt stmt1, JobStmt stmt2);
+	public abstract void createJobStmt(JobStmt.Type type, List<JobStmt> stmts);
+	public abstract void createJobStmt(JobStmt.Type type, JobExpr expr);
+	public abstract void createJobStmt(JobStmt.Type type);
+
 	public abstract void finish();
 }

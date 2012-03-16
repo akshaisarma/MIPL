@@ -29,7 +29,7 @@ public class Expression extends Traversable {
 	Expression right;
 
 	public Expression(Type type, Term term) {
-		assert (type == Type.TERM && 
+		assert (type == Type.TERM &&
 			(term.getType() == Term.Type.VARIABLE || term.getType() == Term.Type.NUMBER));
 
 		this.type = type;
@@ -42,7 +42,7 @@ public class Expression extends Traversable {
 
 	public Expression(Type type, double value) {
 		assert (type == Type.TERM && term.getType() == Term.Type.NUMBER);
-		
+
 		term.setValue(value);
 	}
 

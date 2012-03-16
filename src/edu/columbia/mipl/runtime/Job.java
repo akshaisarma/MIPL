@@ -29,4 +29,12 @@ public class Job extends Knowledge {
 	public String getName() {
 		return name;
 	}
+
+	public List<Term> getArgs() {
+		return args;
+	}
+
+	public List<JobStmt> getStmts() {
+		return stmts;
+	}
 }

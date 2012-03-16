@@ -83,18 +83,48 @@ public class CodeGenerator extends RuntimeTraverser {
 	}
 
 	public void reachFact(Fact fact) {
+		switch (fact.getType()) {
+			case FACT:
+				writer.createFact(Fact.Type.FACT, fact.getTerm());
+				break;
+			case MATRIXASFACTS:
+				writer.createFact(Fact.Type.MATRIXASFACTS, fact.getName(),
+									fact.getNames(), fact.getTerms());
+				break;
+		}
 	}
 
 	public void reachRule(Rule rule) {
+		writer.createRule(rule.getTerm(), rule.getSource());
 	}
 
 	public void reachQuery(Query query) {
+		writer.createQuery(query.getTerm());
 	}
 
 	public void reachJob(Job job) {
+		writer.createJob(job.getName(), job.getArgs(), job.getStmts());
 	}
 
 	public void reachJobStmt(JobStmt jstmt) {
+		switch (jstmt.getType()) {
+			case IF:
+			case WHILE:
+			case DOWHILE:
+				writer.createJobStmt(jstmt.getType(), jstmt.getExpr(),
+										jstmt.getStmt1(), jstmt.getStmt2());
+				break;
+			case COMPOUND:
+				writer.createJobStmt(JobStmt.Type.COMPOUND, jstmt.getStmts());
+				break;
+			case EXPR:
+			case RETURN:
+				writer.createJobStmt(jstmt.getType(), jstmt.getExpr());
+				break;
+			case NULL:
+				writer.createJobStmt(JobStmt.Type.NULL);
+				break;
+		}
 	}
 
 	public void reachJobExpr(JobExpr jexpr) {

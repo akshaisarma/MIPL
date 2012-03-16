@@ -136,6 +136,61 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		}
 	}
 
+	public void createFact(Fact.Type type, Term term) {
+	// Fact.Type.FACT
+
+	}
+
+	public void createFact(Fact.Type type, String name, List<String> names,
+							List<Term> terms) {
+	// Fact.Type.MATRIXASFACTS
+
+	}
+
+	public void createRule(Term term, Term source) {
+
+	}
+
+	public void createQuery(Term term) {
+
+	}
+
+	public void createJob(String name, List<Term> args, List<JobStmt> stmts) {
+
+	}
+
+	public void createJobStmt(JobStmt.Type type, JobExpr expr, JobStmt stmt1,
+								JobStmt stmt2) {
+		switch (type) {
+			case IF:
+				break;
+			case WHILE:
+				break;
+			case DOWHILE:
+				break;
+		}
+	}
+
+	public void createJobStmt(JobStmt.Type type, List<JobStmt> stmts) {
+	// JobStmt.Type.COMPOUND
+
+	}
+
+	public void createJobStmt(JobStmt.Type type, JobExpr expr) {
+	// Maybe should use helper functions for this as tasks are really different
+		switch (type) {
+			case RETURN:
+				break;
+			case EXPR:
+				break;
+		}
+	}
+
+	public void createJobStmt(JobStmt.Type type) {
+	// JobStmt.Type.NULL. Do nothing depending on how we handle function return
+
+	}
+
 // ObjectType i_stream = new ObjectType("java.io.InputStream");
 	public void finish() {
 	}
