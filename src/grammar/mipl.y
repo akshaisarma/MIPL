@@ -26,8 +26,8 @@ import edu.columbia.mipl.runtime.*;
 %token NUMBER
 
 %start program
-%%
 
+%%
 
 program
 	: commands
@@ -243,7 +243,7 @@ array_idx_elmt
 	;
 
 array_idx_list
-	: array_idx_elmt			{ $$ = new ArrayList<ArrayIndex>(); ((List<ArrayIndex>) $$).add((ArrayIndex) $1); };
+	: array_idx_elmt			{ $$ = new ArrayList<ArrayIndex>(); ((List<ArrayIndex>) $$).add((ArrayIndex) $1); }
 	| array_idx_list ',' array_idx_elmt	{ $$ = $1; ((List<ArrayIndex>) $$).add((ArrayIndex) $3); }
 	;
 

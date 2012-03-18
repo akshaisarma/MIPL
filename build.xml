@@ -140,7 +140,7 @@
 	    </move>
     </target>
 
-    <target name="docs" description="Generates pdf documents">
+    <target name="docs" depends="extract" description="Generates pdf documents">
 	<exec executable="make">
 		<arg value="-C" />
 		<arg value="${docs}/reference_manual" />
@@ -151,5 +151,19 @@
 		<arg value="${docs}/tutorial" />
 	</exec>
 	<copy file="${docs}/tutorial/tutorial.pdf" todir="${docs}"/>
+    </target>
+
+    <target name="extract">
+	    <java jar="${tool}/JFlex.jar" fork="true" failonerror="true">
+		    <arg value="${tool}/grammar_extract/ge.jflex" />
+		    <arg value="-d" />
+		    <arg value="${tool}/grammar_extract/" />
+		    <arg value="--nobak" />
+	    </java>
+	    <javac srcdir="${tool}/grammar_extract" includes="Yylex.java" destdir="${tool}" />
+	    <java classname="Yylex" classpath="${tool}">
+		    <arg value="${src}/grammar/mipl.y" />
+		    <arg value="${build}/mipl.grammar" />
+	    </java>
     </target>
 </project>
