@@ -75,7 +75,19 @@
 		<arg value="${tool}/byaccj1.15/src" />
 		<arg value="clean" />
 	</exec>
-</target>
+	<exec executable="make">
+		<arg value="-C" />
+		<arg value="${docs}/reference_manual" />
+		<arg value="clean" />
+	</exec>
+	<exec executable="make">
+		<arg value="-C" />
+		<arg value="${docs}/tutorial" />
+		<arg value="clean" />
+	</exec>
+	<delete file="${docs}/reference_manual.pdf" />
+	<delete file="${docs}/tutorial.pdf" />
+    </target>
 
     <taskdef resource="checkstyletask.properties" classpath="${tool}/checkstyle-5.5-all.jar" />
 
@@ -100,7 +112,7 @@
 	    <antcall target="checkstyle"/>
     </target>
 
-    <target name="parser" description="Generates Yylex.java and Parser.java using JFlex and BYacc/J from mipl.jflex and mipl.y">
+    <target name="parser" depends="docs" description="Generates Yylex.java and Parser.java using JFlex and BYacc/J from mipl.jflex and mipl.y">
 	    <java jar="${tool}/JFlex.jar" fork="true" failonerror="true">
 		    <arg value="${src}/grammar/mipl.jflex" />
 		    <arg value="-d" />
@@ -126,7 +138,18 @@
 			    <file name="ParserTokens.java"/>
 		    </filelist>
 	    </move>
-
     </target>
 
+    <target name="docs" description="Generates pdf documents">
+	<exec executable="make">
+		<arg value="-C" />
+		<arg value="${docs}/reference_manual" />
+	</exec>
+	<copy file="${docs}/reference_manual/reference_manual.pdf" todir="${docs}"/>
+	<exec executable="make">
+		<arg value="-C" />
+		<arg value="${docs}/tutorial" />
+	</exec>
+	<copy file="${docs}/tutorial/tutorial.pdf" todir="${docs}"/>
+    </target>
 </project>

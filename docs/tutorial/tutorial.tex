@@ -1,0 +1,195 @@
+% acmsmall-sample.tex, dated 4th Nov. 2011
+% This is a sample file for ACM small trim journals
+%
+% Compilation using 'acmsmall.cls' - version 1.2, Aptara Inc.
+% (c) 2010 Association for Computing Machinery (ACM)
+%
+% Questions/Suggestions/Feedback should be addressed to => "acmtexsupport@aptaracorp.com".
+% Users can also go through the FAQs available on the journal's submission webpage.
+%
+% Steps to compile: latex, bibtex, latex latex
+%
+% For tracking purposes => this is v1.2 - Nov. 2011
+
+\documentclass[prodmode,acmtecs]{acmsmall}
+
+% Package to generate and customize Algorithm as per ACM style
+\usepackage[ruled]{algorithm2e}
+\renewcommand{\algorithmcfname}{ALGORITHM}
+\SetAlFnt{\small}
+\SetAlCapFnt{\large}
+\SetAlCapNameFnt{\large}
+\SetAlCapHSkip{10pt}
+\IncMargin{-\parindent}
+
+% Metadata Information
+\acmVolume{1}
+\acmNumber{1}
+\acmArticle{1}
+\acmYear{2012}
+\acmMonth{3}
+
+% Document starts
+\begin{document}
+
+% Page heads
+%\markboth{Young Hoon et al.}{MIPL Reference Manual}
+
+% Title portion
+\title{{MIPL: Mining Integrated Programming Language\\
+Language Reference Manual}}
+\author{Project Manager: Younghoon Jeon $<yj2231@columbia.edu>$\\
+System Architect: Young Hoon Jung $<yj2244@columbia.edu>$\\
+Language Expert: Jinhyung Park $<jp2105@columbia.edu>$\\
+System Integrator: Daniel Wonjoon Song $<dws2127@columbia.edu>$\\
+System Validation: Akshai Sarma $<as4107@columbia.edu>$
+%\affil{Columbia University}
+}
+
+\begin{abstract}
+Abstraction here.
+\end{abstract}
+
+%\category{C.2.2}{Computer-Communication Networks}{Network Protocols}
+
+%\terms{Design, Algorithms, Performance}
+
+%\keywords{Wireless sensor networks, media access control,
+%multi-channel, radio interference, time synchronization}
+
+%\acmformat{Zhou, G., Wu, Y., Yan, T., He, T., Huang, C., Stankovic,
+%J. A., and Abdelzaher, T. F.  2010. A multifrequency MAC specially
+%designed for  wireless sensor network applications.}
+
+%\begin{bottomstuff}
+%This work is supported by the National Science Foundation, under
+%\end{bottomstuff}
+
+\maketitle
+
+
+\section{Introduction}
+
+Introduction here.
+
+Item sample.
+\begin{itemize}
+\item item1 To the best of our knowledge, the MMSN protocol is the first
+\item item2 Instead of using pairwise RTS/CTS frequency negotiation
+\end{itemize}
+
+% Head 1
+\section{Lexical conventions}
+MIPL has six kinds of tokens: identifiers, variables, numbers, strings,
+expression operators, and other separators.  In general blanks, tabs,
+newlines, and comments as described below are ignored except as they
+serve to separate tokens. At least one of these characters is required
+to separate otherwise adjacent identifiers, constants, and certain
+operatorpairs.  If the input stream has been parsed into tokens up
+to a given character, the next token is taken to include the longest
+string of characters which could possibly constitute a token.
+
+% Head 2
+\subsection{Comments}
+
+MIPL uses shell script-like comments, which begins with the character
+\# and terminates at the end of the line, separated by the newline character.
+
+% Head 3
+\subsection{Identifiers}
+
+An identifier is a sequence of letters that begins with lower case alphabets.
+Upper and lower case letters are considered different.   Identifiers are
+served for use as the name of Terms, the basic block of MIPL syntax.
+
+\subsection{Variables}
+
+A variable is a sequence of letters that begins with upper case alphabets
+or the underscore character, \_, which means that this variable will not
+be tracked.  Upper and lower case letters in the variable names are
+considered different. 
+
+\subsection{Numbers}
+
+A number in MIPL is a floating number.  A number consists of an integer
+part, a decimal point, a fraction part, an e, and an optionally signed integer
+exponent. The integer and fraction parts both consist of a sequence of digits.
+Either the integer part or the fraction
+part (not both) may be missing; either the decimal point or the
+e and the exponent (not both) may be missing.
+Every floating constant is taken to be doubleprecision.
+
+\subsection{Strings}
+
+A string is a sequence of characters surrounded by double quotes or single
+quotes.
+A string has the type arrayofcharacters
+(see below) and refers to an area of storage initialized with the given
+characters. The compiler places a null byte ( \\0 ) at the end of each
+string so that programs which scan the string can find its end. In a
+string, the character ..  " ..  must be preceded by a ..\.. ; in
+addition, the same escapes as described for character constants may be used.
+NEED FIX
+
+\subsection{Expression Operators}
+Expression Operators will be explained in Built-in Operators and Jobs section.
+
+\section{Data Types}
+
+Data Types here.
+
+\section{Syntax}
+
+Syntax here
+
+\subsection{Syntax subsection}
+
+Sytanx subsection
+
+\section{Operators}
+Operators here
+
+\subsection{Operator $*$}
+
+\subsection{Operator $/$}
+
+\section{Built-in Terms}
+Functions here
+
+\subsection{sum()}
+
+\subsection{Syntax subsection}
+
+\section{Conclusions}
+
+Conclusion here, if we have.
+
+% Appendix
+%\appendix
+%\section*{APPENDIX}
+%\setcounter{section}{1}
+%In this appendix, we measure
+
+%\appendixhead{ZHOU}
+
+% Acknowledgments
+%\begin{acks}
+%The authors would like to thank Dr. Maura Turolla of Telecom
+%\end{acks}
+
+% Bibliography
+%\bibliographystyle{acmsmall}
+%\bibliography{tutorial_ref}
+
+% History dates
+%\received{February 2007}{March 2009}{June 2009}
+
+% Electronic Appendix
+%\elecappendix
+
+\medskip
+
+%\section{This is an example of Appendix section head}
+
+\end{document}
+
