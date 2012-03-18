@@ -145,6 +145,7 @@ Data Types here.
 
 Syntax here
 
+%----------------------------------------------------------JINHYUNG{
 \subsection{Program}
 
 A program looks like this:
@@ -177,8 +178,183 @@ command
 	;
 \end{lstlisting}
 
-Sytanx subsection
+%----------------------------------------------------------JINHYUNG}
+%----------------------------------------------------------YOUNGHOON{
+\subsection{Term Expression}
 
+Term Expression
+\begin{lstlisting}
+term_expr
+	: term_expr '+' term_fact
+	| term_expr '-' term_fact
+	| term_fact
+	;
+\end{lstlisting}
+
+\subsection{Term Factor}
+
+Term Factor
+\begin{lstlisting}
+term_fact
+	: term_fact '*' term_term
+	| term_fact '/' term_term
+	| term_term
+	;
+\end{lstlisting}
+
+
+\subsection{Term Term}
+
+\begin{lstlisting}
+term_term
+	: VARIABLE
+	| NUMBER
+	| '(' term_expr ')'
+	;
+\end{lstlisting}
+
+
+\subsection{Argument Candidate}
+
+\begin{lstlisting}
+arg_cand
+	: IDENTIFIER
+	| IDENTIFIER '(' arg_list ')'
+	| VARIABLE
+	| '_'
+	| NUMBER
+	| STRING_LITERAL
+	;
+\end{lstlisting}
+
+
+\subsection{Argument List}
+
+\begin{lstlisting}
+arg_list
+	: arg_cand
+	| arg_list ',' arg_cand
+	;
+\end{lstlisting}
+
+\subsection{Job}
+
+\begin{lstlisting}
+job
+	: IDENTIFIER '(' arg_list ')' '{' stmt_list '}'
+	;
+\end{lstlisting}
+
+
+\subsection{Job Statement}
+
+\begin{lstlisting}
+stmt
+	: selection_stmt
+	| compound_stmt
+	| return_stmt
+	| expr_stmt
+	| iteration_stmt
+	;
+\end{lstlisting}
+
+
+\subsection{Job Statement List}
+
+\begin{lstlisting}
+stmt_list
+	: stmt
+	| stmt_list stmt
+	;
+\end{lstlisting}
+
+
+\subsection{Job Compound Statement}
+
+\begin{lstlisting}
+compound_stmt
+	: '{' '}'
+	| '{' stmt_list '}'
+	;
+\end{lstlisting}
+
+
+\subsection{Job Return Statement}
+
+\begin{lstlisting}
+return_stmt
+	: '@' expr '.'
+	;
+
+\end{lstlisting}
+
+
+\subsection{Job Expression Statement}
+
+\begin{lstlisting}
+expr_stmt
+	: expr '.'
+	;
+\end{lstlisting}
+
+
+\subsection{Job Selection Statement}
+
+\begin{lstlisting}
+selection_stmt
+	: IF '(' expr ')' stmt
+	| IF '(' expr ')' stmt ELSE stmt
+	;
+\end{lstlisting}
+
+
+\subsection{Job Iteration Statement}
+
+\begin{lstlisting}
+iteration_stmt
+	: WHILE '(' expr ')' stmt
+	| DO stmt WHILE '(' expr ')' '.'
+	;
+\end{lstlisting}
+
+
+\subsection{Job Expression}
+
+\begin{lstlisting}
+expr
+	: assign_expr
+	;
+\end{lstlisting}
+
+
+\subsection{Job Assignment Expression}
+
+\begin{lstlisting}
+assign_expr
+	: logical_or_expr
+	| unary_expr assign_op assign_expr
+	;
+\end{lstlisting}
+
+\subsection{Job Assignment Operator}
+
+\begin{lstlisting}
+assign_op
+	: '='
+	| LARROW_OP
+	| MUL_ASSIGN
+	| DIV_ASSIGN
+	| MOD_ASSIGN
+	| ADD_ASSIGN
+	| SUB_ASSIGN
+	;
+\end{lstlisting}
+
+
+%----------------------------------------------------------YOUNGHOON}
+%----------------------------------------------------------AKSHAI{
+
+%----------------------------------------------------------AKSHAI}
 \section{Operators}
 Operators here
 
