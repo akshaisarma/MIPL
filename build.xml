@@ -154,13 +154,14 @@
     </target>
 
     <target name="extract">
+	    <mkdir dir="${build}" />
 	    <java jar="${tool}/JFlex.jar" fork="true" failonerror="true">
 		    <arg value="${tool}/grammar_extract/ge.jflex" />
 		    <arg value="-d" />
-		    <arg value="${tool}/grammar_extract/" />
+		    <arg value="${build}" />
 		    <arg value="--nobak" />
 	    </java>
-	    <javac srcdir="${tool}/grammar_extract" includes="Yylex.java" destdir="${tool}" />
+	    <javac srcdir="${build}" includes="Yylex.java" destdir="${tool}" />
 	    <java classname="Yylex" classpath="${tool}">
 		    <arg value="${src}/grammar/mipl.y" />
 		    <arg value="${build}/mipl.grammar" />
