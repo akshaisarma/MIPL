@@ -291,6 +291,8 @@ return_stmt
 
 \subsection{Job Expression Statement}
 
+Probably should make all the expressions below subsubsections instead of subsections.
+
 \begin{lstlisting}
 expr_stmt
 	: expr '.'
@@ -352,7 +354,131 @@ assign_op
 
 
 %----------------------------------------------------------YOUNGHOON}
+
 %----------------------------------------------------------AKSHAI{
+\subsection{Job Logical OR Expression}
+
+\begin{lstlisting}
+logical_or_expr
+	: logical_and_expr
+	| logical_or_expr OR_OP logical_and_expr
+	;
+\end{lstlisting}
+
+\subsection{Job Logical AND Expression}
+
+\begin{lstlisting}
+logical_and_expr
+	: equality_expr
+	| logical_and_expr AND_OP equality_expr
+	;
+\end{lstlisting}
+
+\subsection{Job Equality Expression}
+
+\begin{lstlisting}
+equality_expr
+	: relational_expr
+	| equality_expr EQ_OP relational_expr
+	| equality_expr NE_OP relational_expr
+	;
+\end{lstlisting}
+
+\subsection{Job Relational Expression}
+
+\begin{lstlisting}
+relational_expr
+	: additive_expr
+	| relational_expr '<' additive_expr
+	| relational_expr '>' additive_expr
+	| relational_expr LE_OP additive_expr
+	| relational_expr GE_OP additive_expr
+	;
+\end{lstlisting}
+
+\subsection{Job Additive Expression}
+
+\begin{lstlisting}
+additive_expr
+	: multiplicative_expr
+	| additive_expr '+' multiplicative_expr
+	| additive_expr '-' multiplicative_expr
+	;
+\end{lstlisting}
+
+\subsection{Job Multiplicative Expression}
+
+\begin{lstlisting}
+multiplicative_expr
+	: unary_expr
+	| multiplicative_expr '*' unary_expr
+	| multiplicative_expr '/' unary_expr
+	| multiplicative_expr '%' unary_expr
+	;
+\end{lstlisting}
+
+\subsection{Job Unary Expression}
+Should talk about l-value if necessary.
+
+\begin{lstlisting}
+unary_expr
+	: postfix_expr
+	| '+' unary_expr
+	| '-' unary_expr
+	;
+\end{lstlisting}
+
+\subsection{Job PostFix Expression}
+
+\begin{lstlisting}
+postfix_expr
+	: primary_expr
+	| VARIABLE '[' array_idx_list ']' '[' array_idx_list ']'
+	| IDENTIFIER '(' ')'
+	| IDENTIFIER '(' argument_expr_list ')'
+	;
+\end{lstlisting}
+
+\subsection{Job Primary Expression}
+
+\begin{lstlisting}
+primary_expr
+	: IDENTIFIER
+	| VARIABLE
+	| NUMBER
+	| STRING_LITERAL
+	| '(' expr ')'
+	;
+\end{lstlisting}
+
+\subsection{Job Array Index Element}
+
+\begin{lstlisting}
+array_idx_elmt
+	: '~'
+	| '~' NUMBER
+	| NUMBER
+	| NUMBER '~'
+	| NUMBER '~' NUMBER
+	;
+\end{lstlisting}
+
+\subsection{Job Array Index List}
+
+\begin{lstlisting}
+array_idx_list
+	: array_idx_elmt
+	| array_idx_list ',' array_idx_elmt
+	;
+\end{lstlisting}
+\subsection{Job Argument Expression List}
+
+\begin{lstlisting}
+argument_expr_list
+	: assign_expr
+	| argument_expr_list ',' assign_expr
+	;
+\end{lstlisting}
 
 %----------------------------------------------------------AKSHAI}
 \section{Operators}
