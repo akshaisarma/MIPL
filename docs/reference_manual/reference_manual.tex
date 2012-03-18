@@ -15,6 +15,7 @@
 
 % Package to generate and customize Algorithm as per ACM style
 \usepackage[ruled]{algorithm2e}
+\usepackage{listings}
 \renewcommand{\algorithmcfname}{ALGORITHM}
 \SetAlFnt{\small}
 \SetAlCapFnt{\large}
@@ -67,6 +68,8 @@ Abstraction here.
 
 \maketitle
 
+
+\lstset{frame=single}
 
 \section{Introduction}
 
@@ -142,7 +145,37 @@ Data Types here.
 
 Syntax here
 
-\subsection{Syntax subsection}
+\subsection{Program}
+
+A program looks like this:
+
+\begin{lstlisting}
+program
+	: commands
+	;
+\end{lstlisting}
+
+
+\subsection{Commands}
+
+\begin{lstlisting}
+commands
+	: command commands
+	| command
+	;
+\end{lstlisting}
+
+
+\subsection{Command}
+
+\begin{lstlisting}
+command
+	: fact
+	| query
+	| rule
+	| job
+	;
+\end{lstlisting}
 
 Sytanx subsection
 
@@ -160,9 +193,11 @@ Functions here
 
 \subsection{Syntax subsection}
 
-\section{Conclusions}
+\section*{Appendix}
 
-Conclusion here, if we have.
+MIPL's full grammar is here.
+%\lstinputlisting{../../src/grammar/mipl.y}
+%\lstinputlisting{tablified_grammar}
 
 % Appendix
 %\appendix
