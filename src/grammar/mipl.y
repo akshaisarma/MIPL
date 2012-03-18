@@ -25,8 +25,6 @@ import edu.columbia.mipl.runtime.*;
 %token REGEX VARIABLE NOT LARROW_OP IS
 %token NUMBER
 
-%token NULL
-
 %start program
 %%
 
@@ -36,8 +34,8 @@ program
 	;
 
 commands
-	: commands command		{ /* ProgramList.add(command); */ }
-	| command		{ /* ProgramList.add(command); */ }
+	: command commands		{ program.add((Command) $1); }
+	| command			{ program.add((Command) $1); }
 	;
 
 command
@@ -75,25 +73,25 @@ and_terms
 	| and_terms ',' term		{ $$ = new Term(Term.Type.ANDTERMS, (Term) $1, (Term) $3); }
 	;
 
-term /*% load into edu.columbia.mipl.runtime.Term */
-	: IDENTIFIER			{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
+term
+	: IDENTIFIER			{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) null); }
 	| IDENTIFIER '(' arg_list ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
 	| IDENTIFIER '(' '*' ')'	{ $$ = new Term(Term.Type.QUERYALL, (String) $1); }
-        | REGEX				{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, new ArrayList<Term>()); }
-        | REGEX '(' arg_list ')'	{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, (List<Term>) $3); }
-        | REGEX '(' '*' ')'		{ $$ = new Term(Term.Type.REGEXQUERYALL, (String) $1); }
-        | NOT term			{ $$ = new Term(Term.Type.NOTTERM, (Term) $2); }
-        | term_expr			{ $$ = ((Expression) $1).getTerm(); }
-        | VARIABLE IS term		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), (Term) $3); } /* TODO: Should check VariableMatcher for the same command */
-        | term_expr '<' term_expr	{ $$ = new Term(Term.Type.LT, (Expression) $1, (Expression) $3); }
-        | term_expr '>' term_expr	{ $$ = new Term(Term.Type.GT, (Expression) $1, (Expression) $3); }
-        | term_expr LE_OP term_expr	{ $$ = new Term(Term.Type.LE, (Expression) $1, (Expression) $3); }
-        | term_expr GE_OP term_expr	{ $$ = new Term(Term.Type.GE, (Expression) $1, (Expression) $3); }
-        | term_expr EQ_OP term_expr	{ $$ = new Term(Term.Type.EQ, (Expression) $1, (Expression) $3); }
-        | term_expr NE_OP term_expr	{ $$ = new Term(Term.Type.NE, (Expression) $1, (Expression) $3); }
-        ;
+	| REGEX				{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, new ArrayList<Term>()); }
+	| REGEX '(' arg_list ')'	{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, (List<Term>) $3); }
+	| REGEX '(' '*' ')'		{ $$ = new Term(Term.Type.REGEXQUERYALL, (String) $1); }
+	| NOT term			{ $$ = new Term(Term.Type.NOTTERM, (Term) $2); }
+	| term_expr			{ $$ = ((Expression) $1).getTerm(); }
+	| VARIABLE IS term		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), (Term) $3); } /* TODO: Should check VariableMatcher for the same command */
+	| term_expr '<' term_expr	{ $$ = new Term(Term.Type.LT, (Expression) $1, (Expression) $3); }
+	| term_expr '>' term_expr	{ $$ = new Term(Term.Type.GT, (Expression) $1, (Expression) $3); }
+	| term_expr LE_OP term_expr	{ $$ = new Term(Term.Type.LE, (Expression) $1, (Expression) $3); }
+	| term_expr GE_OP term_expr	{ $$ = new Term(Term.Type.GE, (Expression) $1, (Expression) $3); }
+	| term_expr EQ_OP term_expr	{ $$ = new Term(Term.Type.EQ, (Expression) $1, (Expression) $3); }
+	| term_expr NE_OP term_expr	{ $$ = new Term(Term.Type.NE, (Expression) $1, (Expression) $3); }
+	;
 
-term_expr /*% load into edu.columbia.mipl.runtime.Expression */
+term_expr
 	: term_expr '+' term_fact	{ $$ = new Expression(Expression.Type.PLUS, (Expression) $1, (Expression) $3); }
 	| term_expr '-' term_fact	{ $$ = new Expression(Expression.Type.MINUS, (Expression) $1, (Expression) $3); }
 	| term_fact			/* Default Action $$ = $1 */
@@ -117,7 +115,7 @@ arg_cand
 	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same command */
 	| '_'				{ $$ = new Term(Term.Type.VARIABLE, "_"); }
 	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
-	| STRING_LITERAL	{ $$ = new Term(Term.Type.STRING, (String) $1); }
+	| STRING_LITERAL		{ $$ = new Term(Term.Type.STRING, (String) $1); }
 	;
 
 arg_list
@@ -143,7 +141,7 @@ stmt_list
 	;
 
 compound_stmt
-	: '{' '}'			{ $$ = new JobStmt(JobStmt.Type.NULL); }
+	: '{' '}'			{ $$ = new JobStmt(JobStmt.Type.COMPOUND, new ArrayList<JobStmt>()); }
 	| '{' stmt_list '}'		{ $$ = new JobStmt(JobStmt.Type.COMPOUND, (List<JobStmt>) $2); }
 	;
 
@@ -166,8 +164,7 @@ iteration_stmt
 	;
 
 expr
-	: assign_expr		/* Default Action $$ = $1 */
-	| expr ',' assign_expr	{ $$ = new JobExpr(JobExpr.Type.COMPOUND, (JobExpr) $1, (JobExpr) $3); }
+	: assign_expr			/* Default Action $$ = $1 */
 	;
 
 assign_expr
@@ -176,13 +173,13 @@ assign_expr
 	;
 
 assign_op
-	: '='			{ $$ = JobExpr.Type.ASSIGN; }
-	| LARROW_OP		{ $$ = JobExpr.Type.ASSIGN; }
-	| MUL_ASSIGN	{ $$ = JobExpr.Type.MULASSIGN; }
-	| DIV_ASSIGN	{ $$ = JobExpr.Type.DIVASSIGN; }
-	| MOD_ASSIGN	{ $$ = JobExpr.Type.MODASSIGN; }
-	| ADD_ASSIGN	{ $$ = JobExpr.Type.ADDASSIGN; }
-	| SUB_ASSIGN	{ $$ = JobExpr.Type.SUBASSIGN; }
+	: '='				{ $$ = JobExpr.Type.ASSIGN; }
+	| LARROW_OP			{ $$ = JobExpr.Type.ASSIGN; }
+	| MUL_ASSIGN			{ $$ = JobExpr.Type.MULASSIGN; }
+	| DIV_ASSIGN			{ $$ = JobExpr.Type.DIVASSIGN; }
+	| MOD_ASSIGN			{ $$ = JobExpr.Type.MODASSIGN; }
+	| ADD_ASSIGN			{ $$ = JobExpr.Type.ADDASSIGN; }
+	| SUB_ASSIGN			{ $$ = JobExpr.Type.SUBASSIGN; }
 	;
 
 
@@ -212,15 +209,15 @@ relational_expr
 
 additive_expr
 	: multiplicative_expr				/* Default Action $$ = $1 */
-	| additive_expr '+' multiplicative_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
-	| additive_expr '-' multiplicative_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
+	| additive_expr '+' multiplicative_expr		{ $$ = new JobExpr(JobExpr.Type.ADD, (JobExpr) $1, (JobExpr) $3); }
+	| additive_expr '-' multiplicative_expr		{ $$ = new JobExpr(JobExpr.Type.SUB, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 multiplicative_expr
 	: unary_expr					/* Default Action $$ = $1 */
-	| multiplicative_expr '*' unary_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
-	| multiplicative_expr '/' unary_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
-	| multiplicative_expr '%' unary_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_expr '*' unary_expr		{ $$ = new JobExpr(JobExpr.Type.MULT, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_expr '/' unary_expr		{ $$ = new JobExpr(JobExpr.Type.DIV, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_expr '%' unary_expr		{ $$ = new JobExpr(JobExpr.Type.MOD, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 unary_expr
@@ -253,12 +250,12 @@ array_idx_list
 postfix_expr
 	: primary_expr							/* Default Action $$ = $1 */
 	| VARIABLE '[' array_idx_list ']' '[' array_idx_list ']'	{ $$ = new JobExpr(JobExpr.Type.ARRAY, new Term(Term.Type.VARIABLE, (String) $1), (List<ArrayIndex>) $3, (List<ArrayIndex>) $6); }
+	| IDENTIFIER '(' ')'						{ $$ = new JobExpr(JobExpr.Type.JOBCALL, (String) $1, (List<JobExpr>) null); }
 	| IDENTIFIER '(' argument_expr_list ')'				{ $$ = new JobExpr(JobExpr.Type.JOBCALL, (String) $1, (List<JobExpr>) $3); }
 	;
 
 argument_expr_list
-	:					{ $$ = new ArrayList<JobExpr>(); }
-	| assign_expr				{ $$ = new ArrayList<JobExpr>(); ((List<JobExpr>) $$).add((JobExpr) $1); }
+	: assign_expr				{ $$ = new ArrayList<JobExpr>(); ((List<JobExpr>) $$).add((JobExpr) $1); }
 	| argument_expr_list ',' assign_expr	{ $$ = $1; ((List<JobExpr>) $$).add((JobExpr) $3); }
 	;
 
@@ -269,6 +266,10 @@ private Yylex lexer;
 private String filename = null;
 
 private boolean parseSuccess = true;
+
+private Program program = null;
+
+private int nError = 0;
 
 private int yylex () {
 	int yyl_return = -1;
@@ -293,26 +294,55 @@ public void yyerror (String error) {
 	System.err.println ("Error: " + error);
 	System.err.println (getFilename() + ":" + lexer.getLine() + ":" + lexer.getColumn());
 
+	nError++;
+
 	parseSuccess = false;
 //	throw new java.io.IOException("Syntax Error: " + lexer.yytext());
 }
 
-public Parser(Reader r) {
+public Parser(Program program) {
+	this(new InputStreamReader(System.in), program);
+}
+
+public Parser(String file) {
+	this(file, new Program());
+}
+
+public Parser(String file, Program program) {
+	FileReader r;
+	try {
+		r = new FileReader(file);
+	} catch (IOException ioe) {
+		nError++;
+		ioe.printStackTrace();
+		return;
+	}
 	lexer = new Yylex(r, this);
 	parseSuccess = true;
+
+	this.program = program;
+
+	yyparse();
+
+	program.finish();
 }
 
-public static boolean parse(InputStream in) throws IOException {
-	Parser parser = new Parser(new InputStreamReader(System.in));
-	parser.yyparse();
+public Parser(Reader r, Program program) {
+	lexer = new Yylex(r, this);
+	parseSuccess = true;
 
-	return parser.parseSuccess;
+	this.program = program;
+
+	yyparse();
+
+	program.finish();
 }
 
-public static boolean parse(String file) throws IOException {
-	Parser parser = new Parser(new FileReader(file));
-	parser.filename = file;
-	parser.yyparse();
-
-	return parser.parseSuccess;
+public int getNumError() {
+	return nError;
 }
+
+public Program getProgram() {
+	return program;
+}
+

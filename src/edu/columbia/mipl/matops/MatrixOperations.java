@@ -26,6 +26,7 @@ public interface MatrixOperations {
 	public PrimitiveArray div(final PrimitiveArray arg1, final double arg2);
 
 	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2);
+	public void assign(PrimitiveArray arg1, double arg2);
 	public void addassign(PrimitiveArray arg1, final PrimitiveArray arg2);
 	public void addassign(PrimitiveArray arg1, double arg2);
 	public void subassign(PrimitiveArray arg1, final PrimitiveArray arg2);
@@ -41,6 +42,8 @@ public interface MatrixOperations {
 	public PrimitiveArray transpose(final PrimitiveArray arg1);
 	public PrimitiveArray inverse(final PrimitiveArray arg1);
 
+	public PrimitiveArray mod(final PrimitiveArray arg1, double arg2);
+	public PrimitiveArray mod(final PrimitiveArray arg1, PrimitiveArray arg2);
 	public double sum(final PrimitiveArray arg1);
 	public double mean(final PrimitiveArray arg1);
 	public PrimitiveArray rowsum(final PrimitiveArray arg1);

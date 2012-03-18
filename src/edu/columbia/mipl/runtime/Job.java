@@ -22,8 +22,6 @@ public class Job extends Knowledge {
 
 		addAll(args);
 		addAll(stmts);
-
-		registerKnowledge();
 	}
 
 	public String getName() {

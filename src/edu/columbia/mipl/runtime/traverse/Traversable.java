@@ -8,74 +8,86 @@
  */
 package edu.columbia.mipl.runtime.traverse;
 
+import java.io.*;
 import java.util.*;
 
-public class Traversable extends ArrayList<Traversable> {
+public class Traversable extends ArrayList<Traversable> implements Serializable {
 	public enum Method {
 		PRE,
 		IN,
 		POST,
 	};
 
+	boolean immediate;
+
 	public void traverse(Traverser traverser) {
-		traverse(traverser, Method.POST);
+		traverse(traverser, false);
 	}
 
-	public void traverse(Traverser traverser, Method method) {
+	public void traverse(Traverser traverser, boolean immediate) {
+		traverse(traverser, Method.POST, immediate);
+	}
+
+	public void traverse(Traverser traverser, Method method, boolean immediate) {
+		this.immediate = immediate;
+
 		switch (method) {
 			case PRE:
-				preTraverse(traverser, true);
+				preTraverse(traverser);
 				return;
 			case IN:
-				inTraverse(traverser, true);
+				inTraverse(traverser);
 				return;
 			case POST:
-				postTraverse(traverser, true);
+				postTraverse(traverser);
 				return;
 		}
 	}
 
 	public void preTraverse(Traverser traverser) {
-		preTraverse(traverser, true);
+		preTraverseInternal(traverser);
+		if (!immediate)
+			traverser.finish();
 	}
 
-	void preTraverse(Traverser traverser, boolean root) {
+	void preTraverseInternal(Traverser traverser) {
+		int i;
 		traverser.reach(this);
-		for (Traversable t : this) {
-			t.postTraverse(traverser, false);
+		for (i = size() - 1; i >= 0; i--) {
+			get(i).preTraverseInternal(traverser);
 		}
-		if (root)
-			traverser.finish();
-
 	}
 
 
 	public void inTraverse(Traverser traverser) {
-		inTraverse(traverser, true);
+		inTraverseInternal(traverser);
+		if (!immediate)
+			traverser.finish();
 	}
 
-	void inTraverse(Traverser traverser, boolean root) {
-		int i = size();
-		for (Traversable t : this) {
-			t.postTraverse(traverser, false);
-			if (--i > 0)
+	void inTraverseInternal(Traverser traverser) {
+		int i;
+		for (i = size() - 1; i >= 0; i--) {
+			get(i).inTraverseInternal(traverser);
+			if (i > 0)
 				traverser.reach(this);
 		}
-		if (root)
-			traverser.finish();
 	}
 
 	public void postTraverse(Traverser traverser) {
-		postTraverse(traverser, true);
+		postTraverseInternal(traverser);
+		if (!immediate) {
+			traverser.finish();
+			new Exception().printStackTrace();
+		}
 	}
 
-	void postTraverse(Traverser traverser, boolean root) {
-		for (Traversable t : this) {
-			t.postTraverse(traverser, false);
+	void postTraverseInternal(Traverser traverser) {
+		int i;
+		for (i = size() - 1; i >= 0; i--) {
+			get(i).postTraverseInternal(traverser);
 		}
 		traverser.reach(this);
-		if (root)
-			traverser.finish();
 	}
 
 }

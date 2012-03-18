@@ -20,7 +20,6 @@ public class JobStmt extends Traversable {
 		COMPOUND,
 		RETURN,
 		EXPR,
-		NULL,
 	};
 	Type type;
 
@@ -28,10 +27,6 @@ public class JobStmt extends Traversable {
 	JobStmt stmt2;
 	JobExpr expr;
 	List<JobStmt> stmts;
-
-	public JobStmt(Type type) {
-		assert (type == Type.NULL);
-	}
 
 	public JobStmt(Type type, JobExpr expr, JobStmt stmt) {
 		this(type, expr, stmt, null);

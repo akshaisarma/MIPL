@@ -34,6 +34,8 @@ public class Expression extends Traversable {
 
 		this.type = type;
 		this.term = term;
+
+		add(term);
 	}
 
 	public Expression(Type type, int value) {
@@ -52,6 +54,9 @@ public class Expression extends Traversable {
 
 		left = expr1;
 		right = expr2;
+
+		add(expr1);
+		add(expr2);
 	}
 
 	public Term getTerm() {

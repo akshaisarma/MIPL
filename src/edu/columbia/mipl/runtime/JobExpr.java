@@ -14,7 +14,6 @@ import edu.columbia.mipl.runtime.traverse.*;
 
 public class JobExpr extends Traversable {
 	public enum Type {
-		COMPOUND,
 		ASSIGN,
 		MULASSIGN,
 		DIVASSIGN,
@@ -96,7 +95,7 @@ public class JobExpr extends Traversable {
 		assert (type == Type.ASSIGN || type == Type.MULASSIGN ||
 				type == Type.DIVASSIGN || type == Type.MODASSIGN ||
 				type == Type.ADDASSIGN || type == Type.SUBASSIGN ||
-				type == Type.COMPOUND || type == Type.OR ||
+				type == Type.OR ||
 				type == Type.AND || type == Type.EQ || type == Type.NE ||
 				type == Type.LT || type == Type.GT || type == Type.LE ||
 				type == Type.GE || type == Type.ADD || type == Type.SUB ||

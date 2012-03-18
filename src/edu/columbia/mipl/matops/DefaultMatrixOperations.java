@@ -208,6 +208,12 @@ public class DefaultMatrixOperations implements MatrixOperations {
 			for (int j = 0; j < arg1.getCol(); ++j)
 				a1.setValue(i, j, a2.getValue(i, j));
 	}
+	public void assign(PrimitiveArray arg1, double arg2) {
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		for (int i = 0; i < arg1.getRow(); ++i)
+			for (int j = 0; j < arg1.getCol(); ++j)
+				a1.setValue(i, j, arg2);
+	}
 	public void addassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 	}
 	public void addassign(PrimitiveArray arg1, double arg2) {
@@ -276,6 +282,29 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return matI;
 	}
 
+	public PrimitiveArray mod(final PrimitiveArray arg1, PrimitiveArray arg2) {
+		if (!arg1.equalsDimensionally(arg2))
+			/* throw new UncompatiableMatrixDimensionException() */;
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
+		PrimitiveDoubleArray r = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
+		for (int i = 0; i < arg1.getRow(); ++i)
+			for (int j = 0; j < arg1.getCol(); ++j) {
+				int v = (int) ((Double) a1.getValue(i, j) / (Double) a2.getValue(i, j));
+				r.setValue(i, j, (Double) a1.getValue(i, j) - (v * (Double) a2.getValue(i, j)));
+			}
+		return r;
+	}
+	public PrimitiveArray mod(final PrimitiveArray arg1, double arg2) {
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray r = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
+		for (int i = 0; i < arg1.getRow(); ++i)
+			for (int j = 0; j < arg1.getCol(); ++j) {
+				int v = (int) ((Double) a1.getValue(i, j) / arg2);
+				r.setValue(i, j, (Double) a1.getValue(i, j) - (v * arg2));
+			}
+		return r;
+	}
 	public double sum(final PrimitiveArray arg1) {
 		return 0;
 	}

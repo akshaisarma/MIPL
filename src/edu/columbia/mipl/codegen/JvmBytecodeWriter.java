@@ -187,15 +187,8 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		}
 	}
 
-	public void createJobStmt(JobStmt.Type type) {
-	// JobStmt.Type.NULL. Do nothing depending on how we handle function return
-
-	}
-
 	public void createJobExpr(JobExpr.Type type, JobExpr expr1,	JobExpr expr2) {
 		switch (type) {
-			case COMPOUND:
-				break;
 			case ASSIGN:
 				break;
 			case MULASSIGN:

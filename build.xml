@@ -115,6 +115,7 @@
 		    <arg value="-d" />
 		    <arg value="-J" />
 		    <arg value="-Jfinal" />
+		    <arg value="-Jnoconstruct" />
 		    <arg value="-Jsemantic=java.lang.Object" />
 		    <arg value="-Jpackage=edu.columbia.mipl.syntax" />
 		    <arg value="${src}/grammar/mipl.y" />

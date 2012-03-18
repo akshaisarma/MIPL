@@ -19,6 +19,8 @@ public class Query extends Command {
 		assert (term.getType() == Term.Type.TERM);
 
 		this.term = term;
+
+		add(term);
 	}
 
 	public Term getTerm() {

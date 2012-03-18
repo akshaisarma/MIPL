@@ -7,5 +7,5 @@
 */
 package edu.columbia.mipl.datastr;
 
-public class PrimitiveType {
+public abstract class PrimitiveType {
 }

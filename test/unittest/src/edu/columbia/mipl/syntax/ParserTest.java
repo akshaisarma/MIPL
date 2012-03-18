@@ -5,6 +5,9 @@ import java.util.*;
 
 import junit.framework.TestCase;
 
+import edu.columbia.mipl.runtime.*;
+import edu.columbia.mipl.runtime.execute.*;
+
 public class ParserTest extends TestCase {
 
 	static final String testInputPath = "test/input";
@@ -22,12 +25,24 @@ public class ParserTest extends TestCase {
 		for (int i = children.length - 1; i >= 0; i--) {
 			if (children[i].startsWith("."))
 				continue;
-			try {
-				success &= Parser.parse(testInputPath + "/" + children[i]);
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-				throw new IOException("Error on parsing an input file: " + children[i]);
-			}
+			Parser parser = new Parser(testInputPath + "/" + children[i]);
+			success &= (parser.getNumError() == 0);
+		}
+
+		assertTrue(success);
+	}
+
+	public void testInputsSemantic() throws java.io.IOException {
+		File dir = new File(testInputPath);
+		String[] children = dir.list();
+		boolean success = true;
+
+		for (int i = children.length - 1; i >= 0; i--) {
+			if (children[i].startsWith("."))
+				continue;
+			Program program = new Program(new SemanticChecker());
+			Parser parser = new Parser(testInputPath + "/" + children[i], program);
+			success &= (parser.getNumError() == 0);
 		}
 
 		assertTrue(success);

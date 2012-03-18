@@ -18,8 +18,9 @@ public class CodeGenerator extends RuntimeTraverser {
 	InstructionWriter writer;
 
 	public CodeGenerator() {
-		String target = "JVM"; /* read this from Configuration */
+		String target = "JavaSrc"; /* read this from Configuration */
 		writer = InstructionWriterFactory.getInstructionWriter(target);
+		assert (writer != null);
 	}
 
 	public void reachTerm(Term term) {
@@ -122,15 +123,11 @@ public class CodeGenerator extends RuntimeTraverser {
 			case RETURN:
 				writer.createJobStmt(jstmt.getType(), jstmt.getExpr());
 				break;
-			case NULL:
-				writer.createJobStmt(JobStmt.Type.NULL);
-				break;
 		}
 	}
 
 	public void reachJobExpr(JobExpr jexpr) {
 		switch (jexpr.getType()) {
-			case COMPOUND:
 			case ASSIGN:
 			case MULASSIGN:
 			case DIVASSIGN:

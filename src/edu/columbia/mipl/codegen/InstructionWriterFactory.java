@@ -17,6 +17,12 @@ public class InstructionWriterFactory {
 
 	static InstructionWriterFactory instance;
 
+	static {
+		instance = new InstructionWriterFactory();
+		instance.hash = new HashMap<String, InstructionWriter>();
+		new JavaSourceWriter(); //TODO: should be read dynamically from Configuration
+	}
+
 	public static InstructionWriter getInstructionWriter(String name) {
 		return instance.hash.get(name.toLowerCase());
 	}
