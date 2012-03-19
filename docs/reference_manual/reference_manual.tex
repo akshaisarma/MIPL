@@ -203,9 +203,6 @@ Term Expression, by the definition of MIPL grammar.
 \subsubsection{Term Factor}
 
 \begin{lstlisting}
-wkeowekowk
-\end{lstlisting}
-\begin{lstlisting}
 term_fact
 	: term_fact `*' term_term
 	| term_fact `/' term_term
@@ -370,17 +367,17 @@ such as If Statement to do so.
 
 \subsection{Job Expression Statement}
 
-Probably should make all the expressions below subsubsections instead of subsections.
-
 \begin{lstlisting}
 expr_stmt
 	: expr `.'
 	;
 \end{lstlisting}
 
+Job Expression Statement is a Job Statement that includes a Job
+Expression.  This allows users use Job Expressions in a Job.
 
 \subsubsection{Job Selection Statement}
-whatthe\\
+
 \begin{lstlisting}
 selection_stmt
 	: IF `(' expr `)' stmt
@@ -388,9 +385,17 @@ selection_stmt
 	;
 \end{lstlisting}
 
+Job Selection Statement is a conditional control Job Statement,
+which checks the value of given Job Expression and executes the
+statements accordingly.  If the value of the Job Expression is
+true, the first Job Statement will be executed.  If the value of
+the expression is false and the ELSE statement is provided, this
+statement will be executed.  The IF ELSE syntax is ambiguous,
+however, by Yacc's default behavior, reduce precedes shift, which
+results in that the ELSE is associated with closer IF.
 
 \subsubsection{Job Iteration Statement}
-no\\
+
 \begin{lstlisting}
 iteration_stmt
 	: WHILE `(' expr `)' stmt
@@ -398,14 +403,27 @@ iteration_stmt
 	;
 \end{lstlisting}
 
+Job Iteration Statement is a statement, that repeatedly executes
+the given Job Statement according to the value of Job Expression.
 
-\subsubsection{Job Expression}
+WHILE statement executes the given Job Statement while the Job
+Expression's value is true.  DO WHILE statement executes the Job
+Statement once first, and then executes the Job Statement repeatedly
+while the Job Expression's value is true.
+
+
+\subsection{Job Expression}
 
 \begin{lstlisting}
 expr
 	: assign_expr
 	;
 \end{lstlisting}
+
+Job Expression is a grammatical unit that conveys a value, which
+includes a matrix or a number.  Whether a Job Expression contains
+a matrix or a number is decided dynamically at runtime, since MIPL
+is weak typed.
 
 
 \subsubsection{Job Assignment Expression}
@@ -416,6 +434,12 @@ assign_expr
 	| unary_expr assign_op assign_expr
 	;
 \end{lstlisting}
+
+Job Assignment Expression is a Job Expressions that assigns a value
+to a Variable contained in the left-hand side expression.  The value
+of Job Assignment Expression is the value newly assigned to the
+Variable.
+
 
 \subsubsection{Job Assignment Operator}
 
@@ -431,9 +455,18 @@ assign_op
 	;
 \end{lstlisting}
 
+Job Assignment Operator has seven types.  1. `=' and ``$<-$" are used
+for Assignment.  2. ``*=" is Muliplication Assignment Operator.  3. 
+``/=" is Division Assignment Operator.  4. "\%=" is Modular Assignment
+Operator.  5. ``+=" is Addition Assignment Operator.  6. ``-=" is
+Subtraction Assignment Operator.  Each Assignment Operators computes
+the value of the operation using the left-hand side value and the
+right-hand side value and assigns the value to the left-hand side
+Variable.
+
 
 %----------------------------------------------------------YOUNGHOON}
-
+Akshai, would you make Job * Expressions to be subsubsection, so they belong to Job Expression.
 %----------------------------------------------------------AKSHAI{
 \subsection{Job Logical OR Expression}
 

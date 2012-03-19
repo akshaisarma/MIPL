@@ -28,7 +28,6 @@ import edu.columbia.mipl.runtime.*;
 %start program
 
 %%
-
 program
 	: commands
 	;
@@ -46,8 +45,9 @@ command
 	;
 
 fact
-	: term '.'							{ $$ = new Fact((Term) $1); }
-	| '[' maf_list ']' LARROW_OP IDENTIFIER '(' arg_list ')' '.'	{ $$ = new Fact((String) $5, (List<String>) $2, (List<Term>) $7); }
+	: term '.'				{ $$ = new Fact((Term) $1); }
+	| '[' maf_list ']' LARROW_OP
+		IDENTIFIER '(' arg_list ')' '.'	{ $$ = new Fact((String) $5, (List<String>) $2, (List<Term>) $7); }
 	;
 
 maf_list
