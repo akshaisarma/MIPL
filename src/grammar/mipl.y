@@ -14,6 +14,7 @@ import java.io.*;
 import java.util.*;
 
 import edu.columbia.mipl.runtime.*;
+import edu.columbia.mipl.runtime.traverse.*;
 %}
 
 %token IDENTIFIER STRING_LITERAL 
@@ -33,7 +34,7 @@ program
 	;
 
 commands
-	: command commands		{ program.add((Command) $1); }
+	: commands command		{ program.add((Command) $2); }
 	| command			{ program.add((Command) $1); }
 	;
 
@@ -300,8 +301,16 @@ public void yyerror (String error) {
 //	throw new java.io.IOException("Syntax Error: " + lexer.yytext());
 }
 
+public Parser(Traverser traverser) {
+	this(new InputStreamReader(System.in), new Program(traverser));
+}
+
 public Parser(Program program) {
 	this(new InputStreamReader(System.in), program);
+}
+
+public Parser(String file, Traverser traverser) {
+	this(file, new Program(traverser));
 }
 
 public Parser(String file) {
