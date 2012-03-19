@@ -202,8 +202,19 @@ command
 	;
 \end{lstlisting}
 
-$fact$ is ended with $"."$. $fact$ is used to describe the fact. $query$ is ended with $"?"$. $query$ is used to check whether the fact is true or false. $query$ result returns $true$ or $false$. 
+$fact$ is ended with $"."$. $fact$ is used to describe or define the fact. $fact$ should be started with the a small letter. Also, several $fact$s can be combined in one line with $,$.
 
+\begin{lstlisting}
+cat(tom).
+mouse(jerry), mouse(mickey).
+\end{lstlisting}
+
+$query$ is ended with $"?"$. $query$ requires facts, or job results. $query$ with the fact returns $true$ or $false$. $query$ with the job results returns satisfying results about the query. If the job results have lots of columns, $query$ can take $*$ as the query argument.
+
+\begin{lstlisting}
+cat(tom), mouse(jerry).
+mouse(tom)? # Returns false
+\end{lstlisting}
 
 %----------------------------------------------------------JINHYUNG}
 %----------------------------------------------------------YOUNGHOON{
