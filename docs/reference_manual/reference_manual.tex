@@ -229,12 +229,18 @@ $query$ is ended with $"?"$. $query$ requires facts, or job results. $query$ wit
 \begin{lstlisting}
 # rule with a fact
 animal(X) <- cat(X).
+# another rule operator
+animal(X) :- cat(X).
+# complex rule
+animal(X) :- cat(X), dog(X), horse(X).
 \end{lstlisting}
 
-$rule$ is defined with $<-$. The left of $<-$ would be a fact. The right of $<-$
- would be a fact, or a job for the rule. If the right of $<-$ is a job, the left fact
- of the rule should be a dynamic fact. When the fact is queried, the results of query
- come from the job or related fact of the rule.\\
+$rule$ is defined with $<-$ or $:-$. The rule for fact can be combined with $,$.
+ If the first rule cannot be matched, it will try to match the second rule.
+ The left of the rule operator would be a fact. The right of the rule operator would
+ be a fact, or a job for the rule. If the right of the rule operator is a job,
+ the left fact of the rule should be a dynamic fact. When the fact is queried,
+ the results of query come from the job or related fact of the rule.\\
 
 \begin{lstlisting}
 # job
