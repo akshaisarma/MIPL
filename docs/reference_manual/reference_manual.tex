@@ -437,7 +437,11 @@ assign_op
 %----------------------------------------------------------AKSHAI{
 \subsection{Job Logical OR Expression}
 
-The character sequence OR\_OP refers to the sequence "\textbardbl", which  denotes the logical OR operator. The logical AND expressions that are separated by the logical OR operator associate left. The next section details how the logical AND expressions, logical\_and\_expr, which have higher precedence than the logical OR expression, are evaluated. 
+The character sequence OR\_OP refers to the sequence "\textbardbl", which  
+denotes the logical OR operator. The logical AND expressions that are 
+separated by the logical OR operator associate left. The next section 
+details how the logical AND expressions, logical\_and\_expr, which have 
+higher precedence than the logical OR expression, are evaluated. 
 
 \begin{lstlisting}
 logical_or_expr
@@ -446,11 +450,22 @@ logical_or_expr
 	;
 \end{lstlisting}
 
-Given a binary OR\_OP, the Logical OR expression evaluates to the integer 1, if either of the logical\_and\_expr evaluates to the integer 1 and evaluates to 0, if both of the logical\_and\_expr evaluate to 0, where 1 stands for the truth value, true and 0, for false. The order of evaluation is left to right, also known as the "short circuit" evaluation, whereby the logical\_and\_expr on the right of the OR\_OP is evaluated if and only if the logical\_and\_expr on the left of the OR\_OP evaluated to 0. 
+Given a binary OR\_OP, the Logical OR expression evaluates to the 
+integer 1, if either of the logical\_and\_expr evaluates to the integer 
+1 and evaluates to 0, if both of the logical\_and\_expr evaluate to 0, 
+where 1 stands for the truth value, true and 0, for false. The order of 
+evaluation is left to right, also known as the "short circuit" 
+evaluation, whereby the logical\_and\_expr on the right of the OR\_OP 
+is evaluated if and only if the logical\_and\_expr on the left of the 
+OR\_OP evaluated to 0. 
 
 \subsection{Job Logical AND Expression}
 
-The character sequence AND\_OP refers to the sequence "\&\&", which denotes the logical AND operator. The equality expressions that are separated by the logical OR operator associate left. The next section details how equality expressions, equality\_expr, which have higher precedence than the logical OR expression, are evaluated. 
+The character sequence AND\_OP refers to the sequence "\&\&", which 
+denotes the logical AND operator. The equality expressions that are 
+separated by the logical OR operator associate left. The next section 
+details how equality expressions, equality\_expr, which have higher 
+precedence than the logical OR expression, are evaluated. 
 
 \begin{lstlisting}
 logical_and_expr
@@ -459,11 +474,23 @@ logical_and_expr
 	;
 \end{lstlisting}
 
-Given a binary AND\_OP, the Logical AND expression evaluates to the integer 1, if both of the logical\_and\_expr evaluate to the integer 1 and evaluates to 0, if either of the logical\_and\_expr evaluate to 0. The order of evaluation is again left to right, whereby the equality\_expr on the right of the AND\_OP is evaluated if and only if the equality\_expr on the left of the OR\_OP evaluated to 1.
+Given a binary AND\_OP, the Logical AND expression evaluates to the 
+integer 1, if both of the logical\_and\_expr evaluate to the integer 1 
+and evaluates to 0, if either of the logical\_and\_expr evaluate to 0. 
+The order of evaluation is again left to right, whereby the 
+equality\_expr on the right of the AND\_OP is evaluated if and only 
+if the equality\_expr on the left of the OR\_OP evaluated to 1.
 
 \subsection{Job Equality Expression}
 
-The character sequence EQ\_OP refers to the sequence "==" and the character sequence NE\_OP refers to the sequence "!=". These operators, equal to and not equal to, respectively, cause the expression to evaluate to the integer 0, for false, and 1, for true.  These operators that separate the relational expressions, relational\_expr, associate left. The operators EQ\_OP and NE\_OP have lower precedence than the operators that are constitute the relational expressions, described in the next section. 
+The character sequence EQ\_OP refers to the sequence "==" and the 
+character sequence NE\_OP refers to the sequence "!=". These operators, 
+equal to and not equal to, respectively, cause the expression to 
+evaluate to the integer 0, for false, and 1, for true.  These operators 
+that separate the relational expressions, relational\_expr, associate 
+left. The operators EQ\_OP and NE\_OP have lower precedence than the 
+operators that constitute the relational expressions, described in the 
+next section. 
 
 \begin{lstlisting}
 equality_expr
@@ -473,9 +500,22 @@ equality_expr
 	;
 \end{lstlisting}
 
-Given two relational expressions, connected by a EQ\_OP or a NE\_OP, the equality expression evaluates to a 1, if and only if the left and the right relational expressions both evaluate to the same value in the case of a EQ\_OP and to different values in the case of a NE\_OP. Otherwise, the equality expression evaluates to a 0.
+Given two relational expressions, connected by a EQ\_OP or a NE\_OP, 
+the equality expression evaluates to a 1, if and only if the left and 
+the right relational expressions both evaluate to the same value in the 
+case of a EQ\_OP and to different values in the case of a NE\_OP. 
+Otherwise, the equality expression evaluates to a 0.
 
 \subsection{Job Relational Expression}
+
+The character sequence LE\_OP refers to the sequence "<=", for less 
+than or equal to and GE\_OP refers to the sequence ">=", for greater 
+than or equal to. The sequences '<' and '>' mean exactly the same as 
+their mathematical counterpart relations. These operators also associate 
+left to right and have lower precedence than the operators in the additive 
+expression type, additive\_expr, described in the following section. The 
+evaluation of a relational expression is once again a truth value, 
+represented by the integers 0 and 1. 
 
 \begin{lstlisting}
 relational_expr
@@ -487,7 +527,16 @@ relational_expr
 	;
 \end{lstlisting}
 
+Given two additive expressions, connected by the above mentioned operators, 
+the expression evalutes to 1 if the mathematical relation represented by 
+the operation is satisfied. Otherwise, the expression evaluates to 0. 
+
 \subsection{Job Additive Expression}
+
+The character sequence '+' and '-' mean addition and subtraction, 
+respectively. These operators in Additive expressions, or additive\_expr, 
+also associate left to right and have lower precedence than the 
+multiplicative expressions, termed multiplicative\_expr, described next.
 
 \begin{lstlisting}
 additive_expr
@@ -497,7 +546,23 @@ additive_expr
 	;
 \end{lstlisting}
 
+Given two multiplicative expressions, connected by an additive operator, 
+the expression evaluates to the result of applying the operator to the
+operands. However, this depends on the type of the operands, which can
+range from integer or doubles to matrices. In the case of the latter,
+the evaluation of the expression results in a matrix, formed by the 
+application of the operation on the multiplicative expressions. The
+operands have to conform to strict type constraints as there is no
+casting.
+
 \subsection{Job Multiplicative Expression}
+
+The character sequence '*' and '/' mean multiplication and division, 
+respectively. The sequence '\%' represents the modulus operation. That
+is, the remainder after the division of the right operand into the left
+operand. These operators in Multiplicative expressions, or 
+multiplicative\_expr, associate left to right and have lower precedence 
+than unary expressions.
 
 \begin{lstlisting}
 multiplicative_expr
@@ -507,6 +572,15 @@ multiplicative_expr
 	| multiplicative_expr `%' unary_expr
 	;
 \end{lstlisting}
+
+As with the additive expressions, the operators are applicable to types
+where the mathematical equivalent is valid. For the case of multiplying
+matrices, the requirement that the number of columns of the left operand be
+equal to the number of rows of the right operand. With the data types, 
+the result of the evaluation of the operation is contained within the set
+of basic data types. The multiplication of a matrix expression with another 
+results in a matrix expression. As with the additive expressions, there is 
+no casting and the operands have to conform to the strict type constraints.
 
 \subsection{Job Unary Expression}
 Should talk about l-value if necessary.
