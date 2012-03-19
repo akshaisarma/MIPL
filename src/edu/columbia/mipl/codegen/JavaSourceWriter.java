@@ -83,6 +83,7 @@ public class JavaSourceWriter extends InstructionWriter {
 			println("import java.util.*;\n");
 			println("import edu.columbia.mipl.runtime.*;");
 			println("import edu.columbia.mipl.datastr.*;\n");
+			println("import edu.columbia.mipl.datastr.execute.*;\n");
 			println("public class " + output + " {");
 			println("public static void main(String[] args) {");
 			println("Program program = new Program(new ProgramExecutor());");
@@ -294,7 +295,7 @@ public class JavaSourceWriter extends InstructionWriter {
 	public void createJob(String name, List<Term> args, List<JobStmt> stmts) {
 		int i;
 
-		String argsString = null;
+		String argsString = "";
 		for (i = 0; i < args.size(); i++) {
 			stack.pop(); // throw away
 			if (i != 0)

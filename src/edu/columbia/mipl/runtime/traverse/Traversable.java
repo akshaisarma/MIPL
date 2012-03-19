@@ -78,7 +78,6 @@ public class Traversable extends ArrayList<Traversable> implements Serializable 
 		postTraverseInternal(traverser);
 		if (!immediate) {
 			traverser.finish();
-			new Exception().printStackTrace();
 		}
 	}
 
