@@ -742,8 +742,8 @@ array_idx_list
 
 Using the list of array indices, any relevant, valid portion of a matrix may
 be accessed. For instance, given a 5 x 7 matrix A, A[2$\sim$4,6$\sim$][1] produces the
-subset of the matrix A, a 5 x 1 result, consisting of its second, third, 
-fourth, sixth rows and its first column.
+subset of the matrix A, a 5 x 1 result, consisting of its third, fourth, 
+fifth and seventh rows and its second column.
 
 \subsubsection{Job Array Index Element}
 
@@ -763,10 +763,10 @@ array_idx_elmt
 
 NUMBER here refers to any integer that denotes a valid index for the 
 matrix, referring to either its $i^{th}$ row or column. Rows and columns are 
-referred to starting at 1, not 0. If a NUMBER is not specified at either 
+referred to starting at 0. If a NUMBER is not specified at either 
 the left or the right of the `$\sim$' character, it defaults to the extreme 
 of the matrix subscript. In other words, the smallest valid subscript in 
-the case of the left, which is 1, and the largest valid subscript in the 
+the case of the left, which is 0, and the largest valid subscript in the 
 case of the right, which is the total number of rows or columns depending
 on, which is being accessed.
 
