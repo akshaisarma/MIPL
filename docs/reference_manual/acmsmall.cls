@@ -1966,7 +1966,7 @@
 \def\sectionfont{\fontfamily{\sfdefault}\fontsize{9}{11}\selectfont\bfseries\raggedright}
 \def\refsectionfont{\fontfamily{\sfdefault}\fontsize{9}{11}\selectfont\bfseries}
 \def\subsectionfont{\fontfamily{\sfdefault}\fontsize{9}{11}\selectfont\bfseries\raggedright}
-\def\subsubsectionfont{\fontfamily{\sfdefault}\fontsize{9}{11}\selectfont\itshape\raggedright}
+\def\subsubsectionfont{\fontfamily{\sfdefault}\fontsize{9}{11}\selectfont\bfseries\raggedright}
 \def\paragraphfont{\fontsize{10}{11}\selectfont\itshape}
 
 \def\figcaptionfont{\fontsize{8}{9}\selectfont}%
@@ -2114,10 +2114,12 @@ DOI $=$ 10.1145/\@doi\ http://doi.acm.org/10.1145/\@doi}
  \def\pubphrase{Publication date}
 \fi\fi\fi\fi
 
-\runningfoot{\@journalName, Vol.~\@acmVolume, No.~\@acmNumber, Article~\@acmArticle,\ \pubphrase:\ \monthWord{\@acmMonth}\ \@acmYear.}
+%\runningfoot{\@journalName, Vol.~\@acmVolume, No.~\@acmNumber, Article~\@acmArticle,\ \pubphrase:\ \monthWord{\@acmMonth}\ \@acmYear.}
+\runningfoot{MIPL: Mining Integrated Programming Language - Language Reference Manual, \pubphrase:\ \monthWord{\@acmMonth}\ \@acmYear.}
 
 \def\@firstfoot{}
-\gdef\firstfoot{\@journalName, Vol.~\@acmVolume,\ No.~\@acmNumber,\ Article\ \@acmArticle,\ \pubphrase:\ \monthWord{\@acmMonth}\ \@acmYear.}
+%\gdef\firstfoot{\@journalName, Vol.~\@acmVolume,\ No.~\@acmNumber,\ Article\ \@acmArticle,\ \pubphrase:\ \monthWord{\@acmMonth}\ \@acmYear.}
+\gdef\firstfoot{MIPL: Mining Integrated Programming Language - Language Reference Manual, \pubphrase:\ \monthWord{\@acmMonth}\ \@acmYear.}
 
 \def\ps@titlepage{%
     \let\@mkboth\@gobbletwo
@@ -2353,7 +2355,7 @@ or permissions@acm.org.\par\box\@permissionbox
 			      {\subsectionfont}}
 \def\subsubsection{\@startsection{subsubsection}{3}{10pt}%
                                  {-.5\baselineskip \@plus -2\p@ \@minus -.2\p@}%
-				 {-3.5\p@}{\subsubsectionfont}}
+				 {.25\baselineskip}{\subsubsectionfont}}
 \def\paragraph{\@startsection{paragraph}{4}{\parindent}%
                              {-.5\baselineskip \@plus -2\p@ \@minus -.2\p@}%
 			     {-3.5\p@}%

@@ -127,13 +127,6 @@ Every floating constant is taken to be doubleprecision.
 
 A string is a sequence of characters surrounded by double quotes or single
 quotes.
-A string has the type arrayofcharacters
-(see below) and refers to an area of storage initialized with the given
-characters. The compiler places a null byte ( \\0 ) at the end of each
-string so that programs which scan the string can find its end. In a
-string, the character ..  " ..  must be preceded by a ..\.. ; in
-addition, the same escapes as described for character constants may be used.
-NEED FIX
 
 \subsection{Expression Operators}
 Expression Operators will be explained in Built-in Operators and Jobs section.
@@ -357,9 +350,35 @@ return_stmt
 Job Return Statement is a sentence that returns a matrix.  Since
 Job is likely executed on MapReduce clusters (unless configured
 so or the matrix size is smaller than configured threshold), Job
-Return Statement fetches the matrix.
+Return Statement fetches the matrix.  The most interesting part
+in MIPL with regard to Job Return Statement is a Job can contain
+more than on Job Return Statement for returning values more than
+one.  Accordingly, as a Job can contain a number of Job Selection
+Statements and Job Iterative Statements, the combination of those
+allows a Job to return variable numbers of return values. This is
+possible because Job Return Statement does not ``return" immediately,
+when its program counter meets Job Return Statement.  Instead, a
+MIPL program keeps being executed passing that Job Return Statement.
+For example, below MIPL program returns three matrix values.  If
+the given number of names for return values are not matched to the
+number of values the actual Job returns, MIPL reports an error.
 
-There's no acceptable Job Return Statement like $@.$.  The
+\begin{lstlisting}
+I = 3;
+[a, b, c] = job1(matrix1, matrix2, I).
+
+job1(A, B, NumRepeat) {
+    while (NumRepeat > 0) {
+       A *= B.
+       @A.
+       I = I - 1. 
+    }
+}
+\end{lstlisting}
+
+Because Job Return Statement does not ``return" immediately,
+there's no acceptable Job Return Statement like $@.$, which some
+languages provide to flow control such as ``return;" in C.  The
 return operator $@$ is designed to deliver a matrix value from
 MapReduce clusters to the user.  When a user want to quit the Job
 in the mid of the Job, the user should use Job Control Statements
@@ -459,7 +478,7 @@ assign_op
 
 Job Assignment Operator has seven types.  1. `=' and ``$<-$" are used
 for Assignment.  2. ``*=" is Muliplication Assignment Operator.  3. 
-``/=" is Division Assignment Operator.  4. "\%=" is Modular Assignment
+``/=" is Division Assignment Operator.  4. ``\%=" is Modular Assignment
 Operator.  5. ``+=" is Addition Assignment Operator.  6. ``-=" is
 Subtraction Assignment Operator.  Each Assignment Operators computes
 the value of the operation using the left-hand side value and the
@@ -472,7 +491,7 @@ Variable.
 %----------------------------------------------------------AKSHAI{
 \subsubsection{Job Logical OR Expression}
 
-The character sequence OR\_OP refers to the sequence "\textbardbl", which  
+The character sequence OR\_OP refers to the sequence ``\textbardbl", which  
 denotes the logical OR operator. The logical AND expressions that are 
 separated by the logical OR operator associate left. The next section 
 details how the logical AND expressions, logical\_and\_expr, which have 
@@ -489,14 +508,14 @@ Given a binary OR\_OP, the Logical OR expression evaluates to the
 integer 1, if either of the logical\_and\_expr evaluates to the integer 
 1 and evaluates to 0, if both of the logical\_and\_expr evaluate to 0, 
 where 1 stands for the truth value, true and 0, for false. The order of 
-evaluation is left to right, also known as the "short circuit" 
+evaluation is left to right, also known as the ``short circuit" 
 evaluation, whereby the logical\_and\_expr on the right of the OR\_OP 
 is evaluated if and only if the logical\_and\_expr on the left of the 
 OR\_OP evaluated to 0. 
 
 \subsubsection{Job Logical AND Expression}
 
-The character sequence AND\_OP refers to the sequence "\&\&", which 
+The character sequence AND\_OP refers to the sequence ``\&\&", which 
 denotes the logical AND operator. The equality expressions that are 
 separated by the logical OR operator associate left. The next section 
 details how equality expressions, equality\_expr, which have higher 
@@ -518,8 +537,8 @@ if the equality\_expr on the left of the OR\_OP evaluated to 1.
 
 \subsubsection{Job Equality Expression}
 
-The character sequence EQ\_OP refers to the sequence "==" and the 
-character sequence NE\_OP refers to the sequence "!=". These operators, 
+The character sequence EQ\_OP refers to the sequence ``==" and the 
+character sequence NE\_OP refers to the sequence ``!=". These operators, 
 equal to and not equal to, respectively, cause the expression to 
 evaluate to the integer 0, for false, and 1, for true.  These operators 
 that separate the relational expressions, relational\_expr, associate 
@@ -543,9 +562,9 @@ Otherwise, the equality expression evaluates to a 0.
 
 \subsubsection{Job Relational Expression}
 
-The character sequence LE\_OP refers to the sequence "<=", for less 
-than or equal to and GE\_OP refers to the sequence ">=", for greater 
-than or equal to. The sequences '<' and '>' mean exactly the same as 
+The character sequence LE\_OP refers to the sequence ``$<=$", for less 
+than or equal to and GE\_OP refers to the sequence ``$>=$", for greater 
+than or equal to. The sequences `$<$' and `$>$' mean exactly the same as 
 their mathematical counterpart relations. These operators also associate 
 left to right and have lower precedence than the operators in the additive 
 expression type, additive\_expr, described in the following section. The 
@@ -568,7 +587,7 @@ the operation is satisfied. Otherwise, the expression evaluates to 0.
 
 \subsubsection{Job Additive Expression}
 
-The character sequence '+' and '-' mean addition and subtraction, 
+The character sequence `+' and `-' mean addition and subtraction, 
 respectively. These operators in Additive expressions, or additive\_expr, 
 also associate left to right and have lower precedence than the 
 multiplicative expressions, termed multiplicative\_expr, described next.
@@ -590,13 +609,13 @@ application of the operation on the multiplicative expressions. Operands
 are converted (implicitly casted) to the appropriate type to perform the
 operation. For instance, the addition of a scalar to the a matrix, results in 
 the scalar being converted to a appropriate matrix and the resulting matrix
-be applied to the operation. The '+' and the '-' operators can be applied 
+be applied to the operation. The `+' and the `-' operators can be applied 
 to arithmetic and matrix types.
 
 \subsubsection{Job Multiplicative Expression}
 
-The character sequence '*' and '/' mean multiplication and division, 
-respectively. The sequence '\%' represents the modulus operation. That
+The character sequence `*' and `/' mean multiplication and division, 
+respectively. The sequence `\%' represents the modulus operation. That
 is, the remainder after the division of the right operand into the left
 operand. These operators in Multiplicative expressions, or 
 multiplicative\_expr, associate left to right and have lower precedence 
@@ -623,9 +642,9 @@ the more general operand.
 
 \subsubsection{Job Unary Expression}
   
-A unary expression contains the unary operators '+' for positive and '-' 
-for negative. The '+' operator when applied to an arithmetic type does
-not change the value of the type. The '-' operator when applied to an
+A unary expression contains the unary operators `+' for positive and `-' 
+for negative. The `+' operator when applied to an arithmetic type does
+not change the value of the type. The `-' operator when applied to an
 arithmetic type, produces the negative of its operand. The operators, 
 unlike with the additive and multiplicative expressions, may only be
 applied to expressions that produce an arithmetic type.
@@ -655,7 +674,7 @@ postfix_expr
 
 A VARIABLE is like an IDENTIFIER but it begins with an uppercase letter,
 followed by lowercase or uppercase alphabets or underscore. A VARIABLE
-followed by two '[' and ']' is a matrix access. The matrix is accessed
+followed by two `[' and `]' is a matrix access. The matrix is accessed
 by subscripts, also known as the array index list, described in a later
 section. The subscripts correspond exactly to the two dimensional 
 interpretation of the matrix, where the the subscript within the first 
@@ -665,10 +684,10 @@ to matrix type. Using array index lists, any subset of the matrix can be
 obtained. The result of this postfix expression can be a single value of
 the type of the matrix or any subset of the matrix.
 
-An IDENTIFIER followed by a set of paranthesis '(' and ')' is a Job
+An IDENTIFIER followed by a set of paranthesis `(' and `)' is a Job
 invocation. A Job is defined according to \ref{Job_Section}. Only a defined
 Job may be invoked using the IDENTIFIER referring to the Job name,
-followed by '(' and ')', where the parantheses enclose arguments passed
+followed by `(' and `)', where the parantheses enclose arguments passed
 to the Job. If there were no arguments defined for the Job, the
 parantheses do not include anything and if there were arguments defined, 
 arguments that match the number of arguments in the Job definition, must
@@ -686,7 +705,6 @@ primary_expr
 	: IDENTIFIER
 	| VARIABLE
 	| NUMBER
-	| STRING_LITERAL
 	| `(' expr `)'
 	;
 \end{lstlisting}
@@ -703,12 +721,7 @@ data types such as matrices in order to distinguish them from IDENTIFIERS.
 A NUMBER refers to a the decimal representation of a number and is also a 
 primary expression. Scientific notation is also supported, following the 
 E-notation. $10^{x}$ in scientific notation is simply written with either an
-'e' or an 'E' followed by x.
-
-A STRING\_LITERAL is any sequence of characters, enclosed within a " and a " 
-or within a ' and a '. These sequence of characters cannot include the 
-enclosing characters unless they are properly escaped with the escape key
-\\.
+`e' or an `E' followed by x.
 
 Finally, an expression enclosed with parantheses is also a primary expression 
 and the value of this expression is the same as if the parantheses did not 
@@ -728,19 +741,19 @@ array_idx_list
 \end{lstlisting}
 
 Using the list of array indices, any relevant, valid portion of a matrix may
-be accessed. For instance, given a 5 x 7 matrix A, A[2~4,6~][1] produces the
+be accessed. For instance, given a 5 x 7 matrix A, A[2$\sim$4,6$\sim$][1] produces the
 subset of the matrix A, a 5 x 1 result, consisting of its second, third, 
 fourth, sixth rows and its first column.
 
 \subsubsection{Job Array Index Element}
 
 An array index element is used to access a matrix. It consists of either 
-the character '~' representing all valid indices or any combination of placing
+the character `$\sim$' representing all valid indices or any combination of placing
 a NUMBER to either side of the character. 
 
 \begin{lstlisting}
 array_idx_elmt
-	: `~'
+	: `\~'
 	| `~' NUMBER
 	| NUMBER
 	| NUMBER `~'
@@ -751,7 +764,7 @@ array_idx_elmt
 NUMBER here refers to any integer that denotes a valid index for the 
 matrix, referring to either its $i^{th}$ row or column. Rows and columns are 
 referred to starting at 1, not 0. If a NUMBER is not specified at either 
-the left or the right of the '~' character, it defaults to the extreme 
+the left or the right of the `$\sim$' character, it defaults to the extreme 
 of the matrix subscript. In other words, the smallest valid subscript in 
 the case of the left, which is 1, and the largest valid subscript in the 
 case of the right, which is the total number of rows or columns depending
