@@ -358,6 +358,8 @@ assign_op
 %----------------------------------------------------------AKSHAI{
 \subsection{Job Logical OR Expression}
 
+The character sequence OR\_OP refers to the sequence "\textbardbl", which  denotes the logical OR operator. The logical AND expressions that are separated by the logical OR operator associate left. The next section details how the logical AND expressions, logical\_and\_expr, which have higher precedence than the logical OR expression, are evaluated. 
+
 \begin{lstlisting}
 logical_or_expr
 	: logical_and_expr
@@ -365,7 +367,11 @@ logical_or_expr
 	;
 \end{lstlisting}
 
+Given a binary OR\_OP, the Logical OR expression evaluates to the integer 1, if either of the logical\_and\_expr evaluates to the integer 1 and evaluates to 0, if both of the logical\_and\_expr evaluate to 0, where 1 stands for the truth value, true and 0, for false. The order of evaluation is left to right, also known as the "short circuit" evaluation, whereby the logical\_and\_expr on the right of the OR\_OP is evaluated if and only if the logical\_and\_expr on the left of the OR\_OP evaluated to 0. 
+
 \subsection{Job Logical AND Expression}
+
+The character sequence AND\_OP refers to the sequence "\&\&", which denotes the logical AND operator. The equality expressions that are separated by the logical OR operator associate left. The next section details how equality expressions, equality\_expr, which have higher precedence than the logical OR expression, are evaluated. 
 
 \begin{lstlisting}
 logical_and_expr
@@ -374,7 +380,11 @@ logical_and_expr
 	;
 \end{lstlisting}
 
+Given a binary AND\_OP, the Logical AND expression evaluates to the integer 1, if both of the logical\_and\_expr evaluate to the integer 1 and evaluates to 0, if either of the logical\_and\_expr evaluate to 0. The order of evaluation is again left to right, whereby the equality\_expr on the right of the AND\_OP is evaluated if and only if the equality\_expr on the left of the OR\_OP evaluated to 1.
+
 \subsection{Job Equality Expression}
+
+The character sequence EQ\_OP refers to the sequence "==" and the character sequence NE\_OP refers to the sequence "!=". These operators, equal to and not equal to, respectively, cause the expression to evaluate to the integer 0, for false, and 1, for true.  These operators that separate the relational expressions, relational\_expr, associate left. The operators EQ\_OP and NE\_OP have lower precedence than the operators that are constitute the relational expressions, described in the next section. 
 
 \begin{lstlisting}
 equality_expr
@@ -383,6 +393,8 @@ equality_expr
 	| equality_expr NE_OP relational_expr
 	;
 \end{lstlisting}
+
+Given two relational expressions, connected by a EQ\_OP or a NE\_OP, the equality expression evaluates to a 1, if and only if the left and the right relational expressions both evaluate to the same value in the case of a EQ\_OP and to different values in the case of a NE\_OP. Otherwise, the equality expression evaluates to a 0.
 
 \subsection{Job Relational Expression}
 
@@ -529,4 +541,3 @@ MIPL's full grammar is here.
 %\section{This is an example of Appendix section head}
 
 \end{document}
-
