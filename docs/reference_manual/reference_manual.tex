@@ -148,7 +148,7 @@ Syntax here
 %----------------------------------------------------------JINHYUNG{
 \subsection{Program}
 
-A program looks like this:
+A MIPL program is simple. Basically, the MIPL program looks like below:
 
 \begin{lstlisting}
 program
@@ -156,8 +156,28 @@ program
 	;
 \end{lstlisting}
 
+The MIPL program consists of commands. Each command consists of commmands again. MIPL also has the interpreter, so this command is a running unit for the interpreter. Here is the sample MIPL program:
+
+\begin{lstlisting}
+countPositive(A, SizeOfA) {
+    I = 0.
+    while (I < SizeOfA) {
+        if (A[I] > 0) {
+            I = I + 1.
+        }
+    }
+}
+cat(tom).
+cat(tom)?
+animal(X) <- cat(X).
+animal(tom)?
+\end{lstlisting}
+
+This is the example of the MIPL program. In this example, there are five commands: $countPositive\{\}, cat()., cat()?, animal() <- cat().$, and $animal()?$. Each command can also include other commands. Each command can be identified by these: $\{\}, .,$ or $?$. These are used to determien the command type.
 
 \subsection{Commands}
+
+Including other commands in a command is permissible.
 
 \begin{lstlisting}
 commands
@@ -166,8 +186,11 @@ commands
 	;
 \end{lstlisting}
 
+The previous example in 4.1 shows that $countPositive\{\}$ includes several other commands. The command can be $a fact, a query, a rule,$ or $a job$.
 
 \subsection{Command}
+
+In MIPL, there are four types of commands: $fact, query, rule,$ and $job$.  
 
 \begin{lstlisting}
 command
@@ -177,6 +200,9 @@ command
 	| job
 	;
 \end{lstlisting}
+
+$fact$ is ended with $"."$. $fact$ is used to describe the fact. $query$ is ended with $"?"$. $query$ is used to check whether the fact is true or false. $query$ result returns $true$ or $false$. 
+
 
 %----------------------------------------------------------JINHYUNG}
 %----------------------------------------------------------YOUNGHOON{
