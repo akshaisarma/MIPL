@@ -217,17 +217,14 @@ $fact$ is ended with $"."$. $fact$ is used to describe or define the fact, or to
 # query
 cat(tom), mouse(jerry).
 mouse(tom)? # Returns false
-
-# To query the job 'weighted_grade', it requires two arguments.
-[weighted_grade] <- calculate_weighted_grade(grade, weight). 
-# But, we can query with '*'.
-weighted_grade(*)? # this is same with weighted_grade(X, Y)
+# query with *
+weighted_grade(*)?
 \end{lstlisting}
 
 $query$ is ended with $"?"$. $query$ requires facts, or job results. $query$ with
- the fact returns $true$ or $false$. $query$ with the job results returns satisfying
- results about the query. If the job results have lots of columns, $query$ can
- take $*$ as the query argument.\\
+ the fact returns $true$ or $false$. $query$ to the job results returns results 
+ satisfying the query. If the fact of the job results have lots of columns, $query$ can
+ take $*$ as the query argument to see all results.\\
 
 \begin{lstlisting}
 # rule with a fact
