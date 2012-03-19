@@ -367,27 +367,33 @@ public class JavaSourceWriter extends InstructionWriter {
 		}
 	}
 
+	public void createJobExpr(JobExpr.Type type, String name, JobExpr expr) {
+		declarationList.add(name);
+		switch (type) {
+			case ASSIGN:
+				stack.push("PrimitiveOperations.assign(" + name + ", " + stack.pop() + ")");
+				break;
+			case MULASSIGN:
+				stack.push("PrimitiveOperations.multiAssign(" + name + ", " + stack.pop() + ")");
+				break;
+			case DIVASSIGN:
+				stack.push("PrimitiveOperations.divAssign(" + name + ", " + stack.pop() + ")");
+				break;
+			case MODASSIGN:
+				stack.push("PrimitiveOperations.modAssign(" + name + ", " + stack.pop() + ")");
+				break;
+			case ADDASSIGN:
+				stack.push("PrimitiveOperations.addAssign(" + name + ", " + stack.pop() + ")");
+				break;
+			case SUBASSIGN:
+				stack.push("PrimitiveOperations.subAssign(" + name + ", " + stack.pop() + ")");
+				break;
+		}
+	}
+
 	public void createJobExpr(JobExpr.Type type, JobExpr expr1,	JobExpr expr2) {
 		String e = stack.pop();
 		switch (type) {
-			case ASSIGN:
-				stack.push("PrimitiveOperations.assign(" + e + ", " + stack.pop() + ")");
-				break;
-			case MULASSIGN:
-				stack.push("PrimitiveOperations.multiAssign(" + e + ", " + stack.pop() + ")");
-				break;
-			case DIVASSIGN:
-				stack.push("PrimitiveOperations.divAssign(" + e + ", " + stack.pop() + ")");
-				break;
-			case MODASSIGN:
-				stack.push("PrimitiveOperations.modAssign(" + e + ", " + stack.pop() + ")");
-				break;
-			case ADDASSIGN:
-				stack.push("PrimitiveOperations.addAssign(" + e + ", " + stack.pop() + ")");
-				break;
-			case SUBASSIGN:
-				stack.push("PrimitiveOperations.subAssign(" + e + ", " + stack.pop() + ")");
-				break;
 			case OR:
 				stack.push("PrimitiveOperations.or(" + e + ", " + stack.pop() + ")");
 				break;

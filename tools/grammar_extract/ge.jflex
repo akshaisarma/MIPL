@@ -33,6 +33,7 @@ import java.io.*;
 			fw = new FileWriter(args[1]);
 			lexer.yylex();
 			fw.write(resultString.replaceAll(" '", " `"));
+			//fw.write(resultString.replaceAll(" '", " `").replaceAll("\\{", "\\\\{").replaceAll("\\}", "\\\\}"));
 			fw.close();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -41,7 +42,7 @@ import java.io.*;
 %}
 
 SECTION = %%
-ACTION = \{.*\}
+ACTION = [	]\{.*\}
 COMMENT = [	 ]*\/\*.*\*\/
 LCOMMENT = \/\/.*\n
 

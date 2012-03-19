@@ -101,6 +101,9 @@ LARROW_OP = <- |
 "not" { return ParserTokens.NOT; }
 "is" { return ParserTokens.IS; }
 
+"true" { return ParserTokens.TRUE; }
+"false" { return ParserTokens.FALSE; }
+
 {STRING_LITERAL} { yyparser.yylval = getTrimmedString(yytext()); return ParserTokens.STRING_LITERAL; }
 
 \#.*\n { /* Ignore Comments */ }

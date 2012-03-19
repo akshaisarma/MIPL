@@ -91,11 +91,19 @@ public class JobExpr extends Traversable {
 		add(expr);
 	}
 
-	public JobExpr(Type type, JobExpr target, JobExpr source) {
+	public JobExpr(Type type, String name, JobExpr source) {
 		assert (type == Type.ASSIGN || type == Type.MULASSIGN ||
 				type == Type.DIVASSIGN || type == Type.MODASSIGN ||
-				type == Type.ADDASSIGN || type == Type.SUBASSIGN ||
-				type == Type.OR ||
+				type == Type.ADDASSIGN || type == Type.SUBASSIGN);
+		this.type = type;
+		this.expr1 = source;
+		this.name = name;
+
+		add(source);
+	}
+
+	public JobExpr(Type type, JobExpr target, JobExpr source) {
+		assert (type == Type.OR ||
 				type == Type.AND || type == Type.EQ || type == Type.NE ||
 				type == Type.LT || type == Type.GT || type == Type.LE ||
 				type == Type.GE || type == Type.ADD || type == Type.SUB ||

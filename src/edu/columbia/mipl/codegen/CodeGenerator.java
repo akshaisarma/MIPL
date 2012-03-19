@@ -134,6 +134,9 @@ public class CodeGenerator extends RuntimeTraverser {
 			case MODASSIGN:
 			case ADDASSIGN:
 			case SUBASSIGN:
+				writer.createJobExpr(jexpr.getType(), jexpr.getName(),
+										jexpr.getExpr1());
+				break;
 			case OR:
 			case AND:
 			case EQ:

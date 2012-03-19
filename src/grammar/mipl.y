@@ -24,7 +24,7 @@ import edu.columbia.mipl.runtime.traverse.*;
 %token IF ELSE DO WHILE
 
 %token REGEX VARIABLE NOT LARROW_OP IS
-%token NUMBER
+%token NUMBER TRUE FALSE
 
 %start program
 
@@ -155,22 +155,18 @@ expr_stmt
 	;
 
 selection_stmt
-	: IF '(' expr ')' stmt			{ $$ = new JobStmt(JobStmt.Type.IF, (JobExpr) $3, (JobStmt) $5); }
-	| IF '(' expr ')' stmt ELSE stmt	{ $$ = new JobStmt(JobStmt.Type.IF, (JobExpr) $3, (JobStmt) $5, (JobStmt) $7); }
+	: IF '(' bool_expr ')' stmt		{ $$ = new JobStmt(JobStmt.Type.IF, (JobExpr) $3, (JobStmt) $5); }
+	| IF '(' bool_expr ')' stmt ELSE stmt	{ $$ = new JobStmt(JobStmt.Type.IF, (JobExpr) $3, (JobStmt) $5, (JobStmt) $7); }
 	;
 
 iteration_stmt
-	: WHILE '(' expr ')' stmt		{ $$ = new JobStmt(JobStmt.Type.WHILE, (JobExpr) $3, (JobStmt) $5); }
-	| DO stmt WHILE '(' expr ')' '.'	{ $$ = new JobStmt(JobStmt.Type.DOWHILE, (JobExpr) $5, (JobStmt) $2); }
+	: WHILE '(' bool_expr ')' stmt		{ $$ = new JobStmt(JobStmt.Type.WHILE, (JobExpr) $3, (JobStmt) $5); }
+	| DO stmt WHILE '(' bool_expr ')' '.'	{ $$ = new JobStmt(JobStmt.Type.DOWHILE, (JobExpr) $5, (JobStmt) $2); }
 	;
 
 expr
-	: assign_expr			/* Default Action $$ = $1 */
-	;
-
-assign_expr
-	: logical_or_expr			/* Default Action $$ = $1 */
-	| unary_expr assign_op assign_expr	{ $$ = new JobExpr((JobExpr.Type) $2, (JobExpr) $1, (JobExpr) $3); }
+	: additive_expr			/* Default Action $$ = $1 */
+	| VARIABLE assign_op expr	{ $$ = new JobExpr((JobExpr.Type) $2, (String) $1, (JobExpr) $3); }
 	;
 
 assign_op
@@ -184,9 +180,9 @@ assign_op
 	;
 
 
-logical_or_expr
+bool_expr
 	: logical_and_expr				/* Default Action $$ = $1 */
-	| logical_or_expr OR_OP logical_and_expr	{ $$ = new JobExpr(JobExpr.Type.OR, (JobExpr) $1, (JobExpr) $3); }
+	| bool_expr OR_OP logical_and_expr		{ $$ = new JobExpr(JobExpr.Type.OR, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 logical_and_expr
@@ -196,17 +192,24 @@ logical_and_expr
 
 equality_expr
 	: relational_expr				/* Default Action $$ = $1 */
+	| expr EQ_OP expr				{ $$ = new JobExpr(JobExpr.Type.EQ, (JobExpr) $1, (JobExpr) $3); }
+	| expr NE_OP expr				{ $$ = new JobExpr(JobExpr.Type.NE, (JobExpr) $1, (JobExpr) $3); }
 	| equality_expr EQ_OP relational_expr		{ $$ = new JobExpr(JobExpr.Type.EQ, (JobExpr) $1, (JobExpr) $3); }
 	| equality_expr NE_OP relational_expr		{ $$ = new JobExpr(JobExpr.Type.NE, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 relational_expr
-	: additive_expr					/* Default Action $$ = $1 */
-	| relational_expr '<' additive_expr		{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
-	| relational_expr '>' additive_expr		{ $$ = new JobExpr(JobExpr.Type.GT, (JobExpr) $1, (JobExpr) $3); }
-	| relational_expr LE_OP additive_expr		{ $$ = new JobExpr(JobExpr.Type.LE, (JobExpr) $1, (JobExpr) $3); }
-	| relational_expr GE_OP additive_expr		{ $$ = new JobExpr(JobExpr.Type.GE, (JobExpr) $1, (JobExpr) $3); }
+	: boolvalue_expr					/* Default Action $$ = $1 */
+	| expr '<' expr			{ $$ = new JobExpr(JobExpr.Type.LT, (JobExpr) $1, (JobExpr) $3); }
+	| expr '>' expr			{ $$ = new JobExpr(JobExpr.Type.GT, (JobExpr) $1, (JobExpr) $3); }
+	| expr LE_OP expr		{ $$ = new JobExpr(JobExpr.Type.LE, (JobExpr) $1, (JobExpr) $3); }
+	| expr GE_OP expr		{ $$ = new JobExpr(JobExpr.Type.GE, (JobExpr) $1, (JobExpr) $3); }
 	;
+
+boolvalue_expr
+	: TRUE
+	| FALSE
+	| '(' bool_expr ')'
 
 additive_expr
 	: multiplicative_expr				/* Default Action $$ = $1 */
@@ -231,7 +234,6 @@ primary_expr
 	: IDENTIFIER				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>())); }
 	| VARIABLE				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); }
 	| NUMBER				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
-//	| STRING_LITERAL
 	| '(' expr ')'				{ $$ = $2; }
 	;
 
@@ -256,8 +258,8 @@ postfix_expr
 	;
 
 argument_expr_list
-	: assign_expr				{ $$ = new ArrayList<JobExpr>(); ((List<JobExpr>) $$).add((JobExpr) $1); }
-	| argument_expr_list ',' assign_expr	{ $$ = $1; ((List<JobExpr>) $$).add((JobExpr) $3); }
+	: expr					{ $$ = new ArrayList<JobExpr>(); ((List<JobExpr>) $$).add((JobExpr) $1); }
+	| argument_expr_list ',' expr		{ $$ = $1; ((List<JobExpr>) $$).add((JobExpr) $3); }
 	;
 
 %%
@@ -328,6 +330,8 @@ public Parser(String file, Program program) {
 	}
 	lexer = new Yylex(r, this);
 	parseSuccess = true;
+
+	filename = file;
 
 	this.program = program;
 

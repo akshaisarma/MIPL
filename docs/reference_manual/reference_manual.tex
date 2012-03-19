@@ -69,6 +69,7 @@ Abstraction here.
 
 \maketitle
 
+\tableofcontents 
 
 \lstset{frame=single}
 
@@ -469,7 +470,7 @@ in the mid of the Job, the user should use Job Control Statements
 such as If Statement to do so.
 
 
-\subsection{Job Expression Statement}
+\subsubsection{Job Expression Statement}
 
 \begin{lstlisting}
 expr_stmt
@@ -484,14 +485,14 @@ Expression.  This allows users use Job Expressions in a Job.
 
 \begin{lstlisting}
 selection_stmt
-	: IF `(' expr `)' stmt
-	| IF `(' expr `)' stmt ELSE stmt
+	: IF `(' bool_expr `)' stmt
+	| IF `(' bool_expr `)' stmt ELSE stmt
 	;
 \end{lstlisting}
 
 Job Selection Statement is a conditional control Job Statement,
-which checks the value of given Job Expression and executes the
-statements accordingly.  If the value of the Job Expression is
+which checks the value of given Job Boolean Expression and executes
+the statements accordingly.  If the value of the Job Expression is
 true, the first Job Statement will be executed.  If the value of
 the expression is false and the ELSE statement is provided, this
 statement will be executed.  The IF ELSE syntax is ambiguous,
@@ -502,8 +503,8 @@ results in that the ELSE is associated with closer IF.
 
 \begin{lstlisting}
 iteration_stmt
-	: WHILE `(' expr `)' stmt
-	| DO stmt WHILE `(' expr `)' `.'
+	: WHILE `(' bool_expr `)' stmt
+	| DO stmt WHILE `(' bool_expr `)' `.'
 	;
 \end{lstlisting}
 
@@ -511,39 +512,30 @@ Job Iteration Statement is a statement, that repeatedly executes
 the given Job Statement according to the value of Job Expression.
 
 WHILE statement executes the given Job Statement while the Job
-Expression's value is true.  DO WHILE statement executes the Job
-Statement once first, and then executes the Job Statement repeatedly
-while the Job Expression's value is true.
+Boolean Expression's value is true.  DO WHILE statement executes the
+Job Statement once first, and then executes the Job Statement repeatedly
+while the Job Boolean Expression's value is true.
 
 
 \subsection{Job Expression}
 
 \begin{lstlisting}
 expr
-	: assign_expr
+	: additive_expr
+	| VARIABLE assign_op assign_expr
 	;
 \end{lstlisting}
 
-Job Expression is a grammatical unit that conveys a value, which
-includes a matrix or a number.  Whether a Job Expression contains
-a matrix or a number is decided dynamically at runtime, since MIPL
-is weak typed.
+\label{Expression_Section}
+Job Expression is a grammatical unit that conveys a numeric value,
+which includes a matrix or a number.  Whether a Job Expression
+contains a matrix or a number is decided dynamically at runtime,
+as well as how big is the matrix, since MIPL is dynamic typed.
 
-
-\subsubsection{Job Assignment Expression}
-
-\begin{lstlisting}
-assign_expr
-	: logical_or_expr
-	| unary_expr assign_op assign_expr
-	;
-\end{lstlisting}
-
-\label{Assignment_Expression_Section}
-Job Assignment Expression is a Job Expressions that assigns a value
-to a Variable contained in the left-hand side expression.  The value
-of Job Assignment Expression is the value newly assigned to the
-Variable.
+Job Expressions assigns a numberic value to a Variable contained
+at the left-hand side.  The value of Job Expression is the value
+newly assigned to the Variable.  This may relays multiple times,
+for example, $Variable1 = Variable2 = Variable3 = 3.$.
 
 
 \subsubsection{Job Assignment Operator}
@@ -573,102 +565,6 @@ Variable.
 %----------------------------------------------------------YOUNGHOON}
 
 %----------------------------------------------------------AKSHAI{
-\subsubsection{Job Logical OR Expression}
-
-The character sequence OR\_OP refers to the sequence ``\textbardbl", which  
-denotes the logical OR operator. The logical AND expressions that are 
-separated by the logical OR operator associate left. The next section 
-details how the logical AND expressions, logical\_and\_expr, which have 
-higher precedence than the logical OR expression, are evaluated. 
-
-\begin{lstlisting}
-logical_or_expr
-	: logical_and_expr
-	| logical_or_expr OR_OP logical_and_expr
-	;
-\end{lstlisting}
-
-Given a binary OR\_OP, the Logical OR expression evaluates to the 
-integer 1, if either of the logical\_and\_expr evaluates to the integer 
-1 and evaluates to 0, if both of the logical\_and\_expr evaluate to 0, 
-where 1 stands for the truth value, true and 0, for false. The order of 
-evaluation is left to right, also known as the ``short circuit" 
-evaluation, whereby the logical\_and\_expr on the right of the OR\_OP 
-is evaluated if and only if the logical\_and\_expr on the left of the 
-OR\_OP evaluated to 0. 
-
-\subsubsection{Job Logical AND Expression}
-
-The character sequence AND\_OP refers to the sequence ``\&\&", which 
-denotes the logical AND operator. The equality expressions that are 
-separated by the logical OR operator associate left. The next section 
-details how equality expressions, equality\_expr, which have higher 
-precedence than the logical OR expression, are evaluated. 
-
-\begin{lstlisting}
-logical_and_expr
-	: equality_expr
-	| logical_and_expr AND_OP equality_expr
-	;
-\end{lstlisting}
-
-Given a binary AND\_OP, the Logical AND expression evaluates to the 
-integer 1, if both of the logical\_and\_expr evaluate to the integer 1 
-and evaluates to 0, if either of the logical\_and\_expr evaluate to 0. 
-The order of evaluation is again left to right, whereby the 
-equality\_expr on the right of the AND\_OP is evaluated if and only 
-if the equality\_expr on the left of the OR\_OP evaluated to 1.
-
-\subsubsection{Job Equality Expression}
-
-The character sequence EQ\_OP refers to the sequence ``==" and the 
-character sequence NE\_OP refers to the sequence ``!=". These operators, 
-equal to and not equal to, respectively, cause the expression to 
-evaluate to the integer 0, for false, and 1, for true.  These operators 
-that separate the relational expressions, relational\_expr, associate 
-left. The operators EQ\_OP and NE\_OP have lower precedence than the 
-operators that constitute the relational expressions, described in the 
-next section. 
-
-\begin{lstlisting}
-equality_expr
-	: relational_expr
-	| equality_expr EQ_OP relational_expr
-	| equality_expr NE_OP relational_expr
-	;
-\end{lstlisting}
-
-Given two relational expressions, connected by a EQ\_OP or a NE\_OP, 
-the equality expression evaluates to a 1, if and only if the left and 
-the right relational expressions both evaluate to the same value in the 
-case of a EQ\_OP and to different values in the case of a NE\_OP. 
-Otherwise, the equality expression evaluates to a 0.
-
-\subsubsection{Job Relational Expression}
-
-The character sequence LE\_OP refers to the sequence ``$<=$", for less 
-than or equal to and GE\_OP refers to the sequence ``$>=$", for greater 
-than or equal to. The sequences `$<$' and `$>$' mean exactly the same as 
-their mathematical counterpart relations. These operators also associate 
-left to right and have lower precedence than the operators in the additive 
-expression type, additive\_expr, described in the following section. The 
-evaluation of a relational expression is once again a truth value, 
-represented by the integers 0 and 1. 
-
-\begin{lstlisting}
-relational_expr
-	: additive_expr
-	| relational_expr `<' additive_expr
-	| relational_expr `>' additive_expr
-	| relational_expr LE_OP additive_expr
-	| relational_expr GE_OP additive_expr
-	;
-\end{lstlisting}
-
-Given two additive expressions, connected by the above mentioned operators, 
-the expression evalutes to 1 if the mathematical relation represented by 
-the operation is satisfied. Otherwise, the expression evaluates to 0. 
-
 \subsubsection{Job Additive Expression}
 
 The character sequence `+' and `-' mean addition and subtraction, 
@@ -861,13 +757,134 @@ passed to a Job invocation.
 
 \begin{lstlisting}
 argument_expr_list
-	: assign_expr
-	| argument_expr_list `,' assign_expr
+	: expr
+	| argument_expr_list `,' expr
 	;
 \end{lstlisting}
 
 These arguments are evaluated left to right and can include any assignment 
-expression as described above in \ref{Assignment_Expression_Section}.
+expression as described above in \ref{Expression_Section}.
+
+\subsection{Job Boolean Expression}
+
+Job Boolean Expression is a basic Expression that can be evaluated as
+true or false.  Job Selection Statement and Job Iteration Statement
+contains Job Boolean Expression in order to determine whether to proceed
+or how many times to repeat.
+
+The character sequence OR\_OP refers to the sequence ``\textbardbl", which  
+denotes the logical OR operator. The logical AND expressions that are 
+separated by the logical OR operator associate left. The next section 
+details how the logical AND expressions, logical\_and\_expr, which have 
+higher precedence than the logical OR expression, are evaluated. 
+
+\begin{lstlisting}
+bool_expr
+	: logical_and_expr
+	| bool_expr OR_OP logical_and_expr
+	;
+\end{lstlisting}
+
+Given a binary OR\_OP, the Job Boolean Expression evaluates to true 
+if either of the nested bool\_expr or the logical\_and\_expr evaluates
+to true, and evaluates to false if both of the bool\_expr or
+logical\_and\_expr evaluate to false, The order of evaluation is left
+to right, also known as the ``short circuit" evaluation, whereby
+the logical\_and\_expr on the right of the OR\_OP is evaluated if
+and only if the logical\_and\_expr on the left of the OR\_OP 
+evaluated to false. 
+
+\subsubsection{Job Logical AND Expression}
+
+The character sequence AND\_OP refers to the sequence ``\&\&", which 
+denotes the logical AND operator. The equality expressions that are 
+separated by the logical OR operator associate left. The next section 
+details how equality expressions, equality\_expr, which have higher 
+precedence than the logical OR expression, are evaluated. 
+
+\begin{lstlisting}
+logical_and_expr
+	: equality_expr
+	| logical_and_expr AND_OP equality_expr
+	;
+\end{lstlisting}
+
+Given a binary AND\_OP, the Logical AND expression evaluates to true,
+if both of the logical\_and\_expr evaluate to true and evaluates to false,
+if either of the logical\_and\_expr evaluate to false. 
+The order of evaluation is again left to right, whereby the 
+equality\_expr on the right of the AND\_OP is evaluated if and only 
+if the equality\_expr on the left of the OR\_OP evaluated to true.
+
+\subsubsection{Job Equality Expression}
+
+The character sequence EQ\_OP refers to the sequence ``==" and the 
+character sequence NE\_OP refers to the sequence ``!=". These operators, 
+equal to and not equal to, respectively, cause the expression to 
+evaluate to false and true.  These operators that separate the
+relational expressions, relational\_expr, associate left. The
+operators EQ\_OP and NE\_OP have lower precedence than the 
+operators that constitute the relational expressions, described in the 
+next section. 
+
+\begin{lstlisting}
+equality_expr
+	: relational_expr
+	| expr EQ_OP expr
+	| expr NE_OP expr
+	| equality_expr EQ_OP relational_expr
+	| equality_expr NE_OP relational_expr
+	;
+\end{lstlisting}
+
+Given two relational expressions, connected by a EQ\_OP or a NE\_OP, 
+Job Expression or Job Equality Expression evaluates to true, 
+if and only if the left and the right Job Expressions both evaluate
+to the same value in the case of a EQ\_OP and to different values in
+the case of a NE\_OP.  Otherwise, the equality expression evaluates
+to false.
+
+\subsubsection{Job Relational Expression}
+
+The character sequence LE\_OP refers to the sequence ``$<=$", for less 
+than or equal to and GE\_OP refers to the sequence ``$>=$", for greater 
+than or equal to. The sequences `$<$' and `$>$' mean exactly the same as 
+their mathematical counterpart relations. These operators also associate 
+left to right and have lower precedence than the operators in the additive 
+expression type, additive\_expr, described in the following section. The 
+evaluation of a relational expression is once again a truth value, 
+represented by the false and true. 
+
+\begin{lstlisting}
+relational_expr
+	: boolvalue_expr
+	| expr `<' expr
+	| expr `>' expr
+	| expr LE_OP expr
+	| expr GE_OP expr
+	;
+\end{lstlisting}
+
+Given two Job Expressions, connected by the above mentioned operators, 
+Job Relational Expression evalutes to true if the mathematical relation
+represented by the operation is satisfied. Otherwise, Job Relational
+Expression evaluates to false. 
+
+
+\subsubsection{Job BooleanValue Expression}
+
+\begin{lstlisting}
+boolvalue_expr
+	: TRUE
+	| FALSE
+	| '(' bool_expr ')'
+	;
+\end{lstlisting}
+
+The character sequences TRUE and FALSE refer to the sequences ``true"
+and ``false" respectively.  Job BooleanValue Expression can be expanded
+to a nested Job Boolean Expression embraced with a pare of parentheses.
+
 
 %----------------------------------------------------------AKSHAI}
 \section{Operators}

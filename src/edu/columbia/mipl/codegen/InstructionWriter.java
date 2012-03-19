@@ -61,6 +61,8 @@ public abstract class InstructionWriter {
 	public abstract void createJobStmt(JobStmt.Type type, List<JobStmt> stmts);
 	public abstract void createJobStmt(JobStmt.Type type, JobExpr expr);
 
+	public abstract void createJobExpr(JobExpr.Type type, String name,
+										JobExpr expr1);
 	public abstract void createJobExpr(JobExpr.Type type, JobExpr expr1,
 										JobExpr expr2);
 	public abstract void createJobExpr(JobExpr.Type type, JobExpr expr1);

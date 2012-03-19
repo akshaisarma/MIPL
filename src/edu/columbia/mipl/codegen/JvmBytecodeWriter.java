@@ -187,7 +187,7 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		}
 	}
 
-	public void createJobExpr(JobExpr.Type type, JobExpr expr1,	JobExpr expr2) {
+	public void createJobExpr(JobExpr.Type type, String name, JobExpr expr) {
 		switch (type) {
 			case ASSIGN:
 				break;
@@ -201,6 +201,11 @@ public class JvmBytecodeWriter extends InstructionWriter {
 				break;
 			case SUBASSIGN:
 				break;
+		}
+	}
+
+	public void createJobExpr(JobExpr.Type type, JobExpr expr1,	JobExpr expr2) {
+		switch (type) {
 			case OR:
 				break;
 			case AND:

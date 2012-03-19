@@ -24,9 +24,13 @@ public class ProgramExecutor extends RuntimeTraverser {
 	}
 
 	public void reachFact(Fact fact) {
+		// registerKnowledge
+		// or
+		// execute FactsAsMatrix and resgisterKnowledges
 	}
 
 	public void reachRule(Rule rule) {
+		// registerKnowledge
 	}
 
 	public void reachQuery(Query query) {
