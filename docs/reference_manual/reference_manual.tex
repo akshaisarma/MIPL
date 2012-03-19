@@ -16,8 +16,9 @@
 % Package to generate and customize Algorithm as per ACM style
 \usepackage[ruled]{algorithm2e}
 \usepackage{listings}
+\usepackage{longtable}
 \renewcommand{\algorithmcfname}{ALGORITHM}
-\SetAlFnt{\small}
+\SetAlFnt{\large}
 \SetAlCapFnt{\large}
 \SetAlCapNameFnt{\large}
 \SetAlCapHSkip{10pt}
@@ -206,70 +207,126 @@ $fact$ is ended with $"."$. $fact$ is used to describe the fact. $query$ is ende
 
 %----------------------------------------------------------JINHYUNG}
 %----------------------------------------------------------YOUNGHOON{
-\subsection{Term Expression}
 
-Term Expression
+\subsection{Term Expression}
 \begin{lstlisting}
 term_expr
-	: term_expr '+' term_fact
-	| term_expr '-' term_fact
+	: term_expr `+' term_fact
+	| term_expr `-' term_fact
 	| term_fact
 	;
 \end{lstlisting}
 
-\subsection{Term Factor}
+Term Expression is an expression which belongs to a Term.  Term 
+Expressions can consist of binary operators `+' and `-' along with Term
+Factors.  These two operators left-associate Term Facts so that Term
+Factors within a Term Expression can be computed with a left priority.
 
-Term Factor
+Term Expression, Term Factor, and Term Term are basic blocks that
+consist Term Expression.  So these three rules can be applied within
+Term Expression, by the definition of MIPL grammar.
+
+\subsubsection{Term Factor}
+
+\begin{lstlisting}
+wkeowekowk
+\end{lstlisting}
 \begin{lstlisting}
 term_fact
-	: term_fact '*' term_term
-	| term_fact '/' term_term
+	: term_fact `*' term_term
+	| term_fact `/' term_term
 	| term_term
 	;
 \end{lstlisting}
 
+Term Factor is an expression which belongs to a Term Expression.  Term 
+Factors can consist of binary operators `*' and `/' along with Term
+Term.  These two operators left-associate Term Terms so that Term
+Terms within a Term Factor can be computed with a left priority. Like,
+mathematical notations, operators `*' and `/' have higher priority than
+operators `+' and `-' since Term Facts are reduced 
 
-\subsection{Term Term}
 
+\subsubsection{Term Term}
 \begin{lstlisting}
 term_term
 	: VARIABLE
 	| NUMBER
-	| '(' term_expr ')'
+	| `(' term_expr `)'
 	;
 \end{lstlisting}
 
+Term Term is a terminal expression of Term Expression and its derivables,
+belonging to a Term Factor.  Term Terms can consist of a Variable or a
+Number, which serve as the basic blocks of Term Expressions.  Also, a Term
+Expression can be reduced to a Term Term with a pair of parentheses, which
+allows the operators, `-', `+', `*', and `/' can appear recursively in a
+Term Expression.  This also means that `(' and `)' operators have higher
+operation priority than other operators.
 
-\subsection{Argument Candidate}
+\subsection{Arguments}
+Arguments play a role in passing data from Facts to Job, by converting Facts
+into matrices so that the Job computes the matrices by the algorithm
+described in the Job.
 
+\subsubsection{Argument Candidate}
 \begin{lstlisting}
 arg_cand
 	: IDENTIFIER
-	| IDENTIFIER '(' arg_list ')'
+	| IDENTIFIER `(' arg_list `)'
 	| VARIABLE
-	| '_'
+	| `_'
 	| NUMBER
 	| STRING_LITERAL
 	;
 \end{lstlisting}
 
+Argument Candidate is an Identifier, a Variable, an Anonymous
+Variable, a Number, or a String.  An Identifier can have one
+or more arguments within a pair of parentheses or no arguments.
+This arguments again consist of Argument Candidates, which
+allows a recursive form of argument definition.  For instance, 
+$com(monitor, board(cpu, ram(4, 4)), P)$ is a valid form
+of a Term declaration.
 
-\subsection{Argument List}
-
+\subsubsection{Argument List}
 \begin{lstlisting}
 arg_list
 	: arg_cand
-	| arg_list ',' arg_cand
+	| arg_list `,' arg_cand
 	;
 \end{lstlisting}
+
+Argument List is used for 1. A Fact declaration that calls a Job
+2. A Term that has arguments 3. A Job definition.  Sharing the
+same type of argument list for three different rules are possible
+because there is not type and variable declaration in MIPL.  Thus,
+a Job definition and a Job-calling Fact basically have the same
+argument list.  There are a few diffences that will be checked
+semantically at compile time and dynamically at runtime.  For example,
+current implementation of MIPL does not support passing of nested
+parameters so these errors are checked by Semantic Checker, which may
+be eased later when MIPL is extended to support nested parameter passing
+without changing its grammar.  Also, MIPL's Job definitions allows
+variable numbers of return values dynamically, the generated program
+checks if the numbers of return values from Job and the numbers of
+Fact names are matched.  Otherwise, it fails to run.
 
 \subsection{Job}
 
 \begin{lstlisting}
 job
-	: IDENTIFIER '(' arg_list ')' '{' stmt_list '}'
+	: IDENTIFIER `(' arg_list `)' `{' stmt_list `}'
 	;
 \end{lstlisting}
+
+Job is MIPL's basic operation that provides matrix operations.
+A Job definition denotes a number of arguments and a set of Job
+Statements.  At runtime, a compiled Job is distributed over
+a MapReduce clusters, computed, and delivered to the user. For
+example, when a user loads two matrices and calls a Job giving those
+matrices, the matrices are split into several smaller matrices,
+distributed to MapReduce clusters, and computed.
 
 
 \subsection{Job Statement}
@@ -284,8 +341,13 @@ stmt
 	;
 \end{lstlisting}
 
+Job Statement is a sentence in a Job.  There are five types of
+Job Statement: Job Selection Statement, Job Compound Statement,
+Job Return Statement, Job Expression Statement, and Job Iteration
+Statement.  Each of these will be explained in the following
+sections.
 
-\subsection{Job Statement List}
+\subsubsection{Job Statement List}
 
 \begin{lstlisting}
 stmt_list
@@ -294,25 +356,42 @@ stmt_list
 	;
 \end{lstlisting}
 
+Job Statement List is a set of Job Statement, used in Job
+declarations and Job Compound Statement.
 
-\subsection{Job Compound Statement}
+
+\subsubsection{Job Compound Statement}
 
 \begin{lstlisting}
 compound_stmt
-	: '{' '}'
-	| '{' stmt_list '}'
+	: `{' `}'
+	| `{' stmt_list `}'
 	;
 \end{lstlisting}
 
+Job Compound Statement is a Job Statement, which includes
+zero or more Job Statements, embraced by a pair of curly
+brackets.
 
-\subsection{Job Return Statement}
+\subsubsection{Job Return Statement}
 
 \begin{lstlisting}
 return_stmt
-	: '@' expr '.'
+	: `@' expr `.'
 	;
 
 \end{lstlisting}
+
+Job Return Statement is a sentence that returns a matrix.  Since
+Job is likely executed on MapReduce clusters (unless configured
+so or the matrix size is smaller than configured threshold), Job
+Return Statement fetches the matrix.
+
+There's no acceptable Job Return Statement like $@.$.  The
+return operator $@$ is designed to deliver a matrix value from
+MapReduce clusters to the user.  When a user want to quit the Job
+in the mid of the Job, the user should use Job Control Statements
+such as If Statement to do so.
 
 
 \subsection{Job Expression Statement}
@@ -321,32 +400,32 @@ Probably should make all the expressions below subsubsections instead of subsect
 
 \begin{lstlisting}
 expr_stmt
-	: expr '.'
+	: expr `.'
 	;
 \end{lstlisting}
 
 
-\subsection{Job Selection Statement}
-
+\subsubsection{Job Selection Statement}
+whatthe\\
 \begin{lstlisting}
 selection_stmt
-	: IF '(' expr ')' stmt
-	| IF '(' expr ')' stmt ELSE stmt
+	: IF `(' expr `)' stmt
+	| IF `(' expr `)' stmt ELSE stmt
 	;
 \end{lstlisting}
 
 
-\subsection{Job Iteration Statement}
-
+\subsubsection{Job Iteration Statement}
+no\\
 \begin{lstlisting}
 iteration_stmt
-	: WHILE '(' expr ')' stmt
-	| DO stmt WHILE '(' expr ')' '.'
+	: WHILE `(' expr `)' stmt
+	| DO stmt WHILE `(' expr `)' `.'
 	;
 \end{lstlisting}
 
 
-\subsection{Job Expression}
+\subsubsection{Job Expression}
 
 \begin{lstlisting}
 expr
@@ -355,7 +434,7 @@ expr
 \end{lstlisting}
 
 
-\subsection{Job Assignment Expression}
+\subsubsection{Job Assignment Expression}
 
 \begin{lstlisting}
 assign_expr
@@ -364,11 +443,11 @@ assign_expr
 	;
 \end{lstlisting}
 
-\subsection{Job Assignment Operator}
+\subsubsection{Job Assignment Operator}
 
 \begin{lstlisting}
 assign_op
-	: '='
+	: `='
 	| LARROW_OP
 	| MUL_ASSIGN
 	| DIV_ASSIGN
@@ -415,8 +494,8 @@ equality_expr
 \begin{lstlisting}
 relational_expr
 	: additive_expr
-	| relational_expr '<' additive_expr
-	| relational_expr '>' additive_expr
+	| relational_expr `<' additive_expr
+	| relational_expr `>' additive_expr
 	| relational_expr LE_OP additive_expr
 	| relational_expr GE_OP additive_expr
 	;
@@ -427,8 +506,8 @@ relational_expr
 \begin{lstlisting}
 additive_expr
 	: multiplicative_expr
-	| additive_expr '+' multiplicative_expr
-	| additive_expr '-' multiplicative_expr
+	| additive_expr `+' multiplicative_expr
+	| additive_expr `-' multiplicative_expr
 	;
 \end{lstlisting}
 
@@ -437,9 +516,9 @@ additive_expr
 \begin{lstlisting}
 multiplicative_expr
 	: unary_expr
-	| multiplicative_expr '*' unary_expr
-	| multiplicative_expr '/' unary_expr
-	| multiplicative_expr '%' unary_expr
+	| multiplicative_expr `*' unary_expr
+	| multiplicative_expr `/' unary_expr
+	| multiplicative_expr `%' unary_expr
 	;
 \end{lstlisting}
 
@@ -449,8 +528,8 @@ Should talk about l-value if necessary.
 \begin{lstlisting}
 unary_expr
 	: postfix_expr
-	| '+' unary_expr
-	| '-' unary_expr
+	| `+' unary_expr
+	| `-' unary_expr
 	;
 \end{lstlisting}
 
@@ -459,9 +538,9 @@ unary_expr
 \begin{lstlisting}
 postfix_expr
 	: primary_expr
-	| VARIABLE '[' array_idx_list ']' '[' array_idx_list ']'
-	| IDENTIFIER '(' ')'
-	| IDENTIFIER '(' argument_expr_list ')'
+	| VARIABLE `[' array_idx_list `]' `[' array_idx_list `]'
+	| IDENTIFIER `(' `)'
+	| IDENTIFIER `(' argument_expr_list `)'
 	;
 \end{lstlisting}
 
@@ -473,7 +552,7 @@ primary_expr
 	| VARIABLE
 	| NUMBER
 	| STRING_LITERAL
-	| '(' expr ')'
+	| `(' expr `)'
 	;
 \end{lstlisting}
 
@@ -481,11 +560,11 @@ primary_expr
 
 \begin{lstlisting}
 array_idx_elmt
-	: '~'
-	| '~' NUMBER
+	: `~'
+	| `~' NUMBER
 	| NUMBER
-	| NUMBER '~'
-	| NUMBER '~' NUMBER
+	| NUMBER `~'
+	| NUMBER `~' NUMBER
 	;
 \end{lstlisting}
 
@@ -494,7 +573,7 @@ array_idx_elmt
 \begin{lstlisting}
 array_idx_list
 	: array_idx_elmt
-	| array_idx_list ',' array_idx_elmt
+	| array_idx_list `,' array_idx_elmt
 	;
 \end{lstlisting}
 \subsection{Job Argument Expression List}
@@ -502,7 +581,7 @@ array_idx_list
 \begin{lstlisting}
 argument_expr_list
 	: assign_expr
-	| argument_expr_list ',' assign_expr
+	| argument_expr_list `,' assign_expr
 	;
 \end{lstlisting}
 
@@ -521,10 +600,12 @@ Functions here
 
 \subsection{Syntax subsection}
 
-\section*{Appendix}
+\section*{Appendix - Grammar}
 
-MIPL's full grammar is here.
+MIPL's full grammar is here. MIPL's Yacc grammar has only one shift/reduce conflict, which C language also has, without using operator associativity declarations.
+
 \lstinputlisting{../../build/mipl.grammar}
+%\input{../../build/mipl_grammar.tex}
 %\lstinputlisting{tablified_grammar}
 
 % Appendix
