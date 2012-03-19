@@ -140,7 +140,7 @@ Expression Operators will be explained in Built-in Operators and Jobs section.
 
 \section{Data Types}
 
-Data Types here.
+Data Types here. Need Arithmetic types here. Matrix as a type?
 
 \section{Syntax}
 
@@ -466,9 +466,9 @@ Variable.
 
 
 %----------------------------------------------------------YOUNGHOON}
-Akshai, would you make Job * Expressions to be subsubsection, so they belong to Job Expression.
+
 %----------------------------------------------------------AKSHAI{
-\subsection{Job Logical OR Expression}
+\subsubsection{Job Logical OR Expression}
 
 The character sequence OR\_OP refers to the sequence "\textbardbl", which  
 denotes the logical OR operator. The logical AND expressions that are 
@@ -492,7 +492,7 @@ evaluation, whereby the logical\_and\_expr on the right of the OR\_OP
 is evaluated if and only if the logical\_and\_expr on the left of the 
 OR\_OP evaluated to 0. 
 
-\subsection{Job Logical AND Expression}
+\subsubsection{Job Logical AND Expression}
 
 The character sequence AND\_OP refers to the sequence "\&\&", which 
 denotes the logical AND operator. The equality expressions that are 
@@ -514,7 +514,7 @@ The order of evaluation is again left to right, whereby the
 equality\_expr on the right of the AND\_OP is evaluated if and only 
 if the equality\_expr on the left of the OR\_OP evaluated to 1.
 
-\subsection{Job Equality Expression}
+\subsubsection{Job Equality Expression}
 
 The character sequence EQ\_OP refers to the sequence "==" and the 
 character sequence NE\_OP refers to the sequence "!=". These operators, 
@@ -539,7 +539,7 @@ the right relational expressions both evaluate to the same value in the
 case of a EQ\_OP and to different values in the case of a NE\_OP. 
 Otherwise, the equality expression evaluates to a 0.
 
-\subsection{Job Relational Expression}
+\subsubsection{Job Relational Expression}
 
 The character sequence LE\_OP refers to the sequence "<=", for less 
 than or equal to and GE\_OP refers to the sequence ">=", for greater 
@@ -564,7 +564,7 @@ Given two additive expressions, connected by the above mentioned operators,
 the expression evalutes to 1 if the mathematical relation represented by 
 the operation is satisfied. Otherwise, the expression evaluates to 0. 
 
-\subsection{Job Additive Expression}
+\subsubsection{Job Additive Expression}
 
 The character sequence '+' and '-' mean addition and subtraction, 
 respectively. These operators in Additive expressions, or additive\_expr, 
@@ -584,11 +584,14 @@ the expression evaluates to the result of applying the operator to the
 operands. However, this depends on the type of the operands, which can
 range from integer or doubles to matrices. In the case of the latter,
 the evaluation of the expression results in a matrix, formed by the 
-application of the operation on the multiplicative expressions. The
-operands have to conform to strict type constraints as there is no
-casting.
+application of the operation on the multiplicative expressions. Operands 
+are converted (implicitly casted) to the appropriate type to perform the
+operation. For instance, the addition of a scalar to the a matrix, results in 
+the scalar being converted to a appropriate matrix and the resulting matrix
+be applied to the operation. The '+' and the '-' operators can be applied 
+to arithmetic and matrix types.
 
-\subsection{Job Multiplicative Expression}
+\subsubsection{Job Multiplicative Expression}
 
 The character sequence '*' and '/' mean multiplication and division, 
 respectively. The sequence '\%' represents the modulus operation. That
@@ -608,15 +611,23 @@ multiplicative_expr
 
 As with the additive expressions, the operators are applicable to types
 where the mathematical equivalent is valid. For the case of multiplying
-matrices, the requirement that the number of columns of the left operand be
-equal to the number of rows of the right operand. With the data types, 
-the result of the evaluation of the operation is contained within the set
-of basic data types. The multiplication of a matrix expression with another 
-results in a matrix expression. As with the additive expressions, there is 
-no casting and the operands have to conform to the strict type constraints.
+matrices, the requirement that the number of columns of the left operand 
+be equal to the number of rows of the right operand. The result of the
+evaluation of the operation is contained within the set of basic data 
+types. The multiplication of a matrix expression with another results in 
+a matrix expression. As with the additive expressions, there is still 
+automatic type casting and the operands may be converted to match the
+the more general operand. 
 
-\subsection{Job Unary Expression}
-Should talk about l-value if necessary.
+\subsubsection{Job Unary Expression}
+  
+A unary expression contains the unary operators '+' for positive and '-' 
+for negative. The '+' operator when applied to an applicable type does
+not change the value of the type. The '-' operator when applied to an
+arithmetic type, produces the negative of its operand. The operators, 
+unlike with the additive and multiplicative expressions, may only be
+applied to expressions that produce an arithmetic type.
+
 
 \begin{lstlisting}
 unary_expr
@@ -626,7 +637,24 @@ unary_expr
 	;
 \end{lstlisting}
 
-\subsection{Job PostFix Expression}
+\subsubsection{Job PostFix Expression}
+
+A postfix expression is either a primary expression, an matrix access or 
+a Job call.
+
+A VARIABLE is like an IDENTIFIER but it begins with an uppercase letter,
+followed by lowercase or uppercase alphabets or underscore. A VARIABLE
+followed by two '[' and ']' is a matrix access. The matrix is accessed
+by subscripts, also knows as the array index list, described in a later
+section. The subscripts corresponds exactly to the two dimensional 
+interpretation of the matrix, where the the subscript within the first 
+set of square brackets refers to the row of the matrix while the second
+subscript refers to the corresponding pressure. The VARAIABLE must be of 
+typpe katrox/
+
+An IDENTIFIER followed by a set of paranthesis '('
+
+
 
 \begin{lstlisting}
 postfix_expr
@@ -637,7 +665,7 @@ postfix_expr
 	;
 \end{lstlisting}
 
-\subsection{Job Primary Expression}
+\subsubsection{Job Primary Expression}
 
 \begin{lstlisting}
 primary_expr
@@ -649,7 +677,7 @@ primary_expr
 	;
 \end{lstlisting}
 
-\subsection{Job Array Index Element}
+\subsubsection{Job Array Index Element}
 
 \begin{lstlisting}
 array_idx_elmt
@@ -661,7 +689,7 @@ array_idx_elmt
 	;
 \end{lstlisting}
 
-\subsection{Job Array Index List}
+\subsubsection{Job Array Index List}
 
 \begin{lstlisting}
 array_idx_list
