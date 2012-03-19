@@ -150,7 +150,9 @@ program
 	;
 \end{lstlisting}
 
-The MIPL program consists of commands. Each command consists of commmands again. MIPL also has the interpreter, so this command is a running unit for the interpreter. Here is the sample MIPL program:
+The MIPL program consists of commands. Each command consists of commmands again.
+ MIPL also has the interpreter, so this command is a running unit for the interpreter.
+ Here is the sample MIPL program:
 
 \begin{lstlisting}
 countPositive(A, SizeOfA) {
@@ -167,11 +169,12 @@ animal(X) <- cat(X).
 animal(tom)?
 \end{lstlisting}
 
-This is the example of the MIPL program. In this example, there are five commands: $countPositive\{\}, cat()., cat()?, animal() <- cat().$, and $animal()?$. Each command can also include other commands. Each command can be identified by these: $\{\}, .,$ or $?$. These are used to determien the command type.
+This is the example of the MIPL program. In this example, there are five commands:
+ $countPositive\{\}, cat()., cat()?, animal() <- cat().$, and $animal()?$. Each
+ command can also include other commands. Each command can be identified by these:
+ $\{\}, .,$ or $?$. These are used to determien the command type.\\
 
 \subsection{Commands}
-
-Including other commands in a command is permissible.
 
 \begin{lstlisting}
 commands
@@ -180,11 +183,11 @@ commands
 	;
 \end{lstlisting}
 
-The previous example in 4.1 shows that $countPositive\{\}$ includes several other commands. The command can be $a fact, a query, a rule,$ or $a job$.
+Including other commands in a command is permissible. The previous example in 4.1
+ shows that $countPositive\{\}$ includes several other commands. The command can
+ be a $fact$, a $query$, a $rule$, or a $job$.\\
 
 \subsection{Command}
-
-In MIPL, there are four types of commands: $fact, query, rule,$ and $job$.  
 
 \begin{lstlisting}
 command
@@ -195,19 +198,60 @@ command
 	;
 \end{lstlisting}
 
-$fact$ is ended with $"."$. $fact$ is used to describe or define the fact. $fact$ should be started with the a small letter. Also, several $fact$s can be combined in one line with $,$.
+In MIPL, there are four types of commands: $fact$, $query$, $rule$, and $job$.\\
 
 \begin{lstlisting}
+# fact
 cat(tom).
 mouse(jerry), mouse(mickey).
 \end{lstlisting}
 
-$query$ is ended with $"?"$. $query$ requires facts, or job results. $query$ with the fact returns $true$ or $false$. $query$ with the job results returns satisfying results about the query. If the job results have lots of columns, $query$ can take $*$ as the query argument.
+$fact$ is ended with $"."$. $fact$ is used to describe or define the fact, or to
+ process a job. So, there are two kinds of facts: one is a static fact, and the other
+ is a dynamic fact. A static fact is a normal fact that is ended with $"."$. A dynamic
+ fact is wrapped in $[ ]$, so the dynamic fact calls the jab to process data. $fact$
+ should be started with the a small letter. Also, several $fact$s can be combined
+ in one line with $,$.\\
 
 \begin{lstlisting}
+# query
 cat(tom), mouse(jerry).
 mouse(tom)? # Returns false
+
+# To query the job 'weighted_grade', it requires two arguments.
+[weighted_grade] <- calculate_weighted_grade(grade, weight). 
+# But, we can query with '*'.
+weighted_grade(*)? # this is same with weighted_grade(X, Y)
 \end{lstlisting}
+
+$query$ is ended with $"?"$. $query$ requires facts, or job results. $query$ with
+ the fact returns $true$ or $false$. $query$ with the job results returns satisfying
+ results about the query. If the job results have lots of columns, $query$ can
+ take $*$ as the query argument.\\
+
+\begin{lstlisting}
+# rule with a fact
+animal(X) <- cat(X).
+\end{lstlisting}
+
+$rule$ is defined with $<-$. The left of $<-$ would be a fact. The right of $<-$
+ would be a fact, or a job for the rule. If the right of $<-$ is a job, the left fact
+ of the rule should be a dynamic fact. When the fact is queried, the results of query
+ come from the job or related fact of the rule.\\
+
+\begin{lstlisting}
+# job
+calculate_weighted_grade(G, W) {
+ @ bind(G[0][~], G[1~][~] * transpose(W)).
+}
+# process job with a dynamic fact
+[weighted_grade] <- calculate_weighted_grade(grade, weight).
+\end{lstlisting}
+
+$job$ is defined with $ IDENTIFIER ( ) { }$. $job$ can be run through MapReduce.
+ This behavior is defined by the compiler. If $job$ is big, $job$ will be run
+ seperately via MapReduce. If $job$ is small, that operations are run on the
+ local system. The job is processed by a dynamic fact, which uses $[ ]$.\\
 
 %----------------------------------------------------------JINHYUNG}
 %----------------------------------------------------------YOUNGHOON{
