@@ -291,6 +291,7 @@ job
 	;
 \end{lstlisting}
 
+\label{Job_Section}
 Job is MIPL's basic operation that provides matrix operations.
 A Job definition denotes a number of arguments and a set of Job
 Statements.  At runtime, a compiled Job is distributed over
@@ -435,6 +436,7 @@ assign_expr
 	;
 \end{lstlisting}
 
+\label{Assignment_Expression_Section}
 Job Assignment Expression is a Job Expressions that assigns a value
 to a Variable contained in the left-hand side expression.  The value
 of Job Assignment Expression is the value newly assigned to the
@@ -622,7 +624,7 @@ the more general operand.
 \subsubsection{Job Unary Expression}
   
 A unary expression contains the unary operators '+' for positive and '-' 
-for negative. The '+' operator when applied to an applicable type does
+for negative. The '+' operator when applied to an arithmetic type does
 not change the value of the type. The '-' operator when applied to an
 arithmetic type, produces the negative of its operand. The operators, 
 unlike with the additive and multiplicative expressions, may only be
@@ -642,20 +644,6 @@ unary_expr
 A postfix expression is either a primary expression, an matrix access or 
 a Job call.
 
-A VARIABLE is like an IDENTIFIER but it begins with an uppercase letter,
-followed by lowercase or uppercase alphabets or underscore. A VARIABLE
-followed by two '[' and ']' is a matrix access. The matrix is accessed
-by subscripts, also knows as the array index list, described in a later
-section. The subscripts corresponds exactly to the two dimensional 
-interpretation of the matrix, where the the subscript within the first 
-set of square brackets refers to the row of the matrix while the second
-subscript refers to the corresponding pressure. The VARAIABLE must be of 
-typpe katrox/
-
-An IDENTIFIER followed by a set of paranthesis '('
-
-
-
 \begin{lstlisting}
 postfix_expr
 	: primary_expr
@@ -665,7 +653,33 @@ postfix_expr
 	;
 \end{lstlisting}
 
+A VARIABLE is like an IDENTIFIER but it begins with an uppercase letter,
+followed by lowercase or uppercase alphabets or underscore. A VARIABLE
+followed by two '[' and ']' is a matrix access. The matrix is accessed
+by subscripts, also known as the array index list, described in a later
+section. The subscripts correspond exactly to the two dimensional 
+interpretation of the matrix, where the the subscript within the first 
+set of square brackets refers to the row of the matrix while the second
+subscript refers to the corresponding pressure. The VARIABLE must refer 
+to matrix type. Using array index lists, any subset of the matrix can be
+obtained. The result of this postfix expression can be a single value of
+the type of the matrix or any subset of the matrix.
+
+An IDENTIFIER followed by a set of paranthesis '(' and ')' is a Job
+invocation. A Job is defined according to \ref{Job_Section}. Only a defined
+Job may be invoked using the IDENTIFIER referring to the Job name,
+followed by '(' and ')', where the parantheses enclose arguments passed
+to the Job. If there were no arguments defined for the Job, the
+parantheses do not include anything and if there were arguments defined, 
+arguments that match the number of arguments in the Job definition, must
+be provided. These arguments are provided using the argument\_expr\_list 
+defined below. The arguments passed are by value. That is, the arguments 
+are copied and the copies are passed to the Job being invoked.
+
 \subsubsection{Job Primary Expression}
+
+A Job primary expression is the most basic type of expression. In any
+expression, a primary expression has the highest precedence.
 
 \begin{lstlisting}
 primary_expr
@@ -677,7 +691,52 @@ primary_expr
 	;
 \end{lstlisting}
 
+An IDENTIFIER is a primary expression. An IDENTIFIER need not be declared
+as MIPL is dynamically and weakly typed. Any token matching the description
+of an IDENTIFIER, starting with a lowercase letter followed by uppercase and
+underscore characters, is recognized as one. An IDENTIFIER that is not 
+referring to a Job, is a primitive type such as an integer or a double.
+
+A VARIABLE is also a primary expression. A VARIABLE is used to denote complex 
+data types such as matrices in order to distinguish them from IDENTIFIERS.
+
+A NUMBER refers to a the decimal representation of a number and is also a 
+primary expression. Scientific notation is also supported, following the 
+E-notation. $10^{x}$ in scientific notation is simply written with either an
+'e' or an 'E' followed by x.
+
+A STRING\_LITERAL is any sequence of characters, enclosed within a " and a " 
+or within a ' and a '. These sequence of characters cannot include the 
+enclosing characters unless they are properly escaped with the escape key
+\\.
+
+Finally, an expression enclosed with parantheses is also a primary expression 
+and the value of this expression is the same as if the parantheses did not 
+exist.
+
+\subsubsection{Job Array Index List}
+
+An array index list can be used to access the relevant portions of a matrix. 
+The relevant portions of a matrix are referred to using array index elements, 
+described below. The array index elements are evaluated left to right.
+
+\begin{lstlisting}
+array_idx_list
+	: array_idx_elmt
+	| array_idx_list `,' array_idx_elmt
+	;
+\end{lstlisting}
+
+Using the list of array indices, any relevant, valid portion of a matrix may
+be accessed. For instance, given a 5 x 7 matrix A, A[2~4,6~][1] produces the
+subset of the matrix A, a 5 x 1 result, consisting of its second, third, 
+fourth, sixth rows and its first column.
+
 \subsubsection{Job Array Index Element}
+
+An array index element is used to access a matrix. It consists of either 
+the character '~' representing all valid indices or any combination of placing
+a NUMBER to either side of the character. 
 
 \begin{lstlisting}
 array_idx_elmt
@@ -689,15 +748,19 @@ array_idx_elmt
 	;
 \end{lstlisting}
 
-\subsubsection{Job Array Index List}
+NUMBER here refers to any integer that denotes a valid index for the 
+matrix, referring to either its $i^{th}$ row or column. Rows and columns are 
+referred to starting at 1, not 0. If a NUMBER is not specified at either 
+the left or the right of the '~' character, it defaults to the extreme 
+of the matrix subscript. In other words, the smallest valid subscript in 
+the case of the left, which is 1, and the largest valid subscript in the 
+case of the right, which is the total number of rows or columns depending
+on, which is being accessed.
 
-\begin{lstlisting}
-array_idx_list
-	: array_idx_elmt
-	| array_idx_list `,' array_idx_elmt
-	;
-\end{lstlisting}
-\subsection{Job Argument Expression List}
+\subsubsection{Job Argument Expression List}
+
+An argument expression list represents the various arguments that may be
+passed to a Job invocation. 
 
 \begin{lstlisting}
 argument_expr_list
@@ -705,6 +768,9 @@ argument_expr_list
 	| argument_expr_list `,' assign_expr
 	;
 \end{lstlisting}
+
+These arguments are evaluated left to right and can include any assignment 
+expression as described above in \ref{Assignment_Expression_Section}.
 
 %----------------------------------------------------------AKSHAI}
 \section{Operators}
