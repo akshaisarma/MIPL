@@ -1,0 +1,37 @@
+# MIPL: Mining Integrated Programming Language
+#
+# File: multi_jobs.mipl
+# Author: YoungHoon Jung <yj2244@columbia.edu>
+# Reviewer: Younghoon Jeon <yj2231@columbia.edu>
+# Description: A MIPL program that shows how to
+#              define and use jobs
+#              In this example, no large data sets
+#              are ever loaded acutally at client's side.
+#              It transfers the file to the clusters
+#              and maintains the file's location,
+#              while requesting computations to the clusters.
+#              At last query, a single number is actually
+#              copied to the client from the clusters.
+
+addJob(A, B) {
+ @A + B.
+}
+
+multJob(A, B) {
+ @A * B.
+}
+
+rowsumJob(A) {
+ @rowsum(A).
+}
+
+[a] <- load("very_large.dat").
+
+[s] <- addJob(a, load("very_large2.dat")).
+
+[m] <- multJob(a, s).
+
+[r] <- rowsumJob(m).
+
+r(X)?
+
