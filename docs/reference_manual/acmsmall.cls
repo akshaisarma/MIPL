@@ -2076,25 +2076,28 @@ DOI $=$ 10.1145/\@doi\ http://doi.acm.org/10.1145/\@doi}
 
 \def\ps@headings{%
     \let\@mkboth\@gobbletwo
-    \def\@oddhead{{\rhfont\rightmark}\hfill{\foliofont \@acmArticle:\thepage}}%
-    \def\@evenhead{{\foliofont \@acmArticle:\thepage}\hfill{\rhfont\leftmark}}%
-    \def\@evenfoot{\null\hfill{\rfootfont\@runningfoot}}
-    \def\@oddfoot{{\rfootfont\@runningfoot} \hfill\null}%
+%    \def\@oddhead{{\rhfont\rightmark}\hfill{\foliofont \@acmArticle:\thepage}}%
+%    \def\@evenhead{{\foliofont \@acmArticle:\thepage}\hfill{\rhfont\leftmark}}%
+    \def\@evenhead{\null\hfill{\rfootfont\@runningfoot}}
+    \def\@oddhead{\null\hfill{\rfootfont\@runningfoot}}
+    \def\@evenfoot{{\foliofont \thepage}\hfill{\rhfont\leftmark}}%
+    \def\@oddfoot{{\foliofont \thepage}\hfill{\rhfont\leftmark}}%
+%    \def\@oddfoot{{\rfootfont\@runningfoot} \hfill\null}%
     \let\partmark\@gobble
     \let\sectionmark\@gobble
     \let\subsectionmark\@gobble
 }
 
-\def\ps@appheadings{%
-    \let\@mkboth\@gobbletwo
-    \def\@oddhead{{\rhfont\rightmark}\hfill{\foliofont \thepage}}%
-    \def\@evenhead{{\foliofont \thepage}\hfill{\rhfont\leftmark}}%
-    \def\@evenfoot{\null\hfill{\rfootfont\@runningfoot}}
-    \def\@oddfoot{{\rfootfont\@runningfoot} \hfill\null}%
-    \let\partmark\@gobble
-    \let\sectionmark\@gobble
-    \let\subsectionmark\@gobble
-}
+%\def\ps@appheadings{%
+%    \let\@mkboth\@gobbletwo
+%    \def\@oddhead{{\rhfont\rightmark}\hfill{\foliofont \thepage}}%
+%    \def\@evenhead{{\foliofont \thepage}\hfill{\rhfont\leftmark}}%
+%    \def\@evenfoot{\null\hfill{\rfootfont\@runningfoot}}
+%    \def\@oddfoot{{\rfootfont\@runningfoot} \hfill\null}%
+%    \let\partmark\@gobble
+%    \let\sectionmark\@gobble
+%    \let\subsectionmark\@gobble
+%}
 
 \def\@runningfoot{}
 \def\runningfoot#1{\gdef\@runningfoot{#1}}

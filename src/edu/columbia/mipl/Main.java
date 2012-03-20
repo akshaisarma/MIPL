@@ -19,7 +19,7 @@ import edu.columbia.mipl.runtime.traverse.*;
 public class Main {
 	public static void main(String[] args) {
 		//Parser parser = new Parser(new CodeGenerator());
-		Parser parser = new Parser("test/input/multireturn.mipl");
+		Parser parser = new Parser(args[0]);
 		//Parser parser = new Parser("test/input/multireturn.mipl", new CodeGenerator());
 		if (parser.getNumError() != 0) {
 			System.out.println("Error on parsing input!");

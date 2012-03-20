@@ -49,7 +49,11 @@ System Validation: Akshai Sarma $<as4107@columbia.edu>$
 }
 
 \begin{abstract}
-Abstraction here.
+MIPL is a language for Data Mining which provides methods to 
+implement various sophisticated matrix-based algorithms and 
+to retrieve the computed data easily by offering a novel,
+convenient way that converts matrices into a set of facts
+and vice versa.
 \end{abstract}
 
 %\category{C.2.2}{Computer-Communication Networks}{Network Protocols}
@@ -71,6 +75,8 @@ Abstraction here.
 
 \tableofcontents 
 
+\pagebreak
+
 \lstset{frame=single}
 
 \section{Introduction}
@@ -82,6 +88,7 @@ Item sample.
 \item item1 To the best of our knowledge, the MMSN protocol is the first
 \item item2 Instead of using pairwise RTS/CTS frequency negotiation
 \end{itemize}
+\medskip
 
 % Head 1
 \section{Lexical conventions}
@@ -93,12 +100,14 @@ to separate otherwise adjacent identifiers, constants, and certain
 operatorpairs.  If the input stream has been parsed into tokens up
 to a given character, the next token is taken to include the longest
 string of characters which could possibly constitute a token.
+\medskip
 
 % Head 2
 \subsection{Comments}
 
 MIPL uses shell script-like comments, which begins with the character
 \# and terminates at the end of the line, separated by the newline character.
+\medskip
 
 % Head 3
 \subsection{Identifiers}
@@ -106,6 +115,7 @@ MIPL uses shell script-like comments, which begins with the character
 An identifier is a sequence of letters that begins with lower case alphabets.
 Upper and lower case letters are considered different.   Identifiers are
 served for use as the name of Terms, the basic block of MIPL syntax.
+\medskip
 
 \subsection{Variables}
 
@@ -113,6 +123,7 @@ A variable is a sequence of letters that begins with upper case alphabets
 or the underscore character, \_, which means that this variable will not
 be tracked.  Upper and lower case letters in the variable names are
 considered different. 
+\medskip
 
 \subsection{Numbers}
 
@@ -123,22 +134,32 @@ Either the integer part or the fraction
 part (not both) may be missing; either the decimal point or the
 e and the exponent (not both) may be missing.
 Every floating constant is taken to be doubleprecision.
+\medskip
 
 \subsection{Strings}
 
 A string is a sequence of characters surrounded by double quotes or single
 quotes.
+\medskip
 
 \subsection{Expression Operators}
 Expression Operators will be explained in Built-in Operators and Jobs section.
+\medskip
 
 \section{Data Types}
 
-Data Types here. Need Arithmetic types here. Matrix as a type?
+\subsection {Term}
+Term is the only one data type for Facts, Rules, and Querys.  Numbers, Strings,
+FRQs and even Terms are recursively defined in a form of Term. Variables can
+contain a Term.
+\medskip
+
+\subsection {Job Types}
+Unlike FRQ part of MIPL, a Job description has two primitive types, Matrix and
+Number.  Matrix and Number can be computed within a Job description. Variables
+can contain a Number or a Matrix.
 
 \section{Syntax}
-
-Syntax here
 
 %----------------------------------------------------------JINHYUNG{
 \subsection{Program}
@@ -171,9 +192,10 @@ animal(tom)?
 \end{lstlisting}
 
 This is the example of the MIPL program. In this example, there are five commands:
- $countPositive\{\}, cat()., cat()?, animal() <- cat().$, and $animal()?$. Each
- command can also include other commands. Each command can be identified by these:
- $\{\}, .,$ or $?$. These are used to determien the command type.\\
+$countPositive\{\}$, $cat().$, $cat()?$, $animal() <- cat().$, and $animal()?$. Each
+command can also include other commands. Each command can be identified by these:
+$\{\}, .,$ or $?$. These are used to determine the command type.
+\medskip
 
 \subsection{Commands}
 
@@ -186,11 +208,12 @@ commands
 
 Including other commands in a command is permissible. The previous example in 4.1
  shows that $countPositive\{\}$ includes several other commands. The command can
- be a $fact$, a $query$, a $rule$, or a $job$.\\
+ be a $fact$, a $query$, a $rule$, or a $job$.
+\medskip
 
 \subsection{Command}
 
-In MIPL, there are four types of commands: $fact$, $query$, $rule$, and $job$.\\
+In MIPL, there are four types of commands: $fact$, $query$, $rule$, and $job$.
 
 \begin{lstlisting}
 command
@@ -200,6 +223,7 @@ command
 	| job
 	;
 \end{lstlisting}
+\medskip
 
 \subsubsection{Fact}
 \begin{lstlisting}
@@ -213,7 +237,8 @@ $fact$ is ended with $"."$. $fact$ is used to describe or define the fact, or to
  is a dynamic fact. A static fact is a normal fact that is ended with $"."$. A dynamic
  fact is wrapped in $[ ]$, so the dynamic fact calls the jab to process data. $fact$
  should be started with the a small letter. Also, several $fact$s can be combined
- in one line with $,$.\\
+ in one line with $,$.
+\medskip
 
 \subsubsection{Query}
 \begin{lstlisting}
@@ -227,7 +252,8 @@ weighted_grade(*)?
 $query$ is ended with $"?"$. $query$ requires facts, or job results. $query$ with
  the fact returns $true$ or $false$. $query$ to the job results returns results 
  satisfying the query. If the fact of the job results have lots of columns, $query$ can
- take $*$ as the query argument to see all results.\\
+ take $*$ as the query argument to see all results.
+\medskip
 
 \subsubsection{Rule}
 \begin{lstlisting}
@@ -244,7 +270,8 @@ $rule$ is defined with $<-$ or $:-$. The rule for fact can be combined with $,$.
  The left of the rule operator would be a fact. The right of the rule operator would
  be a fact, or a job for the rule. If the right of the rule operator is a job,
  the left fact of the rule should be a dynamic fact. When the fact is queried,
- the results of query come from the job or related fact of the rule.\\
+ the results of query come from the job or related fact of the rule.
+\medskip
 
 \subsubsection{Job}
 \begin{lstlisting}
@@ -259,7 +286,8 @@ calculate_weighted_grade(G, W) {
 $job$ is defined with $ IDENTIFIER ( ) { }$. $job$ can be run through MapReduce.
  This behavior is defined by the compiler. If $job$ is big, $job$ will be run
  seperately via MapReduce. If $job$ is small, that operations are run on the
- local system. The job is processed by a dynamic fact, which uses $[ ]$.\\
+ local system. The job is processed by a dynamic fact, which uses $[ ]$.
+\medskip
 
 %----------------------------------------------------------JINHYUNG}
 %----------------------------------------------------------YOUNGHOON{
@@ -281,6 +309,7 @@ Factors within a Term Expression can be computed with a left priority.
 Term Expression, Term Factor, and Term Term are basic blocks that
 consist Term Expression.  So these three rules can be applied within
 Term Expression, by the definition of MIPL grammar.
+\medskip
 
 \subsubsection{Term Factor}
 
@@ -298,6 +327,7 @@ Term.  These two operators left-associate Term Terms so that Term
 Terms within a Term Factor can be computed with a left priority. Like,
 mathematical notations, operators `*' and `/' have higher priority than
 operators `+' and `-' since Term Facts are reduced 
+\medskip
 
 
 \subsubsection{Term Term}
@@ -316,6 +346,7 @@ Expression can be reduced to a Term Term with a pair of parentheses, which
 allows the operators, `-', `+', `*', and `/' can appear recursively in a
 Term Expression.  This also means that `(' and `)' operators have higher
 operation priority than other operators.
+\medskip
 
 \subsection{Arguments}
 Arguments play a role in passing data from Facts to Job, by converting Facts
@@ -341,6 +372,7 @@ This arguments again consist of Argument Candidates, which
 allows a recursive form of argument definition.  For instance, 
 $com(monitor, board(cpu, ram(4, 4)), P)$ is a valid form
 of a Term declaration.
+\medskip
 
 \subsubsection{Argument List}
 \begin{lstlisting}
@@ -364,6 +396,7 @@ without changing its grammar.  Also, MIPL's Job definitions allows
 variable numbers of return values dynamically, the generated program
 checks if the numbers of return values from Job and the numbers of
 Fact names are matched.  Otherwise, it fails to run.
+\medskip
 
 \subsection{Job}
 
@@ -381,7 +414,7 @@ a MapReduce clusters, computed, and delivered to the user. For
 example, when a user loads two matrices and calls a Job giving those
 matrices, the matrices are split into several smaller matrices,
 distributed to MapReduce clusters, and computed.
-
+\medskip
 
 \subsection{Job Statement}
 
@@ -400,6 +433,7 @@ Job Statement: Job Selection Statement, Job Compound Statement,
 Job Return Statement, Job Expression Statement, and Job Iteration
 Statement.  Each of these will be explained in the following
 sections.
+\medskip
 
 \subsubsection{Job Statement List}
 
@@ -412,6 +446,7 @@ stmt_list
 
 Job Statement List is a set of Job Statement, used in Job
 declarations and Job Compound Statement.
+\medskip
 
 
 \subsubsection{Job Compound Statement}
@@ -426,6 +461,7 @@ compound_stmt
 Job Compound Statement is a Job Statement, which includes
 zero or more Job Statements, embraced by a pair of curly
 brackets.
+\medskip
 
 \subsubsection{Job Return Statement}
 
@@ -472,6 +508,7 @@ return operator $@$ is designed to deliver a matrix value from
 MapReduce clusters to the user.  When a user want to quit the Job
 in the mid of the Job, the user should use Job Control Statements
 such as If Statement to do so.
+\medskip
 
 
 \subsubsection{Job Expression Statement}
@@ -484,6 +521,7 @@ expr_stmt
 
 Job Expression Statement is a Job Statement that includes a Job
 Expression.  This allows users use Job Expressions in a Job.
+\medskip
 
 \subsubsection{Job Selection Statement}
 
@@ -502,6 +540,7 @@ the expression is false and the ELSE statement is provided, this
 statement will be executed.  The IF ELSE syntax is ambiguous,
 however, by Yacc's default behavior, reduce precedes shift, which
 results in that the ELSE is associated with closer IF.
+\medskip
 
 \subsubsection{Job Iteration Statement}
 
@@ -519,6 +558,7 @@ WHILE statement executes the given Job Statement while the Job
 Boolean Expression's value is true.  DO WHILE statement executes the
 Job Statement once first, and then executes the Job Statement repeatedly
 while the Job Boolean Expression's value is true.
+\medskip
 
 
 \subsection{Job Expression}
@@ -540,6 +580,7 @@ Job Expressions assigns a numberic value to a Variable contained
 at the left-hand side.  The value of Job Expression is the value
 newly assigned to the Variable.  This may relays multiple times,
 for example, $Variable1 = Variable2 = Variable3 = 3.$.
+\medskip
 
 
 \subsubsection{Job Assignment Operator}
@@ -564,6 +605,7 @@ Subtraction Assignment Operator.  Each Assignment Operators computes
 the value of the operation using the left-hand side value and the
 right-hand side value and assigns the value to the left-hand side
 Variable.
+\medskip
 
 
 %----------------------------------------------------------YOUNGHOON}
@@ -595,6 +637,7 @@ operation. For instance, the addition of a scalar to the a matrix, results in
 the scalar being converted to a appropriate matrix and the resulting matrix
 be applied to the operation. The `+' and the `-' operators can be applied 
 to arithmetic and matrix types.
+\medskip
 
 \subsubsection{Job Multiplicative Expression}
 
@@ -623,6 +666,7 @@ types. The multiplication of a matrix expression with another results in
 a matrix expression. As with the additive expressions, there is still 
 automatic type casting and the operands may be converted to match the
 the more general operand. 
+\medskip
 
 \subsubsection{Job Unary Expression}
   
@@ -641,6 +685,7 @@ unary_expr
 	| `-' unary_expr
 	;
 \end{lstlisting}
+\medskip
 
 \subsubsection{Job PostFix Expression}
 
@@ -678,6 +723,7 @@ arguments that match the number of arguments in the Job definition, must
 be provided. These arguments are provided using the argument\_expr\_list 
 defined below. The arguments passed are by value. That is, the arguments 
 are copied and the copies are passed to the Job being invoked.
+\medskip
 
 \subsubsection{Job Primary Expression}
 
@@ -710,6 +756,7 @@ E-notation. $10^{x}$ in scientific notation is simply written with either an
 Finally, an expression enclosed with parantheses is also a primary expression 
 and the value of this expression is the same as if the parantheses did not 
 exist.
+\medskip
 
 \subsubsection{Job Array Index List}
 
@@ -728,6 +775,7 @@ Using the list of array indices, any relevant, valid portion of a matrix may
 be accessed. For instance, given a 5 x 7 matrix A, A[2$\sim$4,6$\sim$][1] produces the
 subset of the matrix A, a 5 x 1 result, consisting of its third, fourth, 
 fifth and seventh rows and its second column.
+\medskip
 
 \subsubsection{Job Array Index Element}
 
@@ -753,6 +801,7 @@ of the matrix subscript. In other words, the smallest valid subscript in
 the case of the left, which is 0, and the largest valid subscript in the 
 case of the right, which is the total number of rows or columns depending
 on, which is being accessed.
+\medskip
 
 \subsubsection{Job Argument Expression List}
 
@@ -768,6 +817,7 @@ argument_expr_list
 
 These arguments are evaluated left to right and can include any assignment 
 expression as described above in \ref{Expression_Section}.
+\medskip
 
 \subsection{Job Boolean Expression}
 
@@ -797,6 +847,7 @@ to right, also known as the ``short circuit" evaluation, whereby
 the logical\_and\_expr on the right of the OR\_OP is evaluated if
 and only if the logical\_and\_expr on the left of the OR\_OP 
 evaluated to false. 
+\medskip
 
 \subsubsection{Job Logical AND Expression}
 
@@ -819,6 +870,7 @@ if either of the logical\_and\_expr evaluate to false.
 The order of evaluation is again left to right, whereby the 
 equality\_expr on the right of the AND\_OP is evaluated if and only 
 if the equality\_expr on the left of the OR\_OP evaluated to true.
+\medskip
 
 \subsubsection{Job Equality Expression}
 
@@ -847,6 +899,7 @@ if and only if the left and the right Job Expressions both evaluate
 to the same value in the case of a EQ\_OP and to different values in
 the case of a NE\_OP.  Otherwise, the equality expression evaluates
 to false.
+\medskip
 
 \subsubsection{Job Relational Expression}
 
@@ -873,6 +926,7 @@ Given two Job Expressions, connected by the above mentioned operators,
 Job Relational Expression evalutes to true if the mathematical relation
 represented by the operation is satisfied. Otherwise, Job Relational
 Expression evaluates to false. 
+\medskip
 
 
 \subsubsection{Job BooleanValue Expression}
@@ -888,176 +942,197 @@ boolvalue_expr
 The character sequences TRUE and FALSE refer to the sequences ``true"
 and ``false" respectively.  Job BooleanValue Expression can be expanded
 to a nested Job Boolean Expression embraced with a pare of parentheses.
+\medskip
 
 
 %----------------------------------------------------------AKSHAI}
-\section{Operators}
-MIPL has various operators to support matrix operation.
+%----------------------------------------------------------DANIEL}
+\section{Job Operators}
+MIPL has various Job Operators to support matrix operation in a Job
+description.
 
 \subsection{Operator $+$}
-Addition or unary plus. A+B adds A and B. A and B must have the same size, unless one is a scalar. A scalar can be added to a matrix of any size.
+Addition or unary plus. A+B adds A and B. A and B must have the same size,
+unless one is a number. A number can be added to a matrix of any size.
+\medskip
 
 \subsection{Operator $-$}
-Subtraction or unary minus. A–B subtracts B from A. A and B must have the same size, unless one is a scalar. A scalar can be subtracted from a matrix of any size.
+Subtraction or unary minus. A-B subtracts B from A. A and B must have the
+same size, unless one is a number. A number can be subtracted from a matrix
+of any size.
+\medskip
 
 \subsection{Operator $*$}
-Matrix multiplication. C = A $*$ B is the linear algebraic product of the matrices A and B. More precisely,
+Matrix multiplication. C <- A $*$ B is the linear algebraic product of the
+matrices A and B. More precisely,
 
-$C(i,j) = \displaystyle\sum\limits_{k=1}^n A(i,k)B(k,j).$
+$C(i,j) <- \displaystyle\sum\limits_{k=1}^n A(i,k)B(k,j).$
 
-For nonscalar A and B, the number of columns of A must equal the number of rows of B. A scalar can multiply a matrix of any size.
+For matrices A and B, the number of columns of A must equal the number of
+rows of B. A number can multiply a matrix of any size.
+\medskip
 
 \subsection{Operator $.*$}
-Array multiplication. A.∗B is the element-by-element product of the arrays A and B. A and B must have the same size, unless one of them is a scalar.
+Cell-wise matrix multiplication. A.*B is the element-by-element product
+of the matrices A and B. A and B must have the same size, unless one of
+them is a number.
+\medskip
 
 \subsection{Operator $/$}
-Slash or matrix right division. B/A is roughly the same as B $∗$ inv(A). More precisely, B/A = (A'\textbackslash B')'. See \textbackslash.
+Matrix division. Given A/B, B should be a number while A can be either a
+number or a matrix.
+\medskip
 
 \subsection{Operator $./$}
-Array right division. A./B is the matrix with elements A(i,j)/B(i,j). A and B must have the same size, unless one of them is a scalar.
-
-\subsection{Operator \textbackslash}
-Backslash or matrix left division. If A is a square matrix, A\textbackslash B is roughly the same as inv(A) ∗ B, except it is computed in a different way. If A is an n-by-n matrix and B is a column vector with n components, or a matrix with several such columns, then X = A\textbackslash B is the solution to the equation AX = B computed by Gaussian elimination. A warning message prints if A is badly scaled or nearly singular.
-If A is an m-by-n matrix with m ~= n and B is a column vector with m components, or a matrix with several such columns, then X = A\textbackslash B is the solution in the least squares sense to the under- or overdetermined system of equations AX = B. The effective rank, k, of A, is determined from the QR decomposition with pivoting. A solution X is computed which has at most k nonzero components per column.
-
-\subsection{Operator .\textbackslash}
-Array left division. A.\textbackslash B is the matrix with elements B(i,j)/A(i,j). A and B must have the same size, unless one of them is a scalar.
+Cell-wise Matrix division. A./B is the matrix with elements A(i,j)/B(i,j).
+A and B must have the same size, unless one of them is a number.
+\medskip
 
 \subsection{Operator \^{}}
-Matrix power. X\^{}p is X to the power p, if p is a scalar. If p is an integer, the power is computed by repeated multiplication. If the integer is negative, X is inverted first. For other values of p, the calculation involves eigenvalues and eigenvectors, such that if [V,D] = eig(X), then X\^{}p = V∗D.\^{}p/V.
-If x is a scalar and P is a matrix, x\^{}P is x raised to the matrix power P using eigenvalues and eigenvectors. X\^{}P, where X and P are both matrices, is an error.
+Matrix power. X\^{}p is X to the power p, if p is a integer. The power
+is computed by repeated multiplication.
+\medskip
 
 \subsection{Operator .\^{}}
-Array power. A .\^{} B is the matrix with elements A(i,j) to the B(i,j) power. A and B must have the same size, unless one of them is a scalar.
+Cell-wise matrix power. A .\^{} B is the matrix with elements A(i,j) to
+the B(i,j) power. A and B must have the same size, unless one of them
+is a number.
 
-\section{Built-in Terms}
-Functions here
+\section{Built-in Keywords}
+Built-in Keywords are special type of matices that can be used for
+various purposes.
+\medskip
 
-\subsection{eye()}
-Function eye() returns the identity matrix.
+\subsection{eye}
+Keyword eye returns the identity matrix.
 \begin{lstlisting}
-Y = eye(n)
-Y = eye(m,n)
+Y <- eye.
 \end{lstlisting}
 
-Y = eye(n) returns the n-by-n identity matrix. Y = eye(m,n) or eye([m n]) returns an m-by-n matrix with 1’s on the diagonal and 0’s elsewhere.
+$Y <- eye.$ returns a matrix with 1's on the diagonal and 0's elsewhere.
+\medskip
 
-\subsection{ones()}
-Function ones() creates an array of all ones
+\subsection{zeros}
+Keyword zeros creates a matrix of all zeros.
 \begin{lstlisting}
-Y = ones(n)
-Y = ones(m,n)
-Y = ones([m n])
-Y = ones(d1,d2,d3...)
-Y = ones([d1 d2 d3...])
+Y <- zeros.
 \end{lstlisting}
 
-Y = ones(n) returns an n-by-n matrix of 1s. An error message appears if n is not a scalar. Y = ones(m,n) or Y = ones([m n]) returns an m-by-n matrix of ones. Y = ones(d1,d2,d3...) or Y = ones([d1 d2 d3...]) returns an array of 1s with dimensions d1-by-d2-by-d3-by-....
+$Y <- zeros.$ returns a matrix of zeros.
+\medskip
 
-\subsection{rand()}
-Function rand() generates arrays of random numbers whose elements are uniformly distributed in the interval (0,1).
+\subsection{ones}
+Keyword ones creates a matrix of all ones.
 \begin{lstlisting}
-Y = rand(n)
-Y = rand(m,n)
-Y = rand([m n])
-Y = rand(m,n,p,...)
-Y = rand([m n p...])
+Y <- ones.
+\end{lstlisting}
+
+$Y <- ones.$ returns a matrix of ones.
+\medskip
+
+\subsection{rand}
+Keyword rand generates a matrix of random numbers whose elements are
+uniformly distributed in the interval (0,1).
+\begin{lstlisting}
+Y <- rand.
 rand
 \end{lstlisting}
 
-Y = rand(n) returns an n-by-n matrix of random entries. An error message appears if n is not a scalar. Y = rand(m,n) or Y = rand([m n]) returns an m-by-n matrix of random entries. Y = rand(m,n,p,...) or Y = rand([m n p...]) generates random arrays. 
-rand, by itself, returns a scalar whose value changes each time it’s referenced.
+Y <- rand. returns a matrix of random entries. Note that a random value
+is generated when an element of rand is accessed. For example,
+$B <- rand + A. C <- rand + A.$ results in two different matrices B and A.
+In order to get a constant random matrix, a variable can be used.
+$R <- rand. B <- R + A. C <- R + A.$ results in the same two matrices B
+and A.
 
-\subsection{cat()}
-Function cat() concatenates arrays.
+
+\section{Built-in Jobs}
+There are several Built-in Jobs, while MIPL provides an easy way
+to add a new Job.
+\medskip
+
+\subsection{bind()}
+Job bind() concatenates matrices horizontally.
 \begin{lstlisting}
-C = cat(dim,A,B)
-C = cat(dim,A1,A2,A3,A4...)
+C <- bind(A,B).
 \end{lstlisting}
 
-C = cat(dim,A,B) concatenates the arrays A and B along dim. C = cat(dim,A1,A2,A3,A4,...) concatenates all the input arrays (A1, A2, A3, A4, and so on) along dim. cat(2,A,B) is the same as [A,B] and cat(1,A,B) is the same as [A;B].
+$C <- bind(A,B).$ concatenates the matrices A and B horizontally.
+\medskip
+
+\subsection{vbind()}
+Job vbind() concatenates matrices vertically.
+\begin{lstlisting}
+C <- vbind(A,B).
+\end{lstlisting}
+
+$C <- vbind(A,B).$ concatenates the matrices A and B vertically.
+\medskip
 
 \subsection{eig()}
-Function eig() returns a vector of the eigenvalues of matrix.
+Job eig() returns a vector of the eigenvalues of matrix.
 \begin{lstlisting}
-d = eig(A)
-d = eig(A,B)
+D <- eig(A).
 \end{lstlisting}
 
-d = eig(A) returns a vector of the eigenvalues of matrix A. d = eig(A,B) returns a vector containing the generalized eigenvalues, if A and B are square matrices.
+$d <- eig(A)$ returns a vector of the eigenvalues of matrix A.
+\medskip
 
 \subsection{max()}
-Function max() returns the largest elements along different dimensions of an array.
+Job max() returns the largest elements of a matrix.
 \begin{lstlisting}
-C = max(A)
-C = max(A,B)
-C = max(A,[],dim)
-[C,I] = max(...)
+C <- max(A).
 \end{lstlisting}
 
-If A is a vector, max(A) returns the largest element in A. If A is a matrix, max(A) treats the columns of A as vectors, returning a row vector containing the maximum element from each column. If A is a multidimensional array, max(A) treats the values along the first non-singleton dimension as vectors, returning the maximum value of each vector.
-
-C = max(A,B) returns an array the same size as A and B with the largest elements taken from A or B.
-
-C = max(A,[],dim) returns the largest elements along the dimension of A specified by scalar dim. For example, max(A,[],1) produces the maximum values along the first dimension (the rows) of A.
-
-[C,I] = max(...) finds the indices of the maximum values of A, and returns them in output vector I. If there are several identical maximum values, the index of the first one found is returned.
+$D <- max(A).$ returns the largest element in A.
+\medskip
 
 \subsection{mean()}
-Function mean() returns the mean values of the elements along different dimensions of an array.
+Job mean() returns the mean values of the elements of a matrix.
 \begin{lstlisting}
-M = mean(A)
-M = mean(A,dim)
+M <- mean(A).
 \end{lstlisting}
 
-If A is a vector, mean(A) returns the mean value of A. If A is a matrix, mean(A) treats the columns of A as vectors, returning a row
-vector of mean values. If A is a multidimensional array, mean(A) treats the values along the first non-singleton dimension as vectors, returning an array of mean values.
-
-M = mean(A,dim) returns the mean values for elements along the dimension of A specified by scalar dim.
+$D <- mean(A).$ returns the mean value of A.
+\medskip
 
 \subsection{min()}
-Function min() returns the smallest elements along different dimensions of an array.
+Job min() returns the smallest elements of a matrix.
 \begin{lstlisting}
-C = min(A)
-C = min(A,B)
-C = min(A,[],dim)
-[C,I] = min(...)
+C <- min(A).
 \end{lstlisting}
 
-If A is a vector, min(A) returns the smallest element in A. If A is a matrix, min(A) treats the columns of A as vectors, returning a row vector containing the minimum element from each column. If A is a multidimensional array, min operates along the first nonsingleton dimension.
-
-C = min(A,B) returns an array the same size as A and B with the smallest elements taken from A or B.
-
-C = min(A,[],dim) returns the smallest elements along the dimension of A specified by scalar dim. For example, min(A,[],1) produces the minimum values along the first dimension (the rows) of A.
-
-[C,I] = min(...) finds the indices of the minimum values of A, and returns them in output vector I. If there are several identical minimum values, the index of the first one found is returned.
+$D <- min(A).$ returns the smallest element in A.
+\medskip
 
 \subsection{sum()}
-Function sum() returns sums along different dimensions of an array.
+Job sum() returns sums of a matrix.
 \begin{lstlisting}
-B = sum(A)
-B = sum(A,dim)
+B <- sum(A).
 \end{lstlisting}
 
-If A is a vector, sum(A) returns the sum of the elements. If A is a matrix, sum(A) treats the columns of A as vectors, returning a row vector of the sums of each column. If A is a multidimensional array, sum(A) treats the values along the first non-singleton dimension as vectors, returning an array of row vectors.
-
-B = sum(A,dim) sums along the dimension of A specified by scalar dim.
+$D <- sum(A).$ returns the sum of the elements.
+\medskip
 
 \subsection{abs()}
-Function abs() returns the absolute value and complex magnitude.
+Job abs() returns the absolute value.
 \begin{lstlisting}
-Y = abs(X)
+Y <- abs(X).
 \end{lstlisting}
 
-abs(X) returns the absolute value, X, for each element of X. If X is complex, abs(X) returns the complex modulus (magnitude):
+$D <- abs(X).$ returns the absolute value, X, for each element of X.
+\medskip
 
-abs(X) = $\displaystyle\sqrt{real(X)^2 + imag(X)^2}$
-
-\subsection{Syntax subsection}
+\bigskip
+\bigskip
+\bigskip
+\bigskip
 
 \section*{Appendix - Grammar}
 
-MIPL's full grammar is here. MIPL's Yacc grammar has only one shift/reduce conflict, which C language also has, without using operator associativity declarations.
+MIPL's full grammar is here. MIPL's Yacc grammar has only one
+shift/reduce conflict, which C language also has, without using
+operator associativity declarations.
 
 \lstinputlisting{../../build/mipl.grammar}
 %\input{../../build/mipl_grammar.tex}
