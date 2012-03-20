@@ -190,6 +190,8 @@ Including other commands in a command is permissible. The previous example in 4.
 
 \subsection{Command}
 
+In MIPL, there are four types of commands: $fact$, $query$, $rule$, and $job$.\\
+
 \begin{lstlisting}
 command
 	: fact
@@ -199,8 +201,7 @@ command
 	;
 \end{lstlisting}
 
-In MIPL, there are four types of commands: $fact$, $query$, $rule$, and $job$.\\
-
+\subsubsection{Fact}
 \begin{lstlisting}
 # fact
 cat(tom).
@@ -214,6 +215,7 @@ $fact$ is ended with $"."$. $fact$ is used to describe or define the fact, or to
  should be started with the a small letter. Also, several $fact$s can be combined
  in one line with $,$.\\
 
+\subsubsection{Query}
 \begin{lstlisting}
 # query
 cat(tom), mouse(jerry).
@@ -227,6 +229,7 @@ $query$ is ended with $"?"$. $query$ requires facts, or job results. $query$ wit
  satisfying the query. If the fact of the job results have lots of columns, $query$ can
  take $*$ as the query argument to see all results.\\
 
+\subsubsection{Rule}
 \begin{lstlisting}
 # rule with a fact
 animal(X) <- cat(X).
@@ -243,6 +246,7 @@ $rule$ is defined with $<-$ or $:-$. The rule for fact can be combined with $,$.
  the left fact of the rule should be a dynamic fact. When the fact is queried,
  the results of query come from the job or related fact of the rule.\\
 
+\subsubsection{Job}
 \begin{lstlisting}
 # job
 calculate_weighted_grade(G, W) {
