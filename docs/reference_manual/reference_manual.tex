@@ -892,16 +892,166 @@ to a nested Job Boolean Expression embraced with a pare of parentheses.
 
 %----------------------------------------------------------AKSHAI}
 \section{Operators}
-Operators here
+MIPL has various operators to support matrix operation.
+
+\subsection{Operator $+$}
+Addition or unary plus. A+B adds A and B. A and B must have the same size, unless one is a scalar. A scalar can be added to a matrix of any size.
+
+\subsection{Operator $-$}
+Subtraction or unary minus. A–B subtracts B from A. A and B must have the same size, unless one is a scalar. A scalar can be subtracted from a matrix of any size.
 
 \subsection{Operator $*$}
+Matrix multiplication. C = A $*$ B is the linear algebraic product of the matrices A and B. More precisely,
+
+$C(i,j) = \displaystyle\sum\limits_{k=1}^n A(i,k)B(k,j).$
+
+For nonscalar A and B, the number of columns of A must equal the number of rows of B. A scalar can multiply a matrix of any size.
+
+\subsection{Operator $.*$}
+Array multiplication. A.∗B is the element-by-element product of the arrays A and B. A and B must have the same size, unless one of them is a scalar.
 
 \subsection{Operator $/$}
+Slash or matrix right division. B/A is roughly the same as B $∗$ inv(A). More precisely, B/A = (A'\textbackslash B')'. See \textbackslash.
+
+\subsection{Operator $./$}
+Array right division. A./B is the matrix with elements A(i,j)/B(i,j). A and B must have the same size, unless one of them is a scalar.
+
+\subsection{Operator \textbackslash}
+Backslash or matrix left division. If A is a square matrix, A\textbackslash B is roughly the same as inv(A) ∗ B, except it is computed in a different way. If A is an n-by-n matrix and B is a column vector with n components, or a matrix with several such columns, then X = A\textbackslash B is the solution to the equation AX = B computed by Gaussian elimination. A warning message prints if A is badly scaled or nearly singular.
+If A is an m-by-n matrix with m ~= n and B is a column vector with m components, or a matrix with several such columns, then X = A\textbackslash B is the solution in the least squares sense to the under- or overdetermined system of equations AX = B. The effective rank, k, of A, is determined from the QR decomposition with pivoting. A solution X is computed which has at most k nonzero components per column.
+
+\subsection{Operator .\textbackslash}
+Array left division. A.\textbackslash B is the matrix with elements B(i,j)/A(i,j). A and B must have the same size, unless one of them is a scalar.
+
+\subsection{Operator \^{}}
+Matrix power. X\^{}p is X to the power p, if p is a scalar. If p is an integer, the power is computed by repeated multiplication. If the integer is negative, X is inverted first. For other values of p, the calculation involves eigenvalues and eigenvectors, such that if [V,D] = eig(X), then X\^{}p = V∗D.\^{}p/V.
+If x is a scalar and P is a matrix, x\^{}P is x raised to the matrix power P using eigenvalues and eigenvectors. X\^{}P, where X and P are both matrices, is an error.
+
+\subsection{Operator .\^{}}
+Array power. A .\^{} B is the matrix with elements A(i,j) to the B(i,j) power. A and B must have the same size, unless one of them is a scalar.
 
 \section{Built-in Terms}
 Functions here
 
+\subsection{eye()}
+Function eye() returns the identity matrix.
+\begin{lstlisting}
+Y = eye(n)
+Y = eye(m,n)
+\end{lstlisting}
+
+Y = eye(n) returns the n-by-n identity matrix. Y = eye(m,n) or eye([m n]) returns an m-by-n matrix with 1’s on the diagonal and 0’s elsewhere.
+
+\subsection{ones()}
+Function ones() creates an array of all ones
+\begin{lstlisting}
+Y = ones(n)
+Y = ones(m,n)
+Y = ones([m n])
+Y = ones(d1,d2,d3...)
+Y = ones([d1 d2 d3...])
+\end{lstlisting}
+
+Y = ones(n) returns an n-by-n matrix of 1s. An error message appears if n is not a scalar. Y = ones(m,n) or Y = ones([m n]) returns an m-by-n matrix of ones. Y = ones(d1,d2,d3...) or Y = ones([d1 d2 d3...]) returns an array of 1s with dimensions d1-by-d2-by-d3-by-....
+
+\subsection{rand()}
+Function rand() generates arrays of random numbers whose elements are uniformly distributed in the interval (0,1).
+\begin{lstlisting}
+Y = rand(n)
+Y = rand(m,n)
+Y = rand([m n])
+Y = rand(m,n,p,...)
+Y = rand([m n p...])
+rand
+\end{lstlisting}
+
+Y = rand(n) returns an n-by-n matrix of random entries. An error message appears if n is not a scalar. Y = rand(m,n) or Y = rand([m n]) returns an m-by-n matrix of random entries. Y = rand(m,n,p,...) or Y = rand([m n p...]) generates random arrays. 
+rand, by itself, returns a scalar whose value changes each time it’s referenced.
+
+\subsection{cat()}
+Function cat() concatenates arrays.
+\begin{lstlisting}
+C = cat(dim,A,B)
+C = cat(dim,A1,A2,A3,A4...)
+\end{lstlisting}
+
+C = cat(dim,A,B) concatenates the arrays A and B along dim. C = cat(dim,A1,A2,A3,A4,...) concatenates all the input arrays (A1, A2, A3, A4, and so on) along dim. cat(2,A,B) is the same as [A,B] and cat(1,A,B) is the same as [A;B].
+
+\subsection{eig()}
+Function eig() returns a vector of the eigenvalues of matrix.
+\begin{lstlisting}
+d = eig(A)
+d = eig(A,B)
+\end{lstlisting}
+
+d = eig(A) returns a vector of the eigenvalues of matrix A. d = eig(A,B) returns a vector containing the generalized eigenvalues, if A and B are square matrices.
+
+\subsection{max()}
+Function max() returns the largest elements along different dimensions of an array.
+\begin{lstlisting}
+C = max(A)
+C = max(A,B)
+C = max(A,[],dim)
+[C,I] = max(...)
+\end{lstlisting}
+
+If A is a vector, max(A) returns the largest element in A. If A is a matrix, max(A) treats the columns of A as vectors, returning a row vector containing the maximum element from each column. If A is a multidimensional array, max(A) treats the values along the first non-singleton dimension as vectors, returning the maximum value of each vector.
+
+C = max(A,B) returns an array the same size as A and B with the largest elements taken from A or B.
+
+C = max(A,[],dim) returns the largest elements along the dimension of A specified by scalar dim. For example, max(A,[],1) produces the maximum values along the first dimension (the rows) of A.
+
+[C,I] = max(...) finds the indices of the maximum values of A, and returns them in output vector I. If there are several identical maximum values, the index of the first one found is returned.
+
+\subsection{mean()}
+Function mean() returns the mean values of the elements along different dimensions of an array.
+\begin{lstlisting}
+M = mean(A)
+M = mean(A,dim)
+\end{lstlisting}
+
+If A is a vector, mean(A) returns the mean value of A. If A is a matrix, mean(A) treats the columns of A as vectors, returning a row
+vector of mean values. If A is a multidimensional array, mean(A) treats the values along the first non-singleton dimension as vectors, returning an array of mean values.
+
+M = mean(A,dim) returns the mean values for elements along the dimension of A specified by scalar dim.
+
+\subsection{min()}
+Function min() returns the smallest elements along different dimensions of an array.
+\begin{lstlisting}
+C = min(A)
+C = min(A,B)
+C = min(A,[],dim)
+[C,I] = min(...)
+\end{lstlisting}
+
+If A is a vector, min(A) returns the smallest element in A. If A is a matrix, min(A) treats the columns of A as vectors, returning a row vector containing the minimum element from each column. If A is a multidimensional array, min operates along the first nonsingleton dimension.
+
+C = min(A,B) returns an array the same size as A and B with the smallest elements taken from A or B.
+
+C = min(A,[],dim) returns the smallest elements along the dimension of A specified by scalar dim. For example, min(A,[],1) produces the minimum values along the first dimension (the rows) of A.
+
+[C,I] = min(...) finds the indices of the minimum values of A, and returns them in output vector I. If there are several identical minimum values, the index of the first one found is returned.
+
 \subsection{sum()}
+Function sum() returns sums along different dimensions of an array.
+\begin{lstlisting}
+B = sum(A)
+B = sum(A,dim)
+\end{lstlisting}
+
+If A is a vector, sum(A) returns the sum of the elements. If A is a matrix, sum(A) treats the columns of A as vectors, returning a row vector of the sums of each column. If A is a multidimensional array, sum(A) treats the values along the first non-singleton dimension as vectors, returning an array of row vectors.
+
+B = sum(A,dim) sums along the dimension of A specified by scalar dim.
+
+\subsection{abs()}
+Function abs() returns the absolute value and complex magnitude.
+\begin{lstlisting}
+Y = abs(X)
+\end{lstlisting}
+
+abs(X) returns the absolute value, X, for each element of X. If X is complex, abs(X) returns the complex modulus (magnitude):
+
+abs(X) = $\displaystyle\sqrt{real(X)^2 + imag(X)^2}$
 
 \subsection{Syntax subsection}
 
