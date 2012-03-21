@@ -117,6 +117,10 @@ to separate otherwise adjacent identifiers, constants, and certain
 operatorpairs.  If the input stream has been parsed into tokens up
 to a given character, the next token is taken to include the longest
 string of characters which could possibly constitute a token.
+
+In MIPL, an identifiers is a word that starts with a lower case alphabet
+and a variable is a word that starts with a upper case alphabet.  For
+example, cat is a indentifier and Name is a variable.
 \medskip
 
 % Head 2
@@ -196,7 +200,15 @@ program
 In other words, a MIPL program consists of commands, where commands can contain multiple 
 commmand again.
 
-MIPL also has the interpreter, so this command is a running unit for the interpreter. Here is a sample MIPL program:
+MIPL also has the interpreter, so this command is a running unit for the
+interpreter.  More specifically, when the user finishes a command to the
+input terminal, the command is executed right away by the interpreter,
+whereas the compiler generates target machine code so that it can be
+executed by running the generated target machine code.  However, the
+results from the same MIPL program are always identical regardless of
+whether it is executed by the interpreter or through compiled code.
+
+Here is a sample MIPL program:
 
 \begin{lstlisting}
 countPositive(A, SizeOfA) {
@@ -385,22 +397,25 @@ term
 	| term_expr NE_OP term_expr
 	;
 \end{lstlisting}
- Term is a basic block in MIPL. Term can be used as Identifier's name.\\
+Term is a basic block in MIPL. Term can be used as Identifier's name.
+\medskip
 
 For defining Query, Term can be used with argument lists, which are expressed by
 $(\ term\_args\ )$. To query all data, Term can be used with an asterisk, which
- is expressed by $*$. Also, Term can be a regular expression in MIPL; however,
- Term as a regular expression can be only used in Query. All terms matched by the
- regular expression will be queried with the given argument lists.\\
+is expressed by $*$. Also, Term can be a regular expression in MIPL; however,
+Term as a regular expression can be only used in Query. All terms matched by the
+regular expression will be queried with the given argument lists.
+\medskip
 
 By adding NOT, Term can be negated. Also, all Term Expression can be Term.
- In this case, Term contains the value of the computed results of Term Expressions.
- As an extension of this, which Term contains the value of the Term Expressions,
- Term value can be assigned to Variable by $VARIABLE\ IS\ term$.\\
+In this case, Term contains the value of the computed results of Term Expressions.
+As an extension of this, which Term contains the value of the Term Expressions,
+Term value can be assigned to Variable by $VARIABLE\ IS\ term$.
+\medskip
 
 In addition, comparison operators with Term expressions are also Term. There are six
- comparison operatros can be used in Term: $<, >, <=, >=, ==, !=$. LE\_OP refers $<=$,
- GE\_OP refers $>=$, EQ\_OP refers $==$, and NE\_OP refers $!=$.\\
+comparison operatros can be used in Term: $<, >, <=, >=, ==, !=$. LE\_OP refers $<=$,
+GE\_OP refers $>=$, EQ\_OP refers $==$, and NE\_OP refers $!=$.
 \medskip
 
 %----------------------------------------------------------JINHYUNG}
