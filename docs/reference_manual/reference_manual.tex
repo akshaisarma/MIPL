@@ -81,9 +81,15 @@ and vice versa.
 
 \section{Introduction}
 
-Introduction here.
+Mining Integrated Programming Language (MIPL) is a programming language
+that provides a very simple, easy way for the users to use Data Mining
+algorithms and retrieve data from the computation.
 
-Item sample.
+Also algoritm developers can benefit from MIPL's Job decription interface,
+so that their algorithms are automatically distributed and accelerated
+on the computer clusters and hardware accelerators.
+
+MIPL is...
 \begin{itemize}
 \item item1 To the best of our knowledge, the MMSN protocol is the first
 \item item2 Instead of using pairwise RTS/CTS frequency negotiation
@@ -824,7 +830,11 @@ expression as described above in \ref{Expression_Section}.
 Job Boolean Expression is a basic Expression that can be evaluated as
 true or false.  Job Selection Statement and Job Iteration Statement
 contains Job Boolean Expression in order to determine whether to proceed
-or how many times to repeat.
+or how many times to repeat.  Unlike C Programming Language, MIPL strictly
+distinguish Job Boolean Expressions from Job Expressions as Job Boolean
+Expressions can be used only for conditions in Job Selection Statements
+and Job Iteration Statements.  Thus, a Job Boolean Expression cannot be
+stored in a variable or cannot be used as a statement.
 
 The character sequence OR\_OP refers to the sequence ``\textbardbl", which  
 denotes the logical OR operator. The logical AND expressions that are 
