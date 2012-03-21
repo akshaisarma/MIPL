@@ -326,6 +326,7 @@ A $rule$ is defined with $<-$ or $:-$. The rule for Fact can be combined with $,
  the results of query come from the Job or related Fact of the rule.
 \medskip
 
+\subsection{Terms}
 \subsubsection{OR Term}
 \begin{lstlisting}
 or_terms
@@ -333,6 +334,8 @@ or_terms
 	| or_terms `;' and_terms
 	;
 \end{lstlisting}
+$;$ expression is an expression which concatenates terms, and those terms
+ will be true in Boolean statement if one of terms is ture.
 
 \subsubsection{AND Term}
 \begin{lstlisting}
@@ -341,8 +344,10 @@ and_terms
 	| and_terms `,' term	
 	;
 \end{lstlisting}
+$,$ expression is an expression which concatenates terms, and those terms
+ will be true in Boolean statement if all terms are ture.
 
-\subsubsection{Terms}
+\subsubsection{Term}
 \begin{lstlisting}
 term
 	: IDENTIFIER		
@@ -362,6 +367,9 @@ term
 	| term_expr NE_OP term_expr
 	;
 \end{lstlisting}
+$Term$ is a basic block in MIPL. $Term$ can be 
+
+
 %----------------------------------------------------------JINHYUNG}
 %----------------------------------------------------------YOUNGHOON{
 
