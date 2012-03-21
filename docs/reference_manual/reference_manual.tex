@@ -196,9 +196,7 @@ program
 In other words, a MIPL program consists of commands, where commands can contain multiple 
 commmand again.
 
-MIPL also has the interpreter, so this command is a running unit for the interpreter.
-
-Here is a sample MIPL program:
+MIPL also has the interpreter, so this command is a running unit for the interpreter. Here is a sample MIPL program:
 
 \begin{lstlisting}
 countPositive(A, SizeOfA) {
@@ -287,13 +285,13 @@ cat(tom).
 mouse(jerry), mouse(mickey).
 \end{lstlisting}
 
-A $fact$ is terminated with a $"."$. A $fact$ is used to describe or define a Fact (which 
- expresses some statement in the context of the application) in MIPL, or to
- process a Job. There are two kinds of Facts: static and dynamic Facts. A static Fact 
- is a Fact that is terminated with $"."$. A dynamic Fact is wrapped in $[ ]$, 
- and as part of its definition, a dynamic Fact calls a Job to process data. A $fact$
- starts with a lowercase letter. Finally, several $fact$s can be combined
- in one line with a $,$.
+A $fact$ is Term, which is terminated with a $"."$. A $fact$ is used to
+ describe or define a Fact (which expresses some statement in the context
+ of the application) in MIPL, or to process a Job. There are two kinds of
+ Facts: static and dynamic Facts. A static Fact is Term that is terminated
+ with $"."$. A dynamic Fact is Term that is wrapped in $[ ]$, and as part
+ of its definition, a dynamic Fact calls a Job to process data. A $fact$
+ should start with a lowercase letter.
 \medskip
 
 \subsubsection{Query}
@@ -304,17 +302,18 @@ query
 \end{lstlisting}
 
 \begin{lstlisting}
-# query
+# fact
 cat(tom), mouse(jerry).
+# query
 mouse(tom)? # Returns false
 # query with *
 weighted_grade(*)?
 \end{lstlisting}
 
-A $query$ is terminated with a $"?"$. A $query$ operates on Facts, or Job results. A $query$ 
- matching a Fact returns $true$ or $false$. A $query$ to the Job results returns results 
- satisfying the query. If the Fact or the Job results have lots of columns, $query$ can
- take $*$ as the query argument to see all results.
+A $query$ is terminated with a $"?"$. A $query$ operates on OR Term. A $query$ 
+ to a Fact returns $true$ or $false$. A $query$ to the Job results returns results 
+ satisfying the query. If the Fact or the Job results have one more columns, $query$ can
+ take $*$ as the query argument to show all results.
 \medskip
 
 \subsubsection{Rule}
@@ -334,11 +333,11 @@ animal(X) :- cat(X), dog(X), horse(X).
 \end{lstlisting}
 
 A $rule$ is defined with $<-$ or $:-$. The rule for Term can be OR Term.
- In OR Term, if the first rule cannot be matched, it will try to match the second rule.
- The left of the rule operator would be a Fact. The right of the rule operator would
- be a Fact, or a Job. If the right of the rule operator is a Job,
- the left Fact of the rule should be a dynamic Fact. When the Fact is queried,
- the results of query come from the Job or related Fact of the rule.
+ For OR Term, MIPL implements a short circuit. During OR Terms iterations, if
+ rule meets the true Term, MIPL stops the OR Term iteration. The left of the rule
+ is the rule results, which is also Term. If the right of the rule operator is a Job,
+ the left Term should be a dynamic Fact. When the Term Fact is queried,
+ the results of query come from the Job or related Term Fact of the rule.
 \medskip
 
 \subsection{Terms}
