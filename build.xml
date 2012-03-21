@@ -87,6 +87,7 @@
 	</exec>
 	<delete file="${docs}/reference_manual.pdf" />
 	<delete file="${docs}/tutorial.pdf" />
+	<delete file="${tool}/Yylex.class" />
     </target>
 
     <taskdef resource="checkstyletask.properties" classpath="${tool}/checkstyle-5.5-all.jar" />
