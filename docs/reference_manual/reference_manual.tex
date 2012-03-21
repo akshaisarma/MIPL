@@ -168,13 +168,17 @@ Expression Operators are explained in detail Built-in Operators and Jobs section
 \subsection {Term}
 Term is the only data type for Facts, Rules, and Queries.  Numbers, Strings,
 Facts, Rules, Queries and even Terms are recursively defined in a form of a Term. 
-Variables can be a Term.
+Variables in a Term can contain a Term and their scope is within the Command.
 \medskip
 
 \subsection {Job Types}
 Unlike the FRQ part of MIPL, a Job has two primitive types, Matrix and
-Number, which can both be computed within a Job description. Variables
-can be a Number or a Matrix.
+Number, which can both be computed within a Job description. MIPL strictly
+distinguish boolean expressions from numeric expressions, so Boolean can be
+considered another primitive type, however it is not visible to the users
+as there is no variables that can contain boolean values.  Variables in a
+Job can contain a Number or a Matrix and their scope is within the Job
+definition.
 
 \section{Syntax}
 
@@ -459,13 +463,8 @@ Term Expression.  This also means that `(' and `)' operators have higher
 operation priority than other operators.
 \medskip
 
-\subsection{Arguments}
-TODO:change
-Arguments play a role in passing data from Facts to Job, by converting Facts
-into matrices so that the Job computes the matrices by the algorithm
-described in the Job.
+\subsection{Term Arguments}
 
-\subsubsection{Argument Candidate}
 \begin{lstlisting}
 term_args_cand
 	: IDENTIFIER
@@ -475,37 +474,30 @@ term_args_cand
 	| NUMBER
 	| STRING_LITERAL
 	;
-\end{lstlisting}
 
-Argument Candidate is an Identifier, a Variable, an Anonymous
-Variable, a Number, or a String.  An Identifier can have one
-or more arguments within a pair of parentheses or no arguments.
-This arguments again consist of Argument Candidates, which
-allows a recursive form of argument definition.  For instance, 
-$com(monitor, board(cpu, ram(4, 4)), P)$ is a valid form
-of a Term declaration.
-\medskip
-
-\subsubsection{Argument List}
-\begin{lstlisting}
 term_args
 	: term_args_cand
 	| term_args `,' term_args_cand
 	;
+
 \end{lstlisting}
 
-Argument List is used for 1. A Fact declaration that calls a Job
-2. A Term that has arguments 3. A Job definition.  Sharing the
-same type of argument list for three different rules are possible
-because there is not type and variable declaration in MIPL.  Thus,
-a Job definition and a Job-calling Fact basically have the same
-argument list.  There are a few diffences that will be checked
-semantically at compile time and dynamically at runtime.  For example,
-current implementation of MIPL does not support passing of nested
-parameters so these errors are checked by Semantic Checker, which may
-be eased later when MIPL is extended to support nested parameter passing
-without changing its grammar.  Also, MIPL's Job definitions allows
-variable numbers of return values dynamically, the generated program
+Term Argument Candidate is an Identifier, a Variable, an Anonymous
+Variable, a Number, or a String.  An Identifier can have one
+or more arguments within a pair of parentheses or no arguments.
+This arguments again consist of Term Argument Candidates, which
+allows a recursive form of argument definition.  For instance, 
+$com(monitor, board(cpu, ram(4, 4)), P)$ is a valid form
+of a Term declaration.
+
+Term Argument List is used for Term definition. Hence, Term
+Argument List can be a part of the declarations of Facts, Rules,
+and Queries.  Sharing the same type of argument list for the
+declarations of FRQs are possible because there is no type and
+variable declaration in MIPL.  Thus, a Job definition and
+a Job-calling Fact basically have the same argument list.
+Also, MIPL's Job definitions allows variable numbers of return
+values dynamically, the generated program
 checks if the numbers of return values from Job and the numbers of
 Fact names are matched.  Otherwise, it fails to run.
 \medskip
@@ -514,23 +506,31 @@ Fact names are matched.  Otherwise, it fails to run.
 
 \begin{lstlisting}
 job
-	: JOB IDENTIFIER `(' term_args `)' `{' stmt_list `}'
+	: JOB IDENTIFIER `(' job_args `)' `{' stmt_list `}'
 	;
 
-jobdef_args
-	: jobdef_args ',' VARIABLE
+job_args
+	: job_args ',' VARIABLE
 	| VARIABLE
 	;
 \end{lstlisting}
 
 \label{Job_Section}
 Job is MIPL's basic operation that provides matrix operations.
-A Job definition denotes a number of arguments and a set of Job
+Job is a function-like task, with no nested definitions, no
+overloading of definition, or generic types supported. Job uses
+positional parameter passing with call-by-value.  A Job
+definition denotes a number of variables and a set of Job
 Statements.  At runtime, a compiled Job is distributed over
 a MapReduce clusters, computed, and delivered to the user. For
 example, when a user loads two matrices and calls a Job giving those
 matrices, the matrices are split into several smaller matrices,
 distributed to MapReduce clusters, and computed.
+
+Job Arguments play a role in passing data from Facts to Job, by
+delivering number values and converting Facts into matrices
+so that the Job computes the number values and the matrices by
+the algorithm described in the Job.
 \medskip
 
 \subsection{Job Statement}
@@ -1124,15 +1124,6 @@ Built-in Keywords are special type of matices that can be used for
 various purposes.
 \medskip
 
-\subsection{eye}
-Keyword eye returns the identity matrix.
-\begin{lstlisting}
-Y <- eye.
-\end{lstlisting}
-
-$Y <- eye.$ returns a matrix with 1's on the diagonal and 0's elsewhere.
-\medskip
-
 \subsection{zeros}
 Keyword zeros creates a matrix of all zeros.
 \begin{lstlisting}
@@ -1151,6 +1142,15 @@ Y <- ones.
 $Y <- ones.$ returns a matrix of ones.
 \medskip
 
+\subsection{eye}
+Keyword eye returns the identity matrix.
+\begin{lstlisting}
+Y <- eye.
+\end{lstlisting}
+
+$Y <- eye.$ returns a matrix with 1's on the diagonal and 0's elsewhere.
+\medskip
+
 \subsection{rand}
 Keyword rand generates a matrix of random numbers whose elements are
 uniformly distributed in the interval (0,1).
@@ -1162,14 +1162,71 @@ rand
 Y <- rand. returns a matrix of random entries. Note that a random value
 is generated when an element of rand is accessed. For example,
 $B <- rand + A. C <- rand + A.$ results in two different matrices B and A.
-In order to get a constant random matrix, a variable can be used.
-$R <- rand. B <- R + A. C <- R + A.$ results in the same two matrices B
+In order to get a constant random matrix, a Job rand() can be used.
+$R <- rand(3,4). B <- R + A. C <- R + A.$ results in the same two matrices B
 and A.
 
 
 \section{Built-in Jobs}
 There are several Built-in Jobs, while MIPL provides an easy way
 to add a new Job.
+\medskip
+
+\subsection{zeros()}
+Keyword zeros(n, m) creates a n-by-m matrix of all zeros.
+\begin{lstlisting}
+Y <- zeros(10, 20).
+\end{lstlisting}
+
+$Y <- zeros(10, 20).$ returns a 10-by-20 matrix of zeros.
+\medskip
+
+\subsection{ones()}
+Keyword ones(n, m) creates a n-by-m matrix of all ones.
+\begin{lstlisting}
+Y <- ones(10, 20).
+\end{lstlisting}
+
+$Y <- ones(10, 20).$ returns a 10-by-20 matrix of ones.
+Job ones() is defined as the following:
+\begin{lstlisting}
+job ones(N, M) {
+    @zeros(N, M) + 1.
+}
+\end{lstlisting}
+\medskip
+
+\subsection{eye()}
+Keyword eye(n) returns the identity n-by-n matrix.
+\begin{lstlisting}
+Y <- eye.
+\end{lstlisting}
+
+$Y <- eye(10).$ returns a 10-by-10 matrix with 1's on the diagonal and 0's elsewhere.
+Job eye() is defined as the following:
+\begin{lstlisting}
+job eye(N) {
+    @zeros(N, N) + eye.
+} 
+\end{lstlisting}
+\medskip
+
+\subsection{rand()}
+Keyword rand(n, m) generates a n-by-m matrix of random numbers whose elements are
+uniformly distributed in the interval (0,1).
+\begin{lstlisting}
+Y <- rand(10, 20).
+rand
+\end{lstlisting}
+
+Y <- rand(10, 20). returns a 10-by-20 matrix of random entries.
+
+Job rand() is defined as the following:
+\begin{lstlisting}
+job rand(N, M) {
+    @zeros(N, M) + rand.
+} 
+\end{lstlisting}
 \medskip
 
 \subsection{bind()}

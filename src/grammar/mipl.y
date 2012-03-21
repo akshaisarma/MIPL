@@ -142,11 +142,11 @@ term_args
 	;
 
 job
-	: JOB IDENTIFIER '(' jobdef_args ')' '{' stmt_list '}' 	/*{ $$ = new Job((String) $2, (List<Term>) $4, (List<JobStmt>) $7); }*/
+	: JOB IDENTIFIER '(' job_args ')' '{' stmt_list '}' 	/*{ $$ = new Job((String) $2, (List<Term>) $4, (List<JobStmt>) $7); }*/
 	;
 
-jobdef_args
-	: jobdef_args ',' VARIABLE
+job_args
+	: job_args ',' VARIABLE
 	| VARIABLE
 	;
 
