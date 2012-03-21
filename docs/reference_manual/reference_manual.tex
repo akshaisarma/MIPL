@@ -245,7 +245,17 @@ command
 \end{lstlisting}
 \medskip
 
-\subsubsection{Fact}
+
+\subsubsection{Fact_example}
+\begin{lstlisting}
+fact
+	: term `.'			
+	| `[' maf_list `]' LARROW_OP
+		IDENTIFIER `(' arg_list `)' `.'
+	;
+\end{lstlisting}
+
+\subsubsection{Fact Example}
 \begin{lstlisting}
 # fact
 cat(tom).
@@ -261,7 +271,22 @@ A $fact$ is terminated with a $"."$. A $fact$ is used to describe or define a Fa
  in one line with a $,$.
 \medskip
 
+\subsubsection{maf_list}
+\begin{lstlisting}
+maf_list
+	: maf_list `,' IDENTIFIER
+	| IDENTIFIER		
+	;
+\end{lstlisting}
+
 \subsubsection{Query}
+\begin{lstlisting}
+query
+	: or_terms `?'		
+	;
+\end{lstlisting}
+
+\subsubsection{Query Example}
 \begin{lstlisting}
 # query
 cat(tom), mouse(jerry).
@@ -277,6 +302,13 @@ A $query$ is terminated with a $"?"$. A $query$ operates on Facts, or Job result
 \medskip
 
 \subsubsection{Rule}
+\begin{lstlisting}
+rule
+	: term LARROW_OP or_terms `.'
+	;
+\end{lstlisting}
+
+\subsubsection{Rule Example}
 \begin{lstlisting}
 # rule with a fact
 animal(X) <- cat(X).
@@ -294,22 +326,42 @@ A $rule$ is defined with $<-$ or $:-$. The rule for Fact can be combined with $,
  the results of query come from the Job or related Fact of the rule.
 \medskip
 
-\subsubsection{Job}
+\subsubsection{OR Term}
 \begin{lstlisting}
-# job
-calculate_weighted_grade(G, W) {
- @ bind(G[0][~], G[1~][~] * transpose(W)).
-}
-# process job with a dynamic fact
-[weighted_grade] <- calculate_weighted_grade(grade, weight).
+or_terms
+	: and_terms
+	| or_terms `;' and_terms
+	;
 \end{lstlisting}
 
-$job$ is defined with $ IDENTIFIER ( ) { }$. $job$ can be run through MapReduce.
- This behavior is defined by the compiler. If $job$ is big, $job$ will be run
- seperately via MapReduce. If $job$ is small, that operations are run on the
- local system. The Job is processed by a dynamic Fact, which uses $[ ]$.
-\medskip
+\subsubsection{AND Term}
+\begin{lstlisting}
+and_terms
+	: term
+	| and_terms `,' term	
+	;
+\end{lstlisting}
 
+\subsubsection{Terms}
+\begin{lstlisting}
+term
+	: IDENTIFIER		
+	| IDENTIFIER `(' arg_list `)'
+	| IDENTIFIER `(' `*' `)'
+	| REGEX			
+	| REGEX `(' arg_list `)'
+	| REGEX `(' `*' `)'	
+	| NOT term		
+	| term_expr		
+	| VARIABLE IS term	
+	| term_expr `<' term_expr
+	| term_expr `>' term_expr
+	| term_expr LE_OP term_expr
+	| term_expr GE_OP term_expr
+	| term_expr EQ_OP term_expr
+	| term_expr NE_OP term_expr
+	;
+\end{lstlisting}
 %----------------------------------------------------------JINHYUNG}
 %----------------------------------------------------------YOUNGHOON{
 
