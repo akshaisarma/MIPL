@@ -23,7 +23,7 @@ import edu.columbia.mipl.runtime.traverse.*;
 
 %token IF ELSE DO WHILE
 
-%token REGEX VARIABLE NOT LARROW_OP IS
+%token REGEX VARIABLE NOT LARROW_OP IS JOB
 %token NUMBER TRUE FALSE
 
 %start program
@@ -47,12 +47,29 @@ command
 
 fact
 	: term '.'				{ $$ = new Fact((Term) $1); }
-	| '[' maf_list ']' LARROW_OP
-		IDENTIFIER '(' arg_list ')' '.'	{ $$ = new Fact((String) $5, (List<String>) $2, (List<Term>) $7); }
+	| '[' id_list ']' LARROW_OP jobcall '.'	/*{ $$ = new Fact((String) null, (List<String>) $2, (List<Term>) $5); }*/
 	;
 
-maf_list
-	: maf_list ',' IDENTIFIER	{ $$ = $1; ((List<String>) $$).add((String) $3); }
+jobcall
+	: IDENTIFIER '(' ')'
+	| IDENTIFIER '(' jobcall_args ')'
+	;
+
+jobcall_args
+	: jobcall_args ',' jobcall_args_cand
+	| jobcall_args_cand
+	;
+
+jobcall_args_cand
+	: IDENTIFIER
+	| VARIABLE
+	| NUMBER
+	| STRING_LITERAL
+	| jobcall
+	;
+
+id_list
+	: id_list ',' IDENTIFIER	{ $$ = $1; ((List<String>) $$).add((String) $3); }
 	| IDENTIFIER			{ $$ = new ArrayList<String>(); ((List<String>) $$).add((String) $1); }
 	;
 
@@ -76,10 +93,10 @@ and_terms
 
 term
 	: IDENTIFIER			{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) null); }
-	| IDENTIFIER '(' arg_list ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
+	| IDENTIFIER '(' term_args ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
 	| IDENTIFIER '(' '*' ')'	{ $$ = new Term(Term.Type.QUERYALL, (String) $1); }
 	| REGEX				{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, new ArrayList<Term>()); }
-	| REGEX '(' arg_list ')'	{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, (List<Term>) $3); }
+	| REGEX '(' term_args ')'	{ $$ = new Term(Term.Type.REGEXTERM, (String) $1, (List<Term>) $3); }
 	| REGEX '(' '*' ')'		{ $$ = new Term(Term.Type.REGEXQUERYALL, (String) $1); }
 	| NOT term			{ $$ = new Term(Term.Type.NOTTERM, (Term) $2); }
 	| term_expr			{ $$ = ((Expression) $1).getTerm(); }
@@ -110,22 +127,27 @@ term_term
 	| '(' term_expr ')'		{ $$ = $2; }
 	;
 
-arg_cand
+term_args_cand
 	: IDENTIFIER			{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
-	| IDENTIFIER '(' arg_list ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
+	| IDENTIFIER '(' term_args ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
 	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same command */
 	| '_'				{ $$ = new Term(Term.Type.VARIABLE, "_"); }
 	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
 	| STRING_LITERAL		{ $$ = new Term(Term.Type.STRING, (String) $1); }
 	;
 
-arg_list
-	: arg_cand			{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $1); }
-	| arg_list ',' arg_cand		{ $$ = $1; ((List<Term>) $$).add((Term) $3);}
+term_args
+	: term_args_cand			{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $1); }
+	| term_args ',' term_args_cand		{ $$ = $1; ((List<Term>) $$).add((Term) $3);}
 	;
 
 job
-	: IDENTIFIER '(' arg_list ')' '{' stmt_list '}' 	{ $$ = new Job((String) $1, (List<Term>) $3, (List<JobStmt>) $6); }
+	: JOB IDENTIFIER '(' jobdef_args ')' '{' stmt_list '}' 	/*{ $$ = new Job((String) $2, (List<Term>) $4, (List<JobStmt>) $7); }*/
+	;
+
+jobdef_args
+	: jobdef_args ',' VARIABLE
+	| VARIABLE
 	;
 
 stmt
@@ -254,12 +276,12 @@ postfix_expr
 	: primary_expr							/* Default Action $$ = $1 */
 	| VARIABLE '[' array_idx_list ']' '[' array_idx_list ']'	{ $$ = new JobExpr(JobExpr.Type.ARRAY, new Term(Term.Type.VARIABLE, (String) $1), (List<ArrayIndex>) $3, (List<ArrayIndex>) $6); }
 	| IDENTIFIER '(' ')'						{ $$ = new JobExpr(JobExpr.Type.JOBCALL, (String) $1, (List<JobExpr>) null); }
-	| IDENTIFIER '(' argument_expr_list ')'				{ $$ = new JobExpr(JobExpr.Type.JOBCALL, (String) $1, (List<JobExpr>) $3); }
+	| IDENTIFIER '(' nested_jobcall_args ')'				{ $$ = new JobExpr(JobExpr.Type.JOBCALL, (String) $1, (List<JobExpr>) $3); }
 	;
 
-argument_expr_list
+nested_jobcall_args
 	: expr					{ $$ = new ArrayList<JobExpr>(); ((List<JobExpr>) $$).add((JobExpr) $1); }
-	| argument_expr_list ',' expr		{ $$ = $1; ((List<JobExpr>) $$).add((JobExpr) $3); }
+	| nested_jobcall_args ',' expr		{ $$ = $1; ((List<JobExpr>) $$).add((JobExpr) $3); }
 	;
 
 %%
