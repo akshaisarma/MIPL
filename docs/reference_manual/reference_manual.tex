@@ -329,8 +329,8 @@ animal(X) :- cat(X).
 animal(X) :- cat(X), dog(X), horse(X).
 \end{lstlisting}
 
-A $rule$ is defined with $<-$ or $:-$. The rule for Fact can be combined with $,$.
- If the first rule cannot be matched, it will try to match the second rule.
+A $rule$ is defined with $<-$ or $:-$. The rule for Term can be OR Term.
+ In OR Term, if the first rule cannot be matched, it will try to match the second rule.
  The left of the rule operator would be a Fact. The right of the rule operator would
  be a Fact, or a Job. If the right of the rule operator is a Job,
  the left Fact of the rule should be a dynamic Fact. When the Fact is queried,
@@ -345,8 +345,10 @@ or_terms
 	| or_terms `;' and_terms
 	;
 \end{lstlisting}
-$;$ expression is an expression which concatenates terms, and those terms
- will be true in Boolean statement if one of terms is ture.
+OR Term expression is an expression which concatenates terms, and those terms
+ will be true in Boolean statement if one of terms is ture. OR Term is expressed by $;$.
+ For example, $terms ; terms$ expresses OR Term.
+\medskip
 
 \subsubsection{AND Term}
 \begin{lstlisting}
@@ -355,8 +357,10 @@ and_terms
 	| and_terms `,' term	
 	;
 \end{lstlisting}
-$,$ expression is an expression which concatenates terms, and those terms
- will be true in Boolean statement if all terms are ture.
+AND Term expression is an expression which concatenates terms, and those terms
+ will be true in Boolean statement if all terms are ture. AND Term is expressed by $,$.
+ For example, $terms , terms$ expresses AND Term.
+\medskip
 
 \subsubsection{Term}
 \begin{lstlisting}
@@ -378,8 +382,23 @@ term
 	| term_expr NE_OP term_expr
 	;
 \end{lstlisting}
-$Term$ is a basic block in MIPL. $Term$ can be 
+ Term is a basic block in MIPL. Term can be used as Identifier's name.\\
 
+For defining Query, Term can be used with argument lists, which are expressed by
+$(\ term\_args\ )$. To query all data, Term can be used with an asterisk, which
+ is expressed by $*$. Also, Term can be a regular expression in MIPL; however,
+ Term as a regular expression can be only used in Query. All terms matched by the
+ regular expression will be queried with the given argument lists.\\
+
+By adding NOT, Term can be negated. Also, all Term Expression can be Term.
+ In this case, Term contains the value of the computed results of Term Expressions.
+ As an extension of this, which Term contains the value of the Term Expressions,
+ Term value can be assigned to Variable by $VARIABLE\ IS\ term$.\\
+
+In addition, comparison operators with Term expressions are also Term. There are six
+ comparison operatros can be used in Term: $<, >, <=, >=, ==, !=$. LE\_OP refers $<=$,
+ GE\_OP refers $>=$, EQ\_OP refers $==$, and NE\_OP refers $!=$.\\
+\medskip
 
 %----------------------------------------------------------JINHYUNG}
 %----------------------------------------------------------YOUNGHOON{
