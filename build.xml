@@ -80,13 +80,7 @@
 		<arg value="${docs}/reference_manual" />
 		<arg value="clean" />
 	</exec>
-	<exec executable="make">
-		<arg value="-C" />
-		<arg value="${docs}/tutorial" />
-		<arg value="clean" />
-	</exec>
 	<delete file="${docs}/reference_manual.pdf" />
-	<delete file="${docs}/tutorial.pdf" />
 	<delete file="${tool}/Yylex.class" />
     </target>
 
@@ -148,11 +142,6 @@
 		<arg value="${docs}/reference_manual" />
 	</exec>
 	<copy file="${docs}/reference_manual/reference_manual.pdf" todir="${docs}"/>
-	<exec executable="make">
-		<arg value="-C" />
-		<arg value="${docs}/tutorial" />
-	</exec>
-	<copy file="${docs}/tutorial/tutorial.pdf" todir="${docs}"/>
     </target>
 
     <target name="extract">
