@@ -13,15 +13,15 @@
 #              At last query, a single number is actually
 #              copied to the client from the clusters.
 
-addJob(A, B) {
+job addJob(A, B) {
  @A + B.
 }
 
-multJob(A, B) {
+job multJob(A, B) {
  @A * B.
 }
 
-rowsumJob(A) {
+job rowsumJob(A) {
  @rowsum(A).
 }
 

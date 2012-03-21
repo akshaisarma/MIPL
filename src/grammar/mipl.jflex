@@ -100,6 +100,7 @@ LARROW_OP = <- |
 "while" { return ParserTokens.WHILE; }
 "not" { return ParserTokens.NOT; }
 "is" { return ParserTokens.IS; }
+"job" { return ParserTokens.JOB; }
 
 "true" { return ParserTokens.TRUE; }
 "false" { return ParserTokens.FALSE; }

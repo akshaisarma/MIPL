@@ -7,7 +7,7 @@
 #              a Job with multiple returns.
 
 # a Job that returns two or three values
-multi_return(A, B, C) {
+job multi_return(A, B, C) {
  if (A == 1) {
   @(B + C).
  }

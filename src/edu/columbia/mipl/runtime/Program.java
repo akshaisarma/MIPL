@@ -23,6 +23,9 @@ public final class Program extends Traversable {
 	}
 
 	public boolean add(Command c) {
+		if (c == null)
+			return false;
+
 		if (traverser != null)
 			c.traverse(traverser, true);
 		super.add(0, c);

@@ -250,12 +250,33 @@ command
 \begin{lstlisting}
 fact
 	: term `.'			
-	| `[' maf_list `]' LARROW_OP
-		IDENTIFIER `(' arg_list `)' `.'
+	| `[' id_list `]' LARROW_OP jobcall `.'
+	;
+
+id_list
+	: id_list `,' IDENTIFIER
+	| IDENTIFIER		
+	;
+
+jobcall
+	: IDENTIFIER `(' `)'
+	| IDENTIFIER `(' jobcall_args `)'
+	;
+
+jobcall_args
+	: jobcall_args `,' jobcall_args_cand
+	| jobcall_args_cand
+	;
+
+jobcall_args_cand
+	: IDENTIFIER
+	| VARIABLE
+	| NUMBER
+	| STRING_LITERAL
+	| jobcall
 	;
 \end{lstlisting}
 
-\subsubsection{Fact Example}
 \begin{lstlisting}
 # fact
 cat(tom).
@@ -271,14 +292,6 @@ A $fact$ is terminated with a $"."$. A $fact$ is used to describe or define a Fa
  in one line with a $,$.
 \medskip
 
-\subsubsection{maflist}
-\begin{lstlisting}
-maf_list
-	: maf_list `,' IDENTIFIER
-	| IDENTIFIER		
-	;
-\end{lstlisting}
-
 \subsubsection{Query}
 \begin{lstlisting}
 query
@@ -286,7 +299,6 @@ query
 	;
 \end{lstlisting}
 
-\subsubsection{Query Example}
 \begin{lstlisting}
 # query
 cat(tom), mouse(jerry).
@@ -308,7 +320,6 @@ rule
 	;
 \end{lstlisting}
 
-\subsubsection{Rule Example}
 \begin{lstlisting}
 # rule with a fact
 animal(X) <- cat(X).
@@ -346,10 +357,10 @@ and_terms
 \begin{lstlisting}
 term
 	: IDENTIFIER		
-	| IDENTIFIER `(' arg_list `)'
+	| IDENTIFIER `(' term_args `)'
 	| IDENTIFIER `(' `*' `)'
 	| REGEX			
-	| REGEX `(' arg_list `)'
+	| REGEX `(' term_args `)'
 	| REGEX `(' `*' `)'	
 	| NOT term		
 	| term_expr		
@@ -422,15 +433,16 @@ operation priority than other operators.
 \medskip
 
 \subsection{Arguments}
+TODO:change
 Arguments play a role in passing data from Facts to Job, by converting Facts
 into matrices so that the Job computes the matrices by the algorithm
 described in the Job.
 
 \subsubsection{Argument Candidate}
 \begin{lstlisting}
-arg_cand
+term_args_cand
 	: IDENTIFIER
-	| IDENTIFIER `(' arg_list `)'
+	| IDENTIFIER `(' term_args `)'
 	| VARIABLE
 	| `_'
 	| NUMBER
@@ -449,9 +461,9 @@ of a Term declaration.
 
 \subsubsection{Argument List}
 \begin{lstlisting}
-arg_list
-	: arg_cand
-	| arg_list `,' arg_cand
+term_args
+	: term_args_cand
+	| term_args `,' term_args_cand
 	;
 \end{lstlisting}
 
@@ -475,7 +487,12 @@ Fact names are matched.  Otherwise, it fails to run.
 
 \begin{lstlisting}
 job
-	: IDENTIFIER `(' arg_list `)' `{' stmt_list `}'
+	: JOB IDENTIFIER `(' term_args `)' `{' stmt_list `}'
+	;
+
+jobdef_args
+	: jobdef_args ',' VARIABLE
+	| VARIABLE
 	;
 \end{lstlisting}
 
@@ -770,7 +787,7 @@ postfix_expr
 	: primary_expr
 	| VARIABLE `[' array_idx_list `]' `[' array_idx_list `]'
 	| IDENTIFIER `(' `)'
-	| IDENTIFIER `(' argument_expr_list `)'
+	| IDENTIFIER `(' nested_jobcall_args `)'
 	;
 \end{lstlisting}
 
@@ -882,9 +899,9 @@ An argument expression list represents the various arguments that may be
 passed to a Job invocation. 
 
 \begin{lstlisting}
-argument_expr_list
+nested_jobcall_args
 	: expr
-	| argument_expr_list `,' expr
+	| nested_jobcall_args `,' expr
 	;
 \end{lstlisting}
 
