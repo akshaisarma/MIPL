@@ -48,6 +48,7 @@ command
 fact
 	: term '.'				{ $$ = new Fact((Term) $1); }
 	| '[' id_list ']' LARROW_OP jobcall '.'	/*{ $$ = new Fact((String) null, (List<String>) $2, (List<Term>) $5); }*/
+	| '[' ']' LARROW_OP jobcall '.'	/*{ $$ = new Fact((String) null, (List<String>) $2, (List<Term>) $5); }*/
 	;
 
 jobcall
