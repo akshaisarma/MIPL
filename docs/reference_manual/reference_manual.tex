@@ -214,7 +214,7 @@ whether it is executed by the interpreter or through compiled code.
 Here is a sample MIPL program:
 
 \begin{lstlisting}
-countPositive(A, SizeOfA) {
+job countPositive(A, SizeOfA) {
     I = 0.
     while (I < SizeOfA) {
         if (A[I] > 0) {
@@ -642,7 +642,7 @@ number of values the actual Job returns, MIPL reports an error.
 I = 3;
 [a, b, c] = job1(matrix1, matrix2, I).
 
-job1(A, B, NumRepeat) {
+job job1(A, B, NumRepeat) {
     while (NumRepeat > 0) {
        A *= B.
        @A.
