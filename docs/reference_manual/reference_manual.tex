@@ -357,7 +357,7 @@ animal(X) :- cat(X).
 animal(X) :- cat(X), dog(X), horse(X).
 \end{lstlisting}
 
-A $rule$ is defined with $<-$ or $:-$, which are the LARROW_OP. The name of the 
+A $rule$ is defined with $<-$ or $:-$, which are the LARROW\_OP. The name of the 
  Rule is the $term$. That is, the Rule is referred to with the $term$.
  The body of the Rule contains $or_terms$. For evaluating a Rule to generate a Fact,
  MIPL implements short circuit evaluation. If any of the subsequent compounds in
@@ -375,7 +375,7 @@ or_terms
 	| or_terms `;' and_terms
 	;
 \end{lstlisting}
-$or_terms$ contain either $and_terms$ or $or_terms$ separated by $;$. 
+$or_terms$ contain either $and\_terms$ or $or\_terms$ separated by $;$. 
  For the short circuit evaluation mentioned in rule evaluation, the $or_terms$
  is True if the left side of $;$ operator is True. The right side is evaluated
  only if the left side is False.
