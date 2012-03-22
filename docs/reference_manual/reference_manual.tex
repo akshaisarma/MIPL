@@ -180,7 +180,7 @@ Variables in a Term can contain a Term and their scope is within the Command.
 \subsection {Job Types}
 Unlike the FRQ part of MIPL, a Job has two primitive types, Matrix and
 Number, which can both be computed within a Job description. MIPL strictly
-distinguish boolean expressions from numeric expressions, so Boolean can be
+distinguish boolean expressions from numeric expressions, so boolean can be
 considered another primitive type, however it is not visible to the users
 as there is no variables that can contain boolean values.  Variables in a
 Job can contain a Number or a Matrix and their scope is within the Job
@@ -229,9 +229,9 @@ animal(tom)?
 \end{lstlisting}
 
 In this example, there are five commands:
- $countPositive\{\}$, $cat().$, $cat()?$, $animal() <- cat().$, and $animal()?$. Each
- command can also include other commands. Each command can be identified by these:
- $\{\}, .,$ or $?$. These are used to determine the command type.
+$countPositive\{\}$, $cat().$, $cat()?$, $animal() <- cat().$, and $animal()?$. Each
+command can also include other commands. Each command can be identified by these:
+$\{\}, .,$ or $?$. These are used to determine the command type.
 \medskip
 
 \subsection{Commands}
@@ -244,8 +244,8 @@ commands
 \end{lstlisting}
 
 Including other commands in a command is permissible. In other words, some commands
- can contain as part of their definition, more commands. The previous example in 4.1
- shows that $countPositive\{\}$ includes several other commands. 
+can contain as part of their definition, more commands. The previous example in 4.1
+shows that $countPositive\{\}$ includes several other commands. 
 \medskip
 
 \subsection{Command}
@@ -300,14 +300,14 @@ cat(tom).
 mouse(jerry), mouse(mickey).
 \end{lstlisting}
 
-A $fact$ is Term, which is terminated with a $"."$. A $fact$ is used to
- describe or define a Fact (which expresses some statement in the context
- of the application) in MIPL, or to process a Job. There are two kinds of
- Facts: static and dynamic Facts. A static Fact is Term that is terminated
- with $"."$. A dynamic Fact is Term that is wrapped in $[ ]$, and as part
- of its definition, a dynamic Fact calls a Job to process data. The semantics
- of the $jobcall$ are exactly the same as the dicussion in \ref{Job_PostFix_Expression}
- and it is not duplicated here. A $fact$ should start with a lowercase letter.
+A $fact$ can be Term, which is terminated with a $"."$. A $fact$ is used to
+describe or define a Fact (which expresses some statement in the context
+of the application) in MIPL, or to process a Job. There are two kinds of
+Facts: static and dynamic Facts. A static Fact is a Term that is terminated
+with $"."$. A dynamic Fact is a Term that is wrapped in $[ ]$, and as part
+of its definition, a dynamic Fact calls a Job to process data. The semantics
+of the $jobcall$ are exactly the same as the dicussion in \ref{Job_PostFix_Expression}
+and it is not duplicated here. A $fact$ should start with a lowercase letter.
 \medskip
 
 \subsubsection{Query}
@@ -331,14 +331,14 @@ weighted_grade(*)? # Returns 86, 99, 32
 \end{lstlisting}
 
 A $query$ is terminated with a $"?"$. A $query$ operates on an OR Term. A $query$ 
- are applied to Facts and Rules. Even if there are no direct matched Facts, Rules
- can be used to derive new Facts to determine the result of a Query. A $query$ to 
- a Fact returns $true$ or $false$ if the Query contains only identifiers. A $query$ 
- to a Fact returns binding results of Facts satisfying the Query if the Query contains 
- Variables. If the Fact contains multiple  arguments, then the Query can contain $*$
- as the query argument to show all bindings, regardless of the number of arguments, 
- whereas using Queries with Variables will require specifying the same number of 
- Variables as arguments of the Fact.
+are applied to Facts and Rules. Even if there are no direct matched Facts, Rules
+can be used to derive new Facts to determine the result of a Query. A $query$ to 
+a Fact returns $true$ or $false$ if the Query contains only identifiers. A $query$ 
+to a Fact returns binding results of Facts satisfying the Query if the Query contains 
+Variables. If the Fact contains multiple  arguments, then the Query can contain $*$
+as the query argument to show all bindings, regardless of the number of arguments, 
+whereas using Queries with Variables will require specifying the same number of 
+Variables as arguments of the Fact.
 \medskip
 
 \subsubsection{Rule}
@@ -357,14 +357,14 @@ animal(X) :- cat(X).
 animal(X) :- cat(X), dog(X), horse(X).
 \end{lstlisting}
 
-A $rule$ is defined with $<-$ or $:-$, which are the LARROW\_OP. The name of the 
- Rule is the $term$. That is, the Rule is referred to with the $term$.
- The body of the Rule contains $or_terms$. For evaluating a Rule to generate a Fact,
- MIPL implements short circuit evaluation. If any of the subsequent compounds in
- $or_terms$ evaluates to True, then MIPL stops and generates the Fact matching the
- left side of the rule. The left of the rule is the rule, which is a $term$. 
- If the right of the rule operator is a Job,
- the left Term should be a dynamic Fact, as described above.
+A $rule$ is defined with $<-$ or $:-$, which are the LARROW\_OPs. The name of the 
+Rule is the $term$. That is, the Rule is referred to with the $term$.
+The body of the Rule contains $or\_terms$. For evaluating a Rule to generate a Fact,
+MIPL implements short circuit evaluation. If any of the constituent compounds in
+$or\_terms$ evaluates to True, then MIPL stops and generates the Fact matching the
+left side of the rule. To the left of the LARROW\_OP is the rule, which is a $term$. 
+If the right of the rule operator is a Job, the left Term should be a dynamic Fact, 
+as described above.
 \medskip
 
 \subsection{Terms}
@@ -376,9 +376,9 @@ or_terms
 	;
 \end{lstlisting}
 $or_terms$ contain either $and\_terms$ or $or\_terms$ separated by $;$. 
- For the short circuit evaluation mentioned in rule evaluation, the $or_terms$
- is True if the left side of $;$ operator is True. The right side is evaluated
- only if the left side is False.
+For the short circuit evaluation mentioned in rule evaluation, the $or\_terms$
+is True if the left side of $;$ operator is True. The right side is evaluated
+only if the left side is False.
 
 \medskip
 
@@ -389,10 +389,10 @@ and_terms
 	| and_terms `,' term	
 	;
 \end{lstlisting}
-$and_terms$ contain either $term$ or $and_terms$ separated by $,$. 
- For the short circuit evaluation mentioned in rule evaluation, the $and_terms$
- is False if the left side of $;$ operator is False. The right side is evaluated
- only if the left side is True.
+$and\_terms$ contain either $term$ or $and\_terms$ separated by $,$. 
+For the short circuit evaluation mentioned in rule evaluation, the $and\_terms$
+is False if the left side of $;$ operator is False. The right side is evaluated
+only if the left side is True.
 \medskip
 
 \subsubsection{Term}
@@ -415,7 +415,7 @@ term
 	| term_expr NE_OP term_expr
 	;
 \end{lstlisting}
-A Term is a basic block in MIPL. A Term can be used to define a fact with the
+A Term is a basic unit in MIPL. A Term can be used to define a fact with the
 given IDENTIFIER.
 \medskip
 
@@ -553,7 +553,7 @@ Job is MIPL's basic operation that provides matrix operations.
 Job is a function-like task, with no nested definitions, no
 overloading of definition, or generic types supported. Job uses
 positional parameter passing with call-by-value.  A Job
-definition denotes a number of variables and a set of Job
+definition starts with the keyword JOB. It denotes a number of variables and a set of Job
 Statements.  At runtime, a compiled Job is distributed over
 a MapReduce clusters, computed, and delivered to the user. For
 example, when a user loads two matrices and calls a Job giving those
