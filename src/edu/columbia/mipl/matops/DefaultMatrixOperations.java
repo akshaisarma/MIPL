@@ -27,10 +27,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		double[] data2 = a2.getData();
 		double[] data = result.getData();
 
-		int i;
-		int j;
-		int pos;
-		int offset = 0;
+		int i, j, pos, offset = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
 			pos = offset;
@@ -114,8 +111,29 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray cellmult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		return null;
+		if (!arg1.equalsDimensionally(arg2))
+			/* throw new UncompatiableMatrixDimensionException() */;
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg2.getCol());
+		double[] data1 = a1.getData();
+		double[] data2 = a2.getData();
+		double[] data = result.getData();
+
+		int i, j, pos, offset = 0;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
+			for (j = 0; j < arg1.getCol(); j++) {
+				data[pos] = data1[pos] * data2[pos];
+				pos++;
+			}
+			offset += arg1.getPaddedRow();
+		}
+
+		return result;
 	}
+
 	public PrimitiveArray mult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		if (!checkDimensionMutipliable(arg1, arg2))
 			/* throw new UncompatiableMatrixDimensionException() */;
@@ -125,10 +143,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg2.getCol());
 		double[] data = result.getData();
 
-		int i;
-		int j;
-		int offset = 0;
-		int pos;
+		int i, j, pos, offset = 0;
 
 		for (i = 0; i < result.getRow(); i++) {
 			pos = offset;
@@ -169,11 +184,37 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray celldiv(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		return null;
+		if (!arg1.equalsDimensionally(arg2))
+			/* throw new UncompatiableMatrixDimensionException() */;
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg2.getCol());
+		double[] data1 = a1.getData();
+		double[] data2 = a2.getData();
+		double[] data = result.getData();
+
+		int i, j, pos, offset = 0;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
+			for (j = 0; j < arg1.getCol(); j++) {
+				if (data2[pos] == 0) {
+					/* throw new divideByZeroException() */
+					return null;
+				}
+				data[pos] = data1[pos] / data2[pos];
+				pos++;
+			}
+			offset += arg1.getPaddedRow();
+		}
+
+		return result;
 	}
+
 	public PrimitiveArray div(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		return null;
 	}
+
 	public PrimitiveArray div(final PrimitiveArray arg1, final double arg2) {
 		if (arg2 == 0)
 			/* throw new divideByZeroException() */;
@@ -214,26 +255,55 @@ public class DefaultMatrixOperations implements MatrixOperations {
 			for (int j = 0; j < arg1.getCol(); ++j)
 				a1.setValue(i, j, arg2);
 	}
+
 	public void addassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.add(arg1, arg2);
+		this.assign(result, arg1);
 	}
+
 	public void addassign(PrimitiveArray arg1, double arg2) {
+		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.add(arg1, arg2);
+		this.assign(result, arg1);
 	}
+
 	public void subassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.sub(arg1, arg2);
+		this.assign(result, arg1);
 	}
+
 	public void subassign(PrimitiveArray arg1, double arg2) {
+		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.sub(arg1, arg2);
+		this.assign(result, arg1);
 	}
 
 	public void cellmultassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.cellmult(arg1, arg2);
+		this.assign(result, arg1);
 	}
+
 	public void multassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.mult(arg1, arg2);
+		this.assign(result, arg1);
 	}
+
 	public void multassign(PrimitiveArray arg1, double arg2) {
+		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.mult(arg1, arg2);
+		this.assign(result, arg1);
 	}
+
 	public void celldivassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.celldiv(arg1, arg2);
+		this.assign(result, arg1);
 	}
+
 	public void divassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.div(arg1, arg2);
+		this.assign(result, arg1);
 	}
+
 	public void divassign(PrimitiveArray arg1, double arg2) {
+		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.div(arg1, arg2);
+		this.assign(result, arg1);
 	}
 
 	public PrimitiveArray transpose(final PrimitiveArray arg1) {
@@ -254,6 +324,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		}
 		return matT;
 	}
+
 	public PrimitiveArray inverse(final PrimitiveArray arg1) {
 		int row = arg1.getRow();
 		int col = arg1.getCol();
@@ -295,6 +366,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 			}
 		return r;
 	}
+
 	public PrimitiveArray mod(final PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray r = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
@@ -305,6 +377,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 			}
 		return r;
 	}
+
 	public double sum(final PrimitiveArray arg1) {
 		return 0;
 	}
