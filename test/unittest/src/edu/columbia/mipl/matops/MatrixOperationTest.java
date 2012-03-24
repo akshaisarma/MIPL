@@ -105,6 +105,71 @@ public class MatrixOperationTest extends TestCase {
 		assertTrue(mat3x3_1.equalsSemantically(mat3x3_2));
 	}
 
+	public void testMatrix_addAssign() {
+		double copy_data3x3_1[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+		double copy_data3x3_2[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+		double copy_data3x3_3[] = {2, 4, 6, 2, 4, 6, 2, 4, 6};
+		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, copy_data3x3_1);
+		final PrimitiveDoubleArray mat3x3_2 = new PrimitiveDoubleArray(3, 3, copy_data3x3_2);
+		final PrimitiveDoubleArray mat3x3_3 = new PrimitiveDoubleArray(3, 3, copy_data3x3_3);
+
+		matOpObj.addassign((PrimitiveArray)mat3x3_1, (PrimitiveArray)mat3x3_2);
+
+		assertTrue(mat3x3_3.equalsSemantically(mat3x3_1));
+	}
+
+	public void testMatrix_subAssign() {
+		double copy_data3x3_1[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+		double copy_data3x3_2[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+		double copy_data3x3_3[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, copy_data3x3_1);
+		final PrimitiveDoubleArray mat3x3_2 = new PrimitiveDoubleArray(3, 3, copy_data3x3_2);
+		final PrimitiveDoubleArray mat3x3_3 = new PrimitiveDoubleArray(3, 3, copy_data3x3_3);
+
+		matOpObj.subassign((PrimitiveArray)mat3x3_1, (PrimitiveArray)mat3x3_2);
+
+		assertTrue(mat3x3_3.equalsSemantically(mat3x3_1));
+	}
+
+	public void testMatrix_multAssign() {
+		double copy_data3x3_1[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+		double copy_data3x3_2[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+		double copy_data3x3_3[] = {6, 12, 18, 6, 12, 18, 6, 12, 18};
+		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, copy_data3x3_1);
+		final PrimitiveDoubleArray mat3x3_2 = new PrimitiveDoubleArray(3, 3, copy_data3x3_2);
+		final PrimitiveDoubleArray mat3x3_3 = new PrimitiveDoubleArray(3, 3, copy_data3x3_3);
+
+		matOpObj.multassign((PrimitiveArray)mat3x3_1, (PrimitiveArray)mat3x3_2);
+
+		assertTrue(mat3x3_3.equalsSemantically(mat3x3_1));
+	}
+
+	public void testMatrix_cellMultAssign() {
+		double copy_data3x3_1[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+		double copy_data3x3_2[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+		double copy_data3x3_3[] = {1, 4, 9, 1, 4, 9, 1, 4, 9};
+		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, copy_data3x3_1);
+		final PrimitiveDoubleArray mat3x3_2 = new PrimitiveDoubleArray(3, 3, copy_data3x3_2);
+		final PrimitiveDoubleArray mat3x3_3 = new PrimitiveDoubleArray(3, 3, copy_data3x3_3);
+
+		matOpObj.cellmultassign((PrimitiveArray)mat3x3_1, (PrimitiveArray)mat3x3_2);
+
+		assertTrue(mat3x3_3.equalsSemantically(mat3x3_1));
+	}
+
+	public void testMatrix_cellDivAssign() {
+		double copy_data3x3_1[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+		double copy_data3x3_2[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+		double copy_data3x3_3[] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, copy_data3x3_1);
+		final PrimitiveDoubleArray mat3x3_2 = new PrimitiveDoubleArray(3, 3, copy_data3x3_2);
+		final PrimitiveDoubleArray mat3x3_3 = new PrimitiveDoubleArray(3, 3, copy_data3x3_3);
+
+		matOpObj.celldivassign((PrimitiveArray)mat3x3_1, (PrimitiveArray)mat3x3_2);
+
+		assertTrue(mat3x3_3.equalsSemantically(mat3x3_1));
+	}
+
 	public void testMatrix_Transpose() {
 		final PrimitiveDoubleArray mat1x3_1 = new PrimitiveDoubleArray(1, 3, data1x3_1);
 		final PrimitiveDoubleArray mat3x1_1 = new PrimitiveDoubleArray(3, 1, data3x1_2);

@@ -47,9 +47,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		double[] data1 = a1.getData();
 		double[] data = result.getData();
 
-		int i;
-		int j;
-		int pos = 0;
+		int i, j, pos = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
 			for (j = 0; j < arg1.getCol(); j++) {
@@ -72,10 +70,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		double[] data2 = a2.getData();
 		double[] data = result.getData();
 
-		int i;
-		int j;
-		int pos;
-		int offset = 0;
+		int i, j, pos, offset = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
 			pos = offset;
@@ -94,10 +89,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		double[] data1 = a1.getData();
 		double[] data = result.getData();
 
-		int i;
-		int j;
-		int pos;
-		int offset = 0;
+		int i, j, pos, offset = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
 			pos = offset;
@@ -167,10 +159,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		double[] data1 = a1.getData();
 		double[] data = result.getData();
 
-		int i;
-		int j;
-		int offset = 0;
-		int pos;
+		int i, j, pos, offset = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
 			pos = offset;
@@ -224,10 +213,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		double[] data1 = a1.getData();
 		double[] data = result.getData();
 
-		int i;
-		int j;
-		int offset = 0;
-		int pos;
+		int i, j, pos, offset = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
 			pos = offset;
@@ -258,52 +244,52 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 	public void addassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.add(arg1, arg2);
-		this.assign(result, arg1);
+		this.assign(arg1, result);
 	}
 
 	public void addassign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.add(arg1, arg2);
-		this.assign(result, arg1);
+		this.assign(arg1, result);
 	}
 
 	public void subassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.sub(arg1, arg2);
-		this.assign(result, arg1);
+		this.assign(arg1, result);
 	}
 
 	public void subassign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.sub(arg1, arg2);
-		this.assign(result, arg1);
+		this.assign(arg1, result);
 	}
 
 	public void cellmultassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.cellmult(arg1, arg2);
-		this.assign(result, arg1);
+		this.assign(arg1, result);
 	}
 
 	public void multassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.mult(arg1, arg2);
-		this.assign(result, arg1);
+		this.assign(arg1, result);
 	}
 
 	public void multassign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.mult(arg1, arg2);
-		this.assign(result, arg1);
+		this.assign(arg1, result);
 	}
 
 	public void celldivassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.celldiv(arg1, arg2);
-		this.assign(result, arg1);
+		this.assign(arg1, result);
 	}
 
 	public void divassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.div(arg1, arg2);
-		this.assign(result, arg1);
+		this.assign(arg1, result);
 	}
 
 	public void divassign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.div(arg1, arg2);
-		this.assign(result, arg1);
+		this.assign(arg1, result);
 	}
 
 	public PrimitiveArray transpose(final PrimitiveArray arg1) {
