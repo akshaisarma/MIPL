@@ -14,6 +14,11 @@ import edu.columbia.mipl.runtime.*;
 import edu.columbia.mipl.runtime.traverse.*;
 
 public class ProgramExecutor extends RuntimeTraverser {
+
+	public Method getMethod() {
+		return Method.POST;
+	}
+
 	public ProgramExecutor() {
 	}
 

@@ -17,6 +17,10 @@ import edu.columbia.mipl.runtime.traverse.*;
 public class CodeGenerator extends RuntimeTraverser {
 	InstructionWriter writer;
 
+	public Method getMethod() {
+		return Method.POST;
+	}
+
 	public CodeGenerator() {
 		String target = "JavaSrc"; /* read this from Configuration */
 		writer = InstructionWriterFactory.getInstructionWriter(target);

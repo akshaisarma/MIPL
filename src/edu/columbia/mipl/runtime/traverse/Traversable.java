@@ -12,12 +12,6 @@ import java.io.*;
 import java.util.*;
 
 public class Traversable extends ArrayList<Traversable> implements Serializable {
-	public enum Method {
-		PRE,
-		IN,
-		POST,
-	};
-
 	boolean immediate;
 
 	public void traverse(Traverser traverser) {
@@ -25,10 +19,10 @@ public class Traversable extends ArrayList<Traversable> implements Serializable 
 	}
 
 	public void traverse(Traverser traverser, boolean immediate) {
-		traverse(traverser, Method.POST, immediate);
+		traverse(traverser, traverser.getMethod(), immediate);
 	}
 
-	public void traverse(Traverser traverser, Method method, boolean immediate) {
+	public void traverse(Traverser traverser, Traverser.Method method, boolean immediate) {
 		this.immediate = immediate;
 
 		switch (method) {
