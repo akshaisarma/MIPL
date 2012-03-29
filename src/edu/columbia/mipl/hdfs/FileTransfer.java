@@ -6,7 +6,7 @@
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
  * Description: FileTransfer
  */
-package edu.columbia.mipl.runtime;
+package edu.columbia.mipl.hdfs;
 
 import java.io.*;
 import java.nio.channels.*;

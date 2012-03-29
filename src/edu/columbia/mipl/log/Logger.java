@@ -6,7 +6,7 @@
  * Reviewer:
  * Description: Logger
  */
-package edu.columbia.mipl.runtime;
+package edu.columbia.mipl.log;
 
 import java.util.*;
 
