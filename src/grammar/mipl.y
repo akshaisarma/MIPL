@@ -248,9 +248,9 @@ multiplicative_expr
 	| multiplicative_expr '*' unary_expr		{ $$ = new JobExpr(JobExpr.Type.MULT, (JobExpr) $1, (JobExpr) $3); }
 	| multiplicative_expr '/' unary_expr		{ $$ = new JobExpr(JobExpr.Type.DIV, (JobExpr) $1, (JobExpr) $3); }
 	| multiplicative_expr '%' unary_expr		{ $$ = new JobExpr(JobExpr.Type.MOD, (JobExpr) $1, (JobExpr) $3); }
-	| multiplicative_exp MUL_CELL_OP unary_expr	/* Need to add */
-	| multiplicative_exp DIV_CELL_OP unary_expr	/* Need to add */
-	| multiplicative_exp EXP_CELL_OP unary_expr	/* Need to add */
+	| multiplicative_exp MUL_CELL_OP unary_expr	{ $$ = new JobExpr(JobExpr.Type.MULT_CELL, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_exp DIV_CELL_OP unary_expr	{ $$ = new JobExpr(JobExpr.Type.DIV_CELL, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_exp EXP_CELL_OP unary_expr	{ $$ = new JobExpr(JobExpr.Type.EXP_CELL, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 unary_expr

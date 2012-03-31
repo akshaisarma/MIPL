@@ -34,6 +34,9 @@ public class JobExpr extends Traversable {
 		DIV,
 		MOD,
 		NEGATE,
+		MULT_CELL,
+		DIV_CELL,
+		EXP_CELL,
 		ARRAY,
 		JOBCALL,
 		TERM,
@@ -107,7 +110,9 @@ public class JobExpr extends Traversable {
 				type == Type.AND || type == Type.EQ || type == Type.NE ||
 				type == Type.LT || type == Type.GT || type == Type.LE ||
 				type == Type.GE || type == Type.ADD || type == Type.SUB ||
-				type == Type.MULT || type == Type.DIV || type == Type.MOD);
+				type == Type.MULT || type == Type.DIV || type == Type.MOD ||
+				type == Type.MULT_CELL || type == Type.DIV_CELL ||
+				type == Type.EXP_CELL);
 		this.type = type;
 		this.expr1 = target;
 		this.expr2 = source;

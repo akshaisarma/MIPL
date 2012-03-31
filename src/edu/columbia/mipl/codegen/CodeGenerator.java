@@ -154,6 +154,9 @@ public class CodeGenerator extends RuntimeTraverser {
 			case MULT:
 			case DIV:
 			case MOD:
+			case MULT_CELL:
+			case DIV_CELL:
+			case EXP_CELL:
 				writer.createJobExpr(jexpr.getType(), jexpr.getExpr1(),
 										jexpr.getExpr2());
 				break;
