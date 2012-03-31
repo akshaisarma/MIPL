@@ -3,7 +3,8 @@
  * MIPL: Mining Integrated Programming Language
  *
  * File: Parser*.java / mipl.y
- * Author: YoungHoon Jung <yj2244@columbia.edu>
+ * Author A: YoungHoon Jung <yj2244@columbia.edu>
+ * Author B: Akshai Sarma <as4107@columbia.edu>
  * Reviewer: Akshai Sarma <as4107@columbia.edu>
  * Description: Automatically generated parser from mipl.y
  *              PLEASE DO NOT MODIFY THIS Parser*.java FILE,
@@ -20,6 +21,8 @@ import edu.columbia.mipl.runtime.traverse.*;
 %token IDENTIFIER STRING_LITERAL 
 %token LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN SUB_ASSIGN
+
+%token MUL_CELL_OP DIV_CELL_OP EXP_CELL_OP
 
 %token IF ELSE DO WHILE
 
@@ -125,7 +128,7 @@ term_fact
 term_term
 	: VARIABLE			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); } /* TODO: Should check VariableMatcher for the same command */
 	| NUMBER			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
-	| '(' term_expr ')'		{ $$ = $2; }
+	| '(' term_expr ')'	{ $$ = $2; }
 	;
 
 term_args_cand
@@ -134,7 +137,7 @@ term_args_cand
 	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same command */
 	| '_'				{ $$ = new Term(Term.Type.VARIABLE, "_"); }
 	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
-	| STRING_LITERAL		{ $$ = new Term(Term.Type.STRING, (String) $1); }
+	| STRING_LITERAL	{ $$ = new Term(Term.Type.STRING, (String) $1); }
 	;
 
 term_args
@@ -155,18 +158,18 @@ stmt
 	: selection_stmt		/* Default Action $$ = $1 */
 	| compound_stmt			/* Default Action $$ = $1 */
 	| return_stmt			/* Default Action $$ = $1 */
-	| expr_stmt			/* Default Action $$ = $1 */
+	| expr_stmt				/* Default Action $$ = $1 */
 	| iteration_stmt		/* Default Action $$ = $1 */
 	;
 
 stmt_list
 	: stmt				{ $$ = new ArrayList<JobStmt>(); ((List<JobStmt>) $$).add((JobStmt) $1); }
-	| stmt_list stmt		{ $$ = $1; ((List<JobStmt>) $$).add((JobStmt) $2); }
+	| stmt_list stmt	{ $$ = $1; ((List<JobStmt>) $$).add((JobStmt) $2); }
 	;
 
 compound_stmt
 	: '{' '}'			{ $$ = new JobStmt(JobStmt.Type.COMPOUND, new ArrayList<JobStmt>()); }
-	| '{' stmt_list '}'		{ $$ = new JobStmt(JobStmt.Type.COMPOUND, (List<JobStmt>) $2); }
+	| '{' stmt_list '}'	{ $$ = new JobStmt(JobStmt.Type.COMPOUND, (List<JobStmt>) $2); }
 	;
 
 return_stmt
@@ -195,11 +198,11 @@ expr
 assign_op
 	: '='				{ $$ = JobExpr.Type.ASSIGN; }
 	| LARROW_OP			{ $$ = JobExpr.Type.ASSIGN; }
-	| MUL_ASSIGN			{ $$ = JobExpr.Type.MULASSIGN; }
-	| DIV_ASSIGN			{ $$ = JobExpr.Type.DIVASSIGN; }
-	| MOD_ASSIGN			{ $$ = JobExpr.Type.MODASSIGN; }
-	| ADD_ASSIGN			{ $$ = JobExpr.Type.ADDASSIGN; }
-	| SUB_ASSIGN			{ $$ = JobExpr.Type.SUBASSIGN; }
+	| MUL_ASSIGN		{ $$ = JobExpr.Type.MULASSIGN; }
+	| DIV_ASSIGN		{ $$ = JobExpr.Type.DIVASSIGN; }
+	| MOD_ASSIGN		{ $$ = JobExpr.Type.MODASSIGN; }
+	| ADD_ASSIGN		{ $$ = JobExpr.Type.ADDASSIGN; }
+	| SUB_ASSIGN		{ $$ = JobExpr.Type.SUBASSIGN; }
 	;
 
 
@@ -245,6 +248,9 @@ multiplicative_expr
 	| multiplicative_expr '*' unary_expr		{ $$ = new JobExpr(JobExpr.Type.MULT, (JobExpr) $1, (JobExpr) $3); }
 	| multiplicative_expr '/' unary_expr		{ $$ = new JobExpr(JobExpr.Type.DIV, (JobExpr) $1, (JobExpr) $3); }
 	| multiplicative_expr '%' unary_expr		{ $$ = new JobExpr(JobExpr.Type.MOD, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_exp MUL_CELL_OP unary_expr	/* Need to add */
+	| multiplicative_exp DIV_CELL_OP unary_expr	/* Need to add */
+	| multiplicative_exp EXP_CELL_OP unary_expr	/* Need to add */
 	;
 
 unary_expr
@@ -254,18 +260,18 @@ unary_expr
 	;
 
 primary_expr
-	: IDENTIFIER				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>())); }
+	: IDENTIFIER			{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>())); }
 	| VARIABLE				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); }
 	| NUMBER				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
-	| '(' expr ')'				{ $$ = $2; }
+	| '(' expr ')'			{ $$ = $2; }
 	;
 
 array_idx_elmt
 	: '~'					{ $$ = new ArrayIndex(0, true); }
-	| '~' NUMBER				{ $$ = new ArrayIndex(0, (long) (double) (Double) $2); }
+	| '~' NUMBER			{ $$ = new ArrayIndex(0, (long) (double) (Double) $2); }
 	| NUMBER				{ $$ = new ArrayIndex((long) (double) (Double) $1); } 
-	| NUMBER '~'				{ $$ = new ArrayIndex((long) (double) (Double) $1, true); }
-	| NUMBER '~' NUMBER			{ $$ = new ArrayIndex((long) (double) (Double) $1, (long) (double) (Double) $3); }
+	| NUMBER '~'			{ $$ = new ArrayIndex((long) (double) (Double) $1, true); }
+	| NUMBER '~' NUMBER		{ $$ = new ArrayIndex((long) (double) (Double) $1, (long) (double) (Double) $3); }
 	;
 
 array_idx_list
