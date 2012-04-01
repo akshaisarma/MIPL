@@ -21,28 +21,36 @@ public class SemanticChecker extends RuntimeTraverser {
 	public SemanticChecker() {
 	}
 
-	public void reachTerm(Term term) {
+	public boolean reachTerm(Term term) {
+		return true;
 	}
 
-	public void reachExpression(Expression expr) {
+	public boolean reachExpression(Expression expr) {
+		return true;
 	}
 
-	public void reachFact(Fact fact) {
+	public boolean reachFact(Fact fact) {
+		return true;
 	}
 
-	public void reachRule(Rule rule) {
+	public boolean reachRule(Rule rule) {
+		return true;
 	}
 
-	public void reachQuery(Query query) {
+	public boolean reachQuery(Query query) {
+		return true;
 	}
 
-	public void reachJob(Job job) {
+	public boolean reachJob(Job job) {
+		return true;
 	}
 
-	public void reachJobStmt(JobStmt jstmt) {
+	public boolean reachJobStmt(JobStmt jstmt) {
+		return true;
 	}
 
-	public void reachJobExpr(JobExpr jexpr) {
+	public boolean reachJobExpr(JobExpr jexpr) {
+		return true;
 	}
 
 	public void finish() {

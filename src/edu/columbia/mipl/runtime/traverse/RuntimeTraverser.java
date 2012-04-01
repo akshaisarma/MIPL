@@ -13,39 +13,42 @@ import java.util.*;
 import edu.columbia.mipl.runtime.*;
 
 public abstract class RuntimeTraverser implements Traverser {
-	public void reach(Traversable t) {
+	public boolean reach(Traversable t) {
 		if (t instanceof Term) {
-			reachTerm((Term) t);
+			return reachTerm((Term) t);
 		}
 		else if (t instanceof Expression) {
-			reachExpression((Expression) t);
+			return reachExpression((Expression) t);
 		}
 		else if (t instanceof Fact) {
-			reachFact((Fact) t);
+			return reachFact((Fact) t);
 		}
 		else if (t instanceof Rule) {
-			reachRule((Rule) t);
+			return reachRule((Rule) t);
 		}
 		else if (t instanceof Query) {
-			reachQuery((Query) t);
+			return reachQuery((Query) t);
 		}
 		else if (t instanceof Job) {
-			reachJob((Job) t);
+			return reachJob((Job) t);
 		}
 		else if (t instanceof JobStmt) {
-			reachJobStmt((JobStmt) t);
+			return reachJobStmt((JobStmt) t);
 		}
 		else if (t instanceof JobExpr) {
-			reachJobExpr((JobExpr) t);
+			return reachJobExpr((JobExpr) t);
 		}
+
+		// TODO: print error log
+		return false;
 	}
 
-	public abstract void reachTerm(Term term);
-	public abstract void reachExpression(Expression expr);
-	public abstract void reachFact(Fact fact);
-	public abstract void reachRule(Rule rule);
-	public abstract void reachQuery(Query query);
-	public abstract void reachJob(Job job);
-	public abstract void reachJobStmt(JobStmt jstmt);
-	public abstract void reachJobExpr(JobExpr jexpr);
+	public abstract boolean reachTerm(Term term);
+	public abstract boolean reachExpression(Expression expr);
+	public abstract boolean reachFact(Fact fact);
+	public abstract boolean reachRule(Rule rule);
+	public abstract boolean reachQuery(Query query);
+	public abstract boolean reachJob(Job job);
+	public abstract boolean reachJobStmt(JobStmt jstmt);
+	public abstract boolean reachJobExpr(JobExpr jexpr);
 }
