@@ -13,27 +13,32 @@ import java.util.*;
 import edu.columbia.mipl.runtime.traverse.*;
 
 public final class Program extends Traversable {
-	Traverser traverser = null;
+	List<Traverser> traversers;
 
 	public Program() {
+		traversers = new ArrayList<Traverser>();
 	}
 
-	public Program(Traverser traverser) {
-		this.traverser = traverser;
+	public Program(Traverser ... traversers) {
+		this.traversers = new ArrayList<Traverser>();
+		for (Traverser t : traversers)
+			this.traversers.add(t);
 	}
 
 	public boolean add(Command c) {
 		if (c == null)
 			return false;
 
-		if (traverser != null)
-			c.traverse(traverser, true);
+		for (Traverser traverser : traversers) {
+			if (!c.traverse(traverser, true))
+				return false;
+		}
 		super.add(0, c);
 		return true;
 	}
 
 	public void finish() {
-		if (traverser != null)
+		for (Traverser traverser : traversers)
 			traverser.finish();
 	}
 }

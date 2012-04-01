@@ -27,7 +27,7 @@ public class CodeGenerator extends RuntimeTraverser {
 		assert (writer != null);
 	}
 
-	public void reachTerm(Term term) {
+	public boolean reachTerm(Term term) {
 		switch (term.getType()) {
 			case IS:
 				writer.createTerm(Term.Type.IS, term.getTerm1(),
@@ -71,9 +71,11 @@ public class CodeGenerator extends RuntimeTraverser {
 				writer.createTerm(Term.Type.EXPRESSION, term.getExpr1());
 				break;
 		}
+
+		return true;
 	}
 
-	public void reachExpression(Expression expr) {
+	public boolean reachExpression(Expression expr) {
 		switch (expr.getType()) {
 			case TERM:
 				writer.createExpression(Expression.Type.TERM, expr.getTerm());
@@ -86,9 +88,11 @@ public class CodeGenerator extends RuntimeTraverser {
 											expr.getExpr2());
 				break;
 		}
+
+		return true;
 	}
 
-	public void reachFact(Fact fact) {
+	public boolean reachFact(Fact fact) {
 		switch (fact.getType()) {
 			case FACT:
 				writer.createFact(Fact.Type.FACT, fact.getTerm());
@@ -98,21 +102,29 @@ public class CodeGenerator extends RuntimeTraverser {
 									fact.getNames(), fact.getTerms());
 				break;
 		}
+
+		return true;
 	}
 
-	public void reachRule(Rule rule) {
+	public boolean reachRule(Rule rule) {
 		writer.createRule(rule.getTerm(), rule.getSource());
+
+		return true;
 	}
 
-	public void reachQuery(Query query) {
+	public boolean reachQuery(Query query) {
 		writer.createQuery(query.getTerm());
+
+		return true;
 	}
 
-	public void reachJob(Job job) {
+	public boolean reachJob(Job job) {
 		writer.createJob(job.getName(), job.getArgs(), job.getStmts());
+
+		return true;
 	}
 
-	public void reachJobStmt(JobStmt jstmt) {
+	public boolean reachJobStmt(JobStmt jstmt) {
 		switch (jstmt.getType()) {
 			case IF:
 			case WHILE:
@@ -128,9 +140,11 @@ public class CodeGenerator extends RuntimeTraverser {
 				writer.createJobStmt(jstmt.getType(), jstmt.getExpr());
 				break;
 		}
+
+		return true;
 	}
 
-	public void reachJobExpr(JobExpr jexpr) {
+	public boolean reachJobExpr(JobExpr jexpr) {
 		switch (jexpr.getType()) {
 			case ASSIGN:
 			case MULASSIGN:
@@ -176,6 +190,8 @@ public class CodeGenerator extends RuntimeTraverser {
 				writer.createJobExpr(JobExpr.Type.TERM, jexpr.getTerm());
 				break;
 		}
+
+		return true;
 	}
 
 	public void finish() {

@@ -19,6 +19,6 @@ public interface Traverser {
 
 	Method getMethod();
 
-	void reach(Traversable target);
+	boolean reach(Traversable target);
 	void finish();
 }
