@@ -82,8 +82,8 @@ public class JavaSourceWriter extends InstructionWriter {
 			println("import java.io.*;");
 			println("import java.util.*;\n");
 			println("import edu.columbia.mipl.runtime.*;");
-			println("import edu.columbia.mipl.datastr.*;\n");
-			println("import edu.columbia.mipl.datastr.execute.*;\n");
+			println("import edu.columbia.mipl.runtime.execute.*;\n");
+			println("import edu.columbia.mipl.datastr.*;\n");			
 			println("public class " + output + " {");
 			println("public static void main(String[] args) {");
 			println("Program program = new Program(new ProgramExecutor());");
