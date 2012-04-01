@@ -50,18 +50,18 @@ command
 
 fact
 	: term '.'								{ $$ = new Fact((Term) $1); }
-	| '[' id_list ']' LARROW_OP jobcall '.'	//{ $$ = new Fact((String) null, (List<String>) $2, (List<Term>) $5); }
-	| '[' ']' LARROW_OP jobcall '.'			//{ $$ = new Fact((String) null, (List<String>) null, (List<Term>) $5); }
+	| '[' id_list ']' LARROW_OP jobcall '.'	{ $$ = new Fact((List<String>) $2, (Term) $5); }
+	| '[' ']' LARROW_OP jobcall '.'			{ $$ = new Fact((List<String>) null, (Term) $5); }
 	;
 
 jobcall
-	: IDENTIFIER '(' ')'				//{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add(new Term(Term.Type.TERM, (String) $1, (List<Term>) null)); }
-	| IDENTIFIER '(' jobcall_args ')'	//{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add(new Term(Term.Type.TERM, (String) $1, (List<Term>) $3)); }
+	: IDENTIFIER '(' ')'				{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) null); }
+	| IDENTIFIER '(' jobcall_args ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
 	;
 
 jobcall_args
-	: jobcall_args ',' jobcall_args_cand	//{ $$ = $1; ((List<Term>) $$).add((Term) $3);}
-	| jobcall_args_cand						//{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $1); }
+	: jobcall_args ',' jobcall_args_cand	{ $$ = $1; ((List<Term>) $$).add((Term) $3);}
+	| jobcall_args_cand						{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $1); }
 	;
 
 jobcall_args_cand
@@ -248,9 +248,9 @@ multiplicative_expr
 	| multiplicative_expr '*' unary_expr		{ $$ = new JobExpr(JobExpr.Type.MULT, (JobExpr) $1, (JobExpr) $3); }
 	| multiplicative_expr '/' unary_expr		{ $$ = new JobExpr(JobExpr.Type.DIV, (JobExpr) $1, (JobExpr) $3); }
 	| multiplicative_expr '%' unary_expr		{ $$ = new JobExpr(JobExpr.Type.MOD, (JobExpr) $1, (JobExpr) $3); }
-	| multiplicative_exp MUL_CELL_OP unary_expr	{ $$ = new JobExpr(JobExpr.Type.MULT_CELL, (JobExpr) $1, (JobExpr) $3); }
-	| multiplicative_exp DIV_CELL_OP unary_expr	{ $$ = new JobExpr(JobExpr.Type.DIV_CELL, (JobExpr) $1, (JobExpr) $3); }
-	| multiplicative_exp EXP_CELL_OP unary_expr	{ $$ = new JobExpr(JobExpr.Type.EXP_CELL, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_expr MUL_CELL_OP unary_expr	{ $$ = new JobExpr(JobExpr.Type.MULT_CELL, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_expr DIV_CELL_OP unary_expr	{ $$ = new JobExpr(JobExpr.Type.DIV_CELL, (JobExpr) $1, (JobExpr) $3); }
+	| multiplicative_expr EXP_CELL_OP unary_expr	{ $$ = new JobExpr(JobExpr.Type.EXP_CELL, (JobExpr) $1, (JobExpr) $3); }
 	;
 
 unary_expr
