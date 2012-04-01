@@ -37,7 +37,7 @@ program
 	;
 
 commands
-	: commands command		{ program.add((Command) $2); }
+	: commands command	{ program.add((Command) $2); }
 	| command			{ program.add((Command) $1); }
 	;
 
@@ -49,27 +49,27 @@ command
 	;
 
 fact
-	: term '.'				{ $$ = new Fact((Term) $1); }
-	| '[' id_list ']' LARROW_OP jobcall '.'	/*{ $$ = new Fact((String) null, (List<String>) $2, (List<Term>) $5); }*/
-	| '[' ']' LARROW_OP jobcall '.'	/*{ $$ = new Fact((String) null, (List<String>) $2, (List<Term>) $5); }*/
+	: term '.'								{ $$ = new Fact((Term) $1); }
+	| '[' id_list ']' LARROW_OP jobcall '.'	//{ $$ = new Fact((String) null, (List<String>) $2, (List<Term>) $5); }
+	| '[' ']' LARROW_OP jobcall '.'			//{ $$ = new Fact((String) null, (List<String>) null, (List<Term>) $5); }
 	;
 
 jobcall
-	: IDENTIFIER '(' ')'
-	| IDENTIFIER '(' jobcall_args ')'
+	: IDENTIFIER '(' ')'				//{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add(new Term(Term.Type.TERM, (String) $1, (List<Term>) null)); }
+	| IDENTIFIER '(' jobcall_args ')'	//{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add(new Term(Term.Type.TERM, (String) $1, (List<Term>) $3)); }
 	;
 
 jobcall_args
-	: jobcall_args ',' jobcall_args_cand
-	| jobcall_args_cand
+	: jobcall_args ',' jobcall_args_cand	//{ $$ = $1; ((List<Term>) $$).add((Term) $3);}
+	| jobcall_args_cand						//{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $1); }
 	;
 
 jobcall_args_cand
-	: IDENTIFIER
-	| VARIABLE
-	| NUMBER
-	| STRING_LITERAL
-	| jobcall
+	: IDENTIFIER		{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
+	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); }
+	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
+	| STRING_LITERAL	{ $$ = new Term(Term.Type.STRING, (String) $1); }
+	| jobcall			/* Default Action $$ = $1 */
 	;
 
 id_list
@@ -146,12 +146,12 @@ term_args
 	;
 
 job
-	: JOB IDENTIFIER '(' job_args ')' '{' stmt_list '}' 	/*{ $$ = new Job((String) $2, (List<Term>) $4, (List<JobStmt>) $7); }*/
+	: JOB IDENTIFIER '(' job_args ')' '{' stmt_list '}' 	{ $$ = new Job((String) $2, (List<Term>) $4, (List<JobStmt>) $7); }
 	;
 
 job_args
-	: job_args ',' VARIABLE
-	| VARIABLE
+	: job_args ',' VARIABLE		{ $$ = $1; ((List<Term>) $$).add(new Term(Term.Type.VARIABLE, (String) $3)); }
+	| VARIABLE					{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add(new Term(Term.Type.VARIABLE, (String) $1)); }
 	;
 
 stmt
@@ -235,7 +235,7 @@ relational_expr
 boolvalue_expr
 	: TRUE
 	| FALSE
-	| '(' bool_expr ')'
+	| '(' bool_expr ')'		{ $$ = $2; }
 
 additive_expr
 	: multiplicative_expr				/* Default Action $$ = $1 */
