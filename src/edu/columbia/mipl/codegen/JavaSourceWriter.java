@@ -324,7 +324,7 @@ public class JavaSourceWriter extends InstructionWriter {
 
 		switch (type) {
 			case IF:
-				s += "if (" + stack.pop() + ") {\n";
+				s += "if (" + stack.pop() + ".getData()) {\n";
 				s += stack.pop();
 				if (stmt2 != null) {
 					s += "} else {\n";
@@ -333,7 +333,7 @@ public class JavaSourceWriter extends InstructionWriter {
 				s += "}\n";
 				break;
 			case WHILE:
-				s += "while (" + stack.pop() + ") {\n";
+				s += "while (" + stack.pop() + ".getData()) {\n";
 				s += stack.pop();
 				s += "}\n";
 				break;
@@ -341,7 +341,7 @@ public class JavaSourceWriter extends InstructionWriter {
 				String e = stack.pop();
 				s += "do {\n";
 				s += stack.pop();
-				s += "} while(" + e + ");\n";
+				s += "} while(" + e + ".getData());\n";
 				break;
 		}
 		stack.push(s);
