@@ -15,6 +15,8 @@ import edu.columbia.mipl.runtime.traverse.*;
 
 public class ProgramExecutor extends RuntimeTraverser {
 
+	KnowledgeTable kt = KnowledgeTableFactory.getKnowledgeTable();
+
 	public Method getMethod() {
 		return Method.POST;
 	}
@@ -31,15 +33,25 @@ public class ProgramExecutor extends RuntimeTraverser {
 	}
 
 	public boolean reachFact(Fact fact) {
+		switch(fact.getType()) {
+			case FACT:
+				kt.put(fact.getName(), fact);
+				break;
+			case MATRIXASFACTS:
+//				List<PrimitiveType> results = 
+//				List<String> names = fact.getNames();
+//				for (PrimitiveType pt : result) {
+//					Fact f = new Fact(names.get(i), new Term(Term.Type.MATRIX, names.get(i), results.get(i));
+//					kt.put(f.getName(), f);
+//				}
+				break;
+		}
 		return true;
-		// registerKnowledge
-		// or
-		// execute FactsAsMatrix and resgisterKnowledges
 	}
 
 	public boolean reachRule(Rule rule) {
+		kt.put(rule.getName(), rule);
 		return true;
-		// registerKnowledge
 	}
 
 	public boolean reachQuery(Query query) {
@@ -47,6 +59,7 @@ public class ProgramExecutor extends RuntimeTraverser {
 	}
 
 	public boolean reachJob(Job job) {
+		kt.put(job.getName(), job);
 		return true;
 	}
 

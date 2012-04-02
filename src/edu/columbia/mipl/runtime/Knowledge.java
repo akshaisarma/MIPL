@@ -13,8 +13,8 @@ import java.util.*;
 public abstract class Knowledge extends Command {
 	abstract String getName();
 
-	Knowledge registerKnowledge() {
-		return KnowledgeTableFactory.getKnowledgeTable().put(getName(), this);
+	void registerKnowledge() {
+		KnowledgeTableFactory.getKnowledgeTable().put(getName(), this);
 	}
 
 }

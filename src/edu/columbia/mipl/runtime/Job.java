@@ -35,4 +35,8 @@ public class Job extends Knowledge {
 	public List<JobStmt> getStmts() {
 		return stmts;
 	}
+
+	public Term getTerm() {
+		return null;
+	}
 }

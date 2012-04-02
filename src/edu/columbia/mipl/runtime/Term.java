@@ -72,6 +72,8 @@ public class Term extends Traversable {
 
 		add(variable);
 		add(expr);
+
+		hasVariables = true;
 	}
 
 	public Term(Type type, double value) {
@@ -115,6 +117,8 @@ public class Term extends Traversable {
 
 		this.type = type;
 		this.term1 = term;
+
+		hasVariables = term.containVariables();
 
 		add(term);
 	}
@@ -217,6 +221,7 @@ public class Term extends Traversable {
 		return expr2;
 	}
 
+/*
 	static boolean checkStoreVS(VariableStack vs, Term term1, Term term2) {
 		Term prev = vs.get(term1);
 		if (prev != null && !prev.match(term2, vs))
@@ -306,5 +311,5 @@ public class Term extends Traversable {
 		}
 		return true;
 	}
-
+*/
 }

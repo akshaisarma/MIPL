@@ -78,14 +78,15 @@ public class Expression extends Traversable {
 		return right;
 	}
 
-	double calculateValue(VariableStack vs) /* throws InsuffArgInitException, NonArithmeticArgException */ {
+	/*
+	double calculateValue(VariableStack vs) /* throws InsuffArgInitException, NonArithmeticArgException / {
 		switch (type) {
 			case TERM:
 				Term term  = vs.get(this.term);
 				if (term == null)
-					/* throw new InsuffArgInitException() */;
+					/* throw new InsuffArgInitException() /;
 				if (term.getType() != Term.Type.NUMBER)
-					/* throw new NonArithmeticArgException() */;
+					/* throw new NonArithmeticArgException() /;
 
 				value = term.getValue();
 				break;
@@ -104,4 +105,5 @@ public class Expression extends Traversable {
 		}
 		return value;
 	}
+	*/
 }

@@ -13,4 +13,5 @@ import java.util.*;
 import edu.columbia.mipl.runtime.traverse.*;
 
 public abstract class Command extends Traversable {
+	public abstract Term getTerm();
 }

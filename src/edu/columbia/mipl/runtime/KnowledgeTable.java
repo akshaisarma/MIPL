@@ -10,5 +10,12 @@ package edu.columbia.mipl.runtime;
 
 import java.util.*;
 
-public class KnowledgeTable extends HashMap<String, Knowledge> {
+public class KnowledgeTable extends HashMap<String, List<Knowledge>> {
+	public void put(String key, Knowledge value) {
+		List<Knowledge> prev = super.get(key);
+		if (prev == null)
+			prev = new ArrayList<Knowledge>();
+		prev.add(value);
+		super.put(key, prev);
+	}
 }

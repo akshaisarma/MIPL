@@ -87,12 +87,12 @@ rule
 
 or_terms
 	: and_terms			/* Default Action $$ = $1 */
-	| or_terms ';' and_terms	{ $$ = new Term(Term.Type.ORTERMS, (Term) $1, (Term) $3); }
+	| and_terms ';' or_terms	{ $$ = new Term(Term.Type.ORTERMS, (Term) $1, (Term) $3); }
 	;
 
 and_terms
 	: term				/* Default Action $$ = $1 */
-	| and_terms ',' term		{ $$ = new Term(Term.Type.ANDTERMS, (Term) $1, (Term) $3); }
+	| term ',' and_terms		{ $$ = new Term(Term.Type.ANDTERMS, (Term) $1, (Term) $3); }
 	;
 
 term
@@ -104,7 +104,7 @@ term
 	| REGEX '(' '*' ')'		{ $$ = new Term(Term.Type.REGEXQUERYALL, (String) $1); }
 	| NOT term			{ $$ = new Term(Term.Type.NOTTERM, (Term) $2); }
 	| term_expr			{ $$ = ((Expression) $1).getTerm(); }
-	| VARIABLE IS term		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), (Term) $3); } /* TODO: Should check VariableMatcher for the same command */
+	| VARIABLE IS term_expr		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), ((Expression) $3).getTerm()); } /* TODO: Should check VariableMatcher for the same command */
 	| term_expr '<' term_expr	{ $$ = new Term(Term.Type.LT, (Expression) $1, (Expression) $3); }
 	| term_expr '>' term_expr	{ $$ = new Term(Term.Type.GT, (Expression) $1, (Expression) $3); }
 	| term_expr LE_OP term_expr	{ $$ = new Term(Term.Type.LE, (Expression) $1, (Expression) $3); }
