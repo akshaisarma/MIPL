@@ -81,8 +81,7 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		return (int) (arr.pos - pos);
 	}
 	
-	public String toString()
-	{
+	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		double[] data = getData();
 		int row = getRow();
