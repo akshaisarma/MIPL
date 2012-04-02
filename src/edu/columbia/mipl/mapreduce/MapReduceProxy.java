@@ -1,6 +1,7 @@
 package edu.columbia.mipl.mapreduce;
 
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobClient;
@@ -34,6 +35,9 @@ public class MapReduceProxy {
 		JobConf conf = new JobConf(jobClass);
 
 		conf.setJobName(jobClass.getName());
+		
+		conf.setMapOutputKeyClass(LongWritable.class);
+		conf.setMapOutputValueClass(WritableArray.class);
 
 		conf.setOutputKeyClass(WritableIndex.class);
 		conf.setOutputValueClass(WritableArray.class);

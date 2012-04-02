@@ -1,5 +1,6 @@
 package edu.columbia.mipl.mapreduce;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.StringTokenizer;
@@ -20,7 +21,9 @@ import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reducer;
 import org.apache.hadoop.mapred.Reporter;
 
-import edu.columbia.mipl.datastr.*;
+import edu.columbia.mipl.datastr.PrimitiveDoubleArray;
+import edu.columbia.mipl.matops.DefaultMatrixOperations;
+
 
 public class MatrixSplitter {
 	static final int NUM_MATRIX_SPLIT = 8;
@@ -35,6 +38,8 @@ public class MatrixSplitter {
 				OutputCollector<LongWritable, WritableArray> output, Reporter reporter)
 				throws IOException {
 
+			System.out.println("key = " + key.toString());
+			System.out.println("val = " + val.toString());
 			int n = 1;
 			WritableArray array = new WritableArray(1, n, key.get());
 
@@ -46,12 +51,21 @@ public class MatrixSplitter {
 					array.increaseCol();
 
 				array.setValue(0, n - 1, Double.parseDouble(itr.nextToken()));
+				n++;
+//				array.printMatrix();
 			}
+			array.printMatrix();
+			System.out.println("array = " + array.getCol() + " " + array.getRow());
+///			System.out.println("key = " + key.toString());
 
+			System.out.println(array.toString());
 			if (array.getCol() < MIN_MATRIX_SIZE) {
+//				newKey.set(n);
 				output.collect(key, array);
 				return;
 			}
+			
+			System.out.println("new");
 
 			int nSplitCols = ((array.getCol() - 1) / NUM_MATRIX_SPLIT) + 1;
 			// int paddedLength = nSplitCols * NUM_MATRIX_SPLIT;
@@ -75,13 +89,34 @@ public class MatrixSplitter {
 
 			boolean first = true;
 			StringBuilder toReturn = new StringBuilder();
+			System.out.println("key = " + key.toString());
+			System.out.println(values.toString());
+			
+			WritableArray sumArr = null;
 			while (values.hasNext()) {
 				WritableArray array = values.next();
-				sortedMap.put(array.getPos(), array);
+				
+				if (sumArr == null) { 
+					sumArr = new WritableArray(array.getRow(), array.getCol(), array.getPos());
+					sumArr.copyRange(array, 0, 0, 0, 0, array.getRow(), array.getCol());
+				}
+				else {
+					sumArr = new WritableArray(sumArr.getRow(), sumArr.getCol(), ((PrimitiveDoubleArray) new DefaultMatrixOperations().add(sumArr, array)).getData(), sumArr.getPos());
+					
+				}
+				
+				System.out.println(array.getCol() + " " + array.getRow());
+//				System.out.println(array.toString());
+				array.printMatrix();
+//				System.out.print(array.getValue(row, col))
+//				sortedMap.put(array.getPos(), array);
 			}
+			output.collect(new WritableIndex(key.get(), key.get()), sumArr);
+			System.out.println();
 			int nSplitRows = ((sortedMap.size() - 1) / NUM_MATRIX_SPLIT) + 1;
 			// int nPaddedRows = nSplitRows * NUM_MATRIX_SPLIT;
 
+			/*
 			int i = 0;
 			int n = 0;
 			WritableArray represent = null;
@@ -99,6 +134,7 @@ public class MatrixSplitter {
 			}
 			if (represent != null)
 				output.collect(new WritableIndex(n, key.get()), represent);
+				*/
 		}
 	}
 
@@ -108,11 +144,17 @@ public class MatrixSplitter {
 	 * "driver" for the MapReduce job.
 	 */
 	public static void main(String[] args) {
+		
+		boolean success = (new File("output")).delete();
+		
 		JobClient client = new JobClient();
 		JobConf conf = new JobConf(MatrixSplitter.class);
 
 		conf.setJobName("MatrixSplitter");
 
+		conf.setMapOutputKeyClass(LongWritable.class);
+		conf.setMapOutputValueClass(WritableArray.class);
+		
 		conf.setOutputKeyClass(WritableIndex.class);
 		conf.setOutputValueClass(WritableArray.class);
 
@@ -120,6 +162,7 @@ public class MatrixSplitter {
 		FileOutputFormat.setOutputPath(conf, new Path("output"));
 
 		conf.setMapperClass(MatrixMapper.class);
+//		conf.setCombinerClass(MatrixReducer.class);
 		conf.setReducerClass(MatrixReducer.class);
 
 		client.setConf(conf);

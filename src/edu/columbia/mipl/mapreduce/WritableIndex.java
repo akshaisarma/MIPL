@@ -5,13 +5,18 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableComparable;
 
 import edu.columbia.mipl.datastr.*;
 
-public class WritableIndex implements Writable {
+public class WritableIndex implements Writable, WritableComparable {
 	int row;
 	int col;
 
+	public WritableIndex() {
+		
+	}
+	
 	public WritableIndex(long row, long col) {
 		this((int) row, (int) col);
 	}
@@ -37,5 +42,21 @@ public class WritableIndex implements Writable {
 
 	public int getCol() {
 		return col;
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		WritableIndex ind = (WritableIndex) arg0;
+		
+		if (ind.row != row) return ind.row - row;
+		return ind.col - col;
+	}
+	
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append(row + " " + col);
+		return sb.toString();
 	}
 }
