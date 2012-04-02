@@ -34,14 +34,14 @@ public class Fact extends Knowledge  {
 		add(term);
 	}
 
-	public Fact(String name, List<String> names, List<Term> terms) {
-		this.name = name;
+	public Fact(List<String> names, Term jobcall) {
 		this.names = names;
-		this.terms = terms;
+		this.name = jobcall.getName();
+		this.terms = jobcall.getArguments();
 
 		type = Type.MATRIXASFACTS;
 
-		addAll(terms);
+		addAll(this.terms);
 	}
 
 	public Term getTerm() {
@@ -50,5 +50,17 @@ public class Fact extends Knowledge  {
 
 	public String getName() {
 		return name;
+	}
+
+	public List<String> getNames() {
+		return names;
+	}
+
+	public List<Term> getTerms() {
+		return terms;
+	}
+
+	public Type getType() {
+		return type;
 	}
 }

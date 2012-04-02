@@ -75,7 +75,14 @@
 		<arg value="${tool}/byaccj1.15/src" />
 		<arg value="clean" />
 	</exec>
-</target>
+	<exec executable="make">
+		<arg value="-C" />
+		<arg value="${docs}/reference_manual" />
+		<arg value="clean" />
+	</exec>
+	<delete file="${docs}/reference_manual.pdf" />
+	<delete file="${tool}/Yylex.class" />
+    </target>
 
     <taskdef resource="checkstyletask.properties" classpath="${tool}/checkstyle-5.5-all.jar" />
 
@@ -100,7 +107,7 @@
 	    <antcall target="checkstyle"/>
     </target>
 
-    <target name="parser" description="Generates Yylex.java and Parser.java using JFlex and BYacc/J from mipl.jflex and mipl.y">
+    <target name="parser" depends="docs" description="Generates Yylex.java and Parser.java using JFlex and BYacc/J from mipl.jflex and mipl.y">
 	    <java jar="${tool}/JFlex.jar" fork="true" failonerror="true">
 		    <arg value="${src}/grammar/mipl.jflex" />
 		    <arg value="-d" />
@@ -113,8 +120,10 @@
 	    </exec>
 	    <exec executable="${tool}/byaccj1.15/src/yacc" failonerror="true">
 		    <arg value="-d" />
+		    <!--arg value="-v" /-->
 		    <arg value="-J" />
 		    <arg value="-Jfinal" />
+		    <arg value="-Jnoconstruct" />
 		    <arg value="-Jsemantic=java.lang.Object" />
 		    <arg value="-Jpackage=edu.columbia.mipl.syntax" />
 		    <arg value="${src}/grammar/mipl.y" />
@@ -125,7 +134,28 @@
 			    <file name="ParserTokens.java"/>
 		    </filelist>
 	    </move>
-
     </target>
 
+    <target name="docs" depends="extract" description="Generates pdf documents">
+	<exec executable="make">
+		<arg value="-C" />
+		<arg value="${docs}/reference_manual" />
+	</exec>
+	<copy file="${docs}/reference_manual/reference_manual.pdf" todir="${docs}"/>
+    </target>
+
+    <target name="extract">
+	    <mkdir dir="${build}" />
+	    <java jar="${tool}/JFlex.jar" fork="true" failonerror="true">
+		    <arg value="${tool}/grammar_extract/ge.jflex" />
+		    <arg value="-d" />
+		    <arg value="${build}" />
+		    <arg value="--nobak" />
+	    </java>
+	    <javac srcdir="${build}" includes="Yylex.java" destdir="${tool}" />
+	    <java classname="Yylex" classpath="${tool}">
+		    <arg value="${src}/grammar/mipl.y" />
+		    <arg value="${build}/mipl.grammar" />
+	    </java>
+    </target>
 </project>

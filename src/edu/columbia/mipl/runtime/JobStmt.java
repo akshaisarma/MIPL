@@ -20,8 +20,6 @@ public class JobStmt extends Traversable {
 		COMPOUND,
 		RETURN,
 		EXPR,
-		ITERATION,
-		NULL,
 	};
 	Type type;
 
@@ -29,10 +27,6 @@ public class JobStmt extends Traversable {
 	JobStmt stmt2;
 	JobExpr expr;
 	List<JobStmt> stmts;
-
-	public JobStmt(Type type) {
-		assert (type == Type.NULL);
-	}
 
 	public JobStmt(Type type, JobExpr expr, JobStmt stmt) {
 		this(type, expr, stmt, null);
@@ -42,8 +36,10 @@ public class JobStmt extends Traversable {
 		assert (type == Type.IF || type == Type.WHILE ||
 			type == Type.DOWHILE);
 
-		assert (type != Type.IF || stmt2 != null);
-
+		/*
+		 * Can still assert the following to ensure only IFs have stmt2
+		 * assert (type == Type.IF || stmt2 == null);
+		 */
 		this.type = type;
 		this.expr = expr;
 		this.stmt1 = stmt1;
@@ -71,5 +67,25 @@ public class JobStmt extends Traversable {
 		this.stmts = stmts;
 
 		addAll(stmts);
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public JobStmt getStmt1() {
+		return stmt1;
+	}
+
+	public JobStmt getStmt2() {
+		return stmt2;
+	}
+
+	public List<JobStmt> getStmts() {
+		return stmts;
+	}
+
+	public JobExpr getExpr() {
+		return expr;
 	}
 }

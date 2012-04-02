@@ -14,5 +14,6 @@ cat(john).
 # cat(X), X = tom.
 # cat(X), X = john.
 
-cat(X), X is ^[staozm]+$?
-# cat(X), X = tom.
+say(greeing, "hello").
+say(X, "^[helo]+$")?
+# X = greeting

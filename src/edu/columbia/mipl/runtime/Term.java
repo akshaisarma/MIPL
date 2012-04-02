@@ -57,6 +57,9 @@ public class Term extends Traversable {
 		this.type = type;
 		this.expr1 = expr1;
 		this.expr2 = expr2;
+
+		add(expr1);
+		add(expr2);
 	}
 
 	/* X is Y - 1 */
@@ -66,6 +69,11 @@ public class Term extends Traversable {
 		this.type = type;
 		term1 = variable;
 		expr1 = expr;
+
+		add(variable);
+		add(expr);
+
+		hasVariables = true;
 	}
 
 	public Term(Type type, double value) {
@@ -99,6 +107,9 @@ public class Term extends Traversable {
 		this.term2 = term2;
 
 		hasVariables = (term1.containVariables() || term2.containVariables());
+
+		add(term1);
+		add(term2);
 	}
 
 	public Term(Type type, Term term) {
@@ -106,6 +117,10 @@ public class Term extends Traversable {
 
 		this.type = type;
 		this.term1 = term;
+
+		hasVariables = term.containVariables();
+
+		add(term);
 	}
 
 	public Term(Type type, String name, List<Term> arguments) {
@@ -124,6 +139,8 @@ public class Term extends Traversable {
 				break;
 			}
 		}
+
+		addAll(arguments);
 	}
 
 	public Term(Type type, String name) {
@@ -142,6 +159,8 @@ public class Term extends Traversable {
 
 		this.type = type;
 		this.expr1 = expr;
+
+		add(expr);
 	}
 
 	public Type getType() {
@@ -172,8 +191,18 @@ public class Term extends Traversable {
 		return arguments;
 	}
 
-	public PrimitiveMatrix<Double> getMatrix() {
+	public PrimitiveMatrix getMatrix() {
 		return matrix;
+	}
+
+	public PrimitiveType getPrimitiveType() {
+		if (type == Type.NUMBER)
+			return new PrimitiveDouble(value);
+
+		if (type == Type.MATRIX)
+			return matrix;
+
+		return null;
 	}
 
 	public Term getTerm1() {
@@ -184,6 +213,15 @@ public class Term extends Traversable {
 		return term2;
 	}
 
+	public Expression getExpr1() {
+		return expr1;
+	}
+
+	public Expression getExpr2() {
+		return expr2;
+	}
+
+/*
 	static boolean checkStoreVS(VariableStack vs, Term term1, Term term2) {
 		Term prev = vs.get(term1);
 		if (prev != null && !prev.match(term2, vs))
@@ -273,5 +311,5 @@ public class Term extends Traversable {
 		}
 		return true;
 	}
-
+*/
 }

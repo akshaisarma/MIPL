@@ -1,13 +1,13 @@
 # MIPL: Mining Integrated Programming Language
 #
-# File: multireturn.mipl
+# File: multi_return.mipl
 # Author: YoungHoon Jung <yj2244@columbia.edu>
 # Reviewer: Younghoon Jeon <yj2231@columbia.edu>
 # Description: A MIPL program that shows how to define
-#              a function with multiple returns.
+#              a Job with multiple returns.
 
-# a function that returns two or three values
-multi_return(A, B, C) {
+# a Job that returns two or three values
+job multi_return(A, B, C) {
  if (A == 1) {
   @(B + C).
  }
@@ -15,7 +15,20 @@ multi_return(A, B, C) {
  @B.
 }
 
+x(10, 20).
+y(30, 40).
+
 [sum, c, b] <- multi_return(1, x, y).
 # sum <- b+c, b <- B, c <- C
+
+sum(*)?
+# *0 = 40, *1 = 60
+c(*)?
+# *0 = 30, *1 = 40
+b(*)?
+# *0 = 10, *1 = 20
+
+
 [c, b] <- multi_return(0, x, y).
 # b <- B, c <- C
+

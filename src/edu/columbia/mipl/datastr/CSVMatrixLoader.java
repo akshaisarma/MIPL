@@ -10,7 +10,6 @@
  * 		must be written in a common double format for
  * 		all relevant double values. Assumes there is
  * 		label line at the beginning and skips it.
- *
  */
 
 package edu.columbia.mipl.datastr;

@@ -22,11 +22,21 @@ public class Job extends Knowledge {
 
 		addAll(args);
 		addAll(stmts);
-
-		registerKnowledge();
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public List<Term> getArgs() {
+		return args;
+	}
+
+	public List<JobStmt> getStmts() {
+		return stmts;
+	}
+
+	public Term getTerm() {
+		return null;
 	}
 }

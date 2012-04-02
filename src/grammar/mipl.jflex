@@ -63,6 +63,10 @@ MOD_ASSIGN = %=
 ADD_ASSIGN = \+=
 SUB_ASSIGN = \-=
 
+MUL_CELL_OP = \.\*
+DIV_CELL_OP = \.\/
+EXP_CELL_OP = \.\^
+
 REGEX = \^.*\$
 VARIABLE = [A-Z][a-zA-Z_]*
 NUMBER = [0-9]+(.[0-9]+)?([Ee][+-]?[0-9]+)?
@@ -100,6 +104,10 @@ LARROW_OP = <- |
 "while" { return ParserTokens.WHILE; }
 "not" { return ParserTokens.NOT; }
 "is" { return ParserTokens.IS; }
+"job" { return ParserTokens.JOB; }
+
+"true" { return ParserTokens.TRUE; }
+"false" { return ParserTokens.FALSE; }
 
 {STRING_LITERAL} { yyparser.yylval = getTrimmedString(yytext()); return ParserTokens.STRING_LITERAL; }
 
@@ -123,6 +131,10 @@ LARROW_OP = <- |
 {MOD_ASSIGN} { return ParserTokens.MOD_ASSIGN; }
 {ADD_ASSIGN} { return ParserTokens.ADD_ASSIGN; }
 {SUB_ASSIGN} { return ParserTokens.SUB_ASSIGN; }
+
+{MUL_CELL_OP}	{ return ParserTokens.MUL_CELL_OP; }
+{DIV_CELL_OP}	{ return ParserTokens.DIV_CELL_OP; }
+{EXP_CELL_OP}	{ return ParserTokens.EXP_CELL_OP; }
 
 {REGEX} { yyparser.yylval = getTrimmedString(yytext()); return ParserTokens.REGEX; }
 

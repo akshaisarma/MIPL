@@ -11,5 +11,14 @@ package edu.columbia.mipl.runtime.traverse;
 import java.util.*;
 
 public interface Traverser {
-	void reach(Traversable target);
+	public enum Method {
+		PRE,
+		IN,
+		POST,
+	};
+
+	Method getMethod();
+
+	boolean reach(Traversable target);
+	void finish();
 }

@@ -6,7 +6,7 @@
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
  * Description: Configuration
  */
-package edu.columbia.mipl.runtime;
+package edu.columbia.mipl.conf;
 
 import java.util.*;
 

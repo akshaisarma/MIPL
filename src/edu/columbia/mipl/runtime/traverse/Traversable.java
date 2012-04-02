@@ -8,52 +8,90 @@
  */
 package edu.columbia.mipl.runtime.traverse;
 
+import java.io.*;
 import java.util.*;
 
-public class Traversable extends ArrayList<Traversable> {
-	enum TraverseType {
-		PRE,
-		IN,
-		POST,
-	};
-	private final TraverseType defaultTraverse = TraverseType.POST;
+public class Traversable extends ArrayList<Traversable> implements Serializable {
+	boolean immediate;
 
-	public void traverse(Traverser traverser) {
-		switch (defaultTraverse) {
+	public boolean traverse(Traverser traverser) {
+		return traverse(traverser, false);
+	}
+
+	public boolean traverse(Traverser traverser, boolean immediate) {
+		return traverse(traverser, traverser.getMethod(), immediate);
+	}
+
+	public boolean traverse(Traverser traverser, Traverser.Method method, boolean immediate) {
+		this.immediate = immediate;
+
+		switch (method) {
 			case PRE:
-				preTraverse(traverser);
-				return;
+				return preTraverse(traverser);
 			case IN:
-				inTraverse(traverser);
-				return;
+				return inTraverse(traverser);
 			case POST:
-				postTraverse(traverser);
-				return;
+				return postTraverse(traverser);
 		}
+		// TODO: print error
+		return false;
 	}
 
-	public void preTraverse(Traverser traverser) {
-		traverser.reach(this);
-		for (Traversable t : this) {
-			t.postTraverse(traverser);
+	public boolean preTraverse(Traverser traverser) {
+		boolean result = true;
+		result &= preTraverseInternal(traverser);
+		if (!immediate)
+			traverser.finish();
+		return result;
+	}
+
+	boolean preTraverseInternal(Traverser traverser) {
+		int i;
+		boolean result = true;
+		result &= traverser.reach(this);
+		for (i = size() - 1; i >= 0; i--) {
+			result &= get(i).preTraverseInternal(traverser);
 		}
+		return result;
 	}
 
 
-	public void inTraverse(Traverser traverser) {
-		int i = size();
-		for (Traversable t : this) {
-			t.postTraverse(traverser);
-			if (--i > 0)
-				traverser.reach(this);
-		}
+	public boolean inTraverse(Traverser traverser) {
+		boolean result = true;
+		result &= inTraverseInternal(traverser);
+		if (!immediate)
+			traverser.finish();
+		return result;
 	}
 
-	public void postTraverse(Traverser traverser) {
-		for (Traversable t : this) {
-			t.postTraverse(traverser);
+	boolean inTraverseInternal(Traverser traverser) {
+		int i;
+		boolean result = true;
+		for (i = size() - 1; i >= 0; i--) {
+			result &= get(i).inTraverseInternal(traverser);
+			if (i > 0)
+				result &= traverser.reach(this);
 		}
-		traverser.reach(this);
+		return result;
+	}
+
+	public boolean postTraverse(Traverser traverser) {
+		boolean result = true;
+		result &= postTraverseInternal(traverser);
+		if (!immediate) {
+			traverser.finish();
+		}
+		return result;
+	}
+
+	boolean postTraverseInternal(Traverser traverser) {
+		int i;
+		boolean result = true;
+		for (i = size() - 1; i >= 0; i--) {
+			result &= get(i).postTraverseInternal(traverser);
+		}
+		result &= traverser.reach(this);
+		return result;
 	}
 
 }

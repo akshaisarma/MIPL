@@ -20,6 +20,7 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		PM_STATUS_URI_REMOTE,
 		PM_STATUS_LOADED_FULL,
 		PM_STATUS_LOADED_SPARSE,
+		PM_STATUS_UNBOUND_MATRIX,
 		/* Reference or SubMatrix Type may be added for performance */
 	};
 	Status status;
@@ -27,19 +28,6 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 
 	int sparseRow;
 	int sparseCol;
-
-	public static void main(String[] args) {
-		/* Unit Tests */
-		PrimitiveMatrix<Double> pm = new PrimitiveMatrix<Double>();
-		PrimitiveMatrix<Integer> pmint = new PrimitiveMatrix<Integer>();
-		pmint.setValue(10, 0, 300);
-
-		double[] newdata = new double[100];
-		PrimitiveMatrix<Double> pmarray = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(10, 10, newdata));
-		pmarray.setValue(0, 0, 3.244); // without this line, pda will be null
-		PrimitiveDoubleArray pda = (PrimitiveDoubleArray) pmarray.getData();
-		double[] arr = pda.getData();
-	}
 
 	Map<String, T> sparseList;
 

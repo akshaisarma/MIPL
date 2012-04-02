@@ -1,0 +1,1389 @@
+% acmsmall-sample.tex, dated 4th Nov. 2011
+% This is a sample file for ACM small trim journals
+%
+% Compilation using 'acmsmall.cls' - version 1.2, Aptara Inc.
+% (c) 2010 Association for Computing Machinery (ACM)
+%
+% Questions/Suggestions/Feedback should be addressed to => "acmtexsupport@aptaracorp.com".
+% Users can also go through the FAQs available on the journal's submission webpage.
+%
+% Steps to compile: latex, bibtex, latex latex
+%
+% For tracking purposes => this is v1.2 - Nov. 2011
+
+\documentclass[prodmode,acmtecs]{acmsmall}
+
+% Package to generate and customize Algorithm as per ACM style
+\usepackage[ruled]{algorithm2e}
+\usepackage{listings}
+\usepackage{longtable}
+\renewcommand{\algorithmcfname}{ALGORITHM}
+\SetAlFnt{\large}
+\SetAlCapFnt{\large}
+\SetAlCapNameFnt{\large}
+\SetAlCapHSkip{10pt}
+\IncMargin{-\parindent}
+
+% Metadata Information
+\acmVolume{1}
+\acmNumber{1}
+\acmArticle{1}
+\acmYear{2012}
+\acmMonth{3}
+
+% Document starts
+\begin{document}
+
+% Page heads
+%\markboth{Young Hoon et al.}{MIPL Reference Manual}
+
+% Title portion
+\title{{MIPL: Mining Integrated Programming Language\\
+Language Reference Manual}}
+\author{Project Manager: Younghoon Jeon $<yj2231@columbia.edu>$\\
+System Architect: Young Hoon Jung $<yj2244@columbia.edu>$\\
+Language Expert: Jinhyung Park $<jp2105@columbia.edu>$\\
+System Integrator: Daniel Wonjoon Song $<dws2127@columbia.edu>$\\
+System Validation: Akshai Sarma $<as4107@columbia.edu>$
+%\affil{Columbia University}
+}
+
+\begin{abstract}
+MIPL is a language for Data Mining which provides methods to 
+implement various sophisticated matrix-based algorithms and 
+to retrieve the computed data easily by offering a novel,
+convenient way that converts matrices into a set of Facts
+and vice versa.
+\end{abstract}
+
+%\category{C.2.2}{Computer-Communication Networks}{Network Protocols}
+
+%\terms{Design, Algorithms, Performance}
+
+%\keywords{Wireless sensor networks, media access control,
+%multi-channel, radio interference, time synchronization}
+
+%\acmformat{Zhou, G., Wu, Y., Yan, T., He, T., Huang, C., Stankovic,
+%J. A., and Abdelzaher, T. F.  2010. A multifrequency MAC specially
+%designed for  wireless sensor network applications.}
+
+%\begin{bottomstuff}
+%This work is supported by the National Science Foundation, under
+%\end{bottomstuff}
+
+\maketitle
+
+\tableofcontents 
+
+\pagebreak
+
+\lstset{frame=single}
+
+\section{Introduction}
+
+Mining Integrated Programming Language (MIPL) is a programming language
+that provides a very simple, easy way for the users to use Data Mining
+algorithms and retrieve data from their computations. At the same time, 
+MIPL also enables developers to easily design these algorithms with 
+explicit support for working with large matrices and matrix operations.
+
+Algorithm developers work with MIPL's Job interface, where MIPL allows
+for programming constructs, such as conditionals and iterations, with
+support for working with matrices. A Job can be likened to a traditional
+function but focused toward MIPL's target audience: data miners. The JOB 
+interface sports novel concepts such as returning more than one value.
+Furthermore, algorithms developed as a Job are automatically distributed 
+and accelerated on the computer clusters and hardware accelerators through
+MapReduce. 
+
+Regular users, who are perhaps, only interested in obtaining results from
+running a Data Mining Job, work with MIPL's FRQ interface, which allows
+the user to declare Facts, Rules and make Queries. Regular expressions are
+supported, enabling a user to write powerful, elegant and concise FRQ's 
+that can use Job to compute and produce results to queries. A key 
+concept in MIPL is that Facts in the FRQ can be converted to matrices
+in Job and vice versa, connecting the simple interface of the FRQ with
+Job.
+
+\medskip
+
+% Head 1
+\section{Lexical conventions}
+MIPL has six kinds of tokens: identifiers, variables, numbers, strings,
+expression operators, and other separators.  In general blanks, tabs,
+newlines, and comments as described below are ignored except to
+serve as token seperators. At least one of these characters is required
+to separate otherwise adjacent identifiers, constants, and certain
+operatorpairs.  If the input stream has been parsed into tokens up
+to a given character, the next token is taken to include the longest
+string of characters which could possibly constitute a token.
+
+In MIPL, an identifiers is a word that starts with a lower case alphabet
+and a variable is a word that starts with a upper case alphabet.  For
+example, cat is a indentifier and Name is a variable.
+\medskip
+
+% Head 2
+\subsection{Comments}
+
+MIPL uses shell script-like comments, which begins with the character
+\# and terminating at the end of the line, denoted by the newline character.
+\medskip
+
+% Head 3
+\subsection{Identifiers}
+
+An Identifier is a sequence of letters that begins with lower case alphabets.
+Upper and lower case letters are considered different.   Identifiers are
+served for use as the name of Terms, the basic block of MIPL syntax.
+\medskip
+
+\subsection{Variables}
+
+A Variable is a sequence of letters that begins with upper case alphabets
+or the underscore character, \_, which means that this variable will not
+be tracked.  Upper and lower case letters in the variable names are
+considered different. A Variable is used for convenience sake, to distinguish
+it from an identifier. A Variable always has a location value, while identifiers
+can refer to Facts in the FRQ or bindings.
+\medskip
+
+\subsection{Numbers}
+
+A number in MIPL can be integeres or floating point numbers.  A number consists of
+an integer part, a decimal point, a fractional part, an e or E, and a signed 
+integer exponent. The integer and fraction parts both consist of sequences of decimal
+digits.
+Either the integer part or the fraction part (not both) may be missing; either 
+the decimal point or the e or E and the exponent (not both) may be missing.
+Every floating constant is taken at double precision.
+\medskip
+
+\subsection{Strings}
+
+A string is a sequence of characters surrounded by double quotes or single
+quotes.
+\medskip
+
+\subsection{Expression Operators}
+Expression Operators are explained in detail Built-in Operators and Jobs section.
+\medskip
+
+\section{Data Types}
+
+\subsection {Term}
+Term is the only data type for Facts, Rules, and Queries.  Numbers, Strings,
+Facts, Rules, Queries and even Terms are recursively defined in a form of a Term. 
+Variables in a Term can contain a Term and their scope is within the Command.
+\medskip
+
+\subsection {Job Types}
+Unlike the FRQ part of MIPL, a Job has two primitive types, Matrix and
+Number, which can both be computed within a Job description. MIPL strictly
+distinguish boolean expressions from numeric expressions, so boolean can be
+considered another primitive type, however it is not visible to the users
+as there is no variables that can contain boolean values.  Variables in a
+Job can contain a Number or a Matrix and their scope is within the Job
+definition.
+
+\section{Syntax}
+
+%----------------------------------------------------------JINHYUNG{
+\subsection{Program}
+
+A MIPL program is simple. Basically, the MIPL program looks like below:
+
+\begin{lstlisting}
+program
+	: commands
+	;
+\end{lstlisting}
+
+In other words, a MIPL program consists of commands, where commands can contain multiple 
+commmands again.
+
+MIPL can run in an interpreter mode or can compile, much like Python or Prolog. A command
+is the basic unit for MIPL and directly maps to a line in the interpreter mode in MIPL.
+More specifically, when the user writes a command to the
+input terminal, the command is executed right away by the interpreter,
+whereas the compiler generates target machine code so that it can be
+executed by running the generated target machine code.  However, the
+results from the same MIPL program are always identical regardless of
+whether it is executed by the interpreter or through compiled code.
+
+Here is a sample MIPL program:
+
+\begin{lstlisting}
+job countPositive(A, SizeOfA) {
+    I = 0.
+    while (I < SizeOfA) {
+        if (A[I] > 0) {
+            I = I + 1.
+        }
+    }
+}
+cat(tom).
+cat(tom)?
+animal(X) <- cat(X).
+animal(tom)?
+\end{lstlisting}
+
+In this example, there are five commands:
+$countPositive\{\}$, $cat().$, $cat()?$, $animal() <- cat().$, and $animal()?$. Each
+command can also include other commands. Each command can be identified by these:
+$\{\}, .,$ or $?$. These are used to determine the command type.
+\medskip
+
+\subsection{Commands}
+
+\begin{lstlisting}
+commands
+	: command commands
+	| command
+	;
+\end{lstlisting}
+
+Including other commands in a command is permissible. In other words, some commands
+can contain as part of their definition, more commands. The previous example in 4.1
+shows that $countPositive\{\}$ includes several other commands. 
+\medskip
+
+\subsection{Command}
+
+In MIPL, there are four types of commands: $fact$, $query$, $rule$, and $job$.
+
+\begin{lstlisting}
+command
+	: fact
+	| query
+	| rule
+	| job
+	;
+\end{lstlisting}
+\medskip
+
+
+\subsubsection{Fact}
+\begin{lstlisting}
+fact
+	: term `.'			
+	| `[' id_list `]' LARROW_OP jobcall `.'
+	;
+
+id_list
+	: id_list `,' IDENTIFIER
+	| IDENTIFIER		
+	;
+
+jobcall
+	: IDENTIFIER `(' `)'
+	| IDENTIFIER `(' jobcall_args `)'
+	;
+
+jobcall_args
+	: jobcall_args `,' jobcall_args_cand
+	| jobcall_args_cand
+	;
+
+jobcall_args_cand
+	: IDENTIFIER
+	| VARIABLE
+	| NUMBER
+	| STRING_LITERAL
+	| jobcall
+	;
+\end{lstlisting}
+
+\begin{lstlisting}
+# fact
+cat(tom).
+mouse(jerry), mouse(mickey).
+\end{lstlisting}
+
+A $fact$ can be Term, which is terminated with a $"."$. A $fact$ is used to
+describe or define a Fact (which expresses some statement in the context
+of the application) in MIPL, or to process a Job. There are two kinds of
+Facts: static and dynamic Facts. A static Fact is a Term that is terminated
+with $"."$. A dynamic Fact is a Term that is wrapped in $[ ]$, and as part
+of its definition, a dynamic Fact calls a Job to process data. The semantics
+of the $jobcall$ are exactly the same as the dicussion in \ref{Job_PostFix_Expression}
+and it is not duplicated here. A $fact$ should start with a lowercase letter.
+\medskip
+
+\subsubsection{Query}
+\begin{lstlisting}
+query
+	: or_terms `?'		
+	;
+\end{lstlisting}
+
+\begin{lstlisting}
+# fact
+cat(tom), mouse(jerry).
+# query
+mouse(tom)? # Returns false
+# query
+mouse(X)? # Returns X = jerry
+# fact
+weighted_grade(86, 99, 32).
+# query with *
+weighted_grade(*)? # Returns 86, 99, 32
+\end{lstlisting}
+
+A $query$ is terminated with a $"?"$. A $query$ operates on an OR Term. A $query$ 
+are applied to Facts and Rules. Even if there are no direct matched Facts, Rules
+can be used to derive new Facts to determine the result of a Query. A $query$ to 
+a Fact returns $true$ or $false$ if the Query contains only identifiers. A $query$ 
+to a Fact returns binding results of Facts satisfying the Query if the Query contains 
+Variables. If the Fact contains multiple  arguments, then the Query can contain $*$
+as the query argument to show all bindings, regardless of the number of arguments, 
+whereas using Queries with Variables will require specifying the same number of 
+Variables as arguments of the Fact.
+\medskip
+
+\subsubsection{Rule}
+\begin{lstlisting}
+rule
+	: term LARROW_OP or_terms `.'
+	;
+\end{lstlisting}
+
+\begin{lstlisting}
+# rule with a fact
+animal(X) <- cat(X).
+# another rule operator
+animal(X) :- cat(X).
+# complex rule
+animal(X) :- cat(X), dog(X), horse(X).
+\end{lstlisting}
+
+A $rule$ is defined with $<-$ or $:-$, which are the LARROW\_OPs. The name of the 
+Rule is the $term$. That is, the Rule is referred to with the $term$.
+The body of the Rule contains $or\_terms$. For evaluating a Rule to generate a Fact,
+MIPL implements short circuit evaluation. If any of the constituent compounds in
+$or\_terms$ evaluates to True, then MIPL stops and generates the Fact matching the
+left side of the rule. To the left of the LARROW\_OP is the rule, which is a $term$. 
+If the right of the rule operator is a Job, the left Term should be a dynamic Fact, 
+as described above.
+\medskip
+
+\subsection{Terms}
+\subsubsection{OR Term}
+\begin{lstlisting}
+or_terms
+	: and_terms
+	| or_terms `;' and_terms
+	;
+\end{lstlisting}
+$or_terms$ contain either $and\_terms$ or $or\_terms$ separated by $;$. 
+For the short circuit evaluation mentioned in rule evaluation, the $or\_terms$
+is True if the left side of $;$ operator is True. The right side is evaluated
+only if the left side is False.
+
+\medskip
+
+\subsubsection{AND Term}
+\begin{lstlisting}
+and_terms
+	: term
+	| and_terms `,' term	
+	;
+\end{lstlisting}
+$and\_terms$ contain either $term$ or $and\_terms$ separated by $,$. 
+For the short circuit evaluation mentioned in rule evaluation, the $and\_terms$
+is False if the left side of $;$ operator is False. The right side is evaluated
+only if the left side is True.
+\medskip
+
+\subsubsection{Term}
+\begin{lstlisting}
+term
+	: IDENTIFIER		
+	| IDENTIFIER `(' term_args `)'
+	| IDENTIFIER `(' `*' `)'
+	| REGEX			
+	| REGEX `(' term_args `)'
+	| REGEX `(' `*' `)'	
+	| NOT term		
+	| term_expr		
+	| VARIABLE IS term	
+	| term_expr `<' term_expr
+	| term_expr `>' term_expr
+	| term_expr LE_OP term_expr
+	| term_expr GE_OP term_expr
+	| term_expr EQ_OP term_expr
+	| term_expr NE_OP term_expr
+	;
+\end{lstlisting}
+A Term is a basic unit in MIPL. A Term can be used to define a fact with the
+given IDENTIFIER.
+\medskip
+
+For defining a Query, Term can be used with argument lists, which are expressed by
+$(\ term\_args\ )$. To query all data, Term can be used with an asterisk, which
+is expressed by $*$. Also, Term can be a regular expression in MIPL; however,
+Term as a regular expression can be only used in Query. All terms matched by the
+regular expression will be queried with the given argument lists.
+\medskip
+
+By adding NOT, a Term can be negated. Also, Term Expressions can also be Terms.
+In this case, Term contains the value of the computed results of Term Expressions.
+As an extension of this, Terms and hence Term Expressions can be assigned to Variables,
+by $VARIABLE\ IS\ term$.
+\medskip
+
+In addition, comparison operators with Term expressions are also Term. There are six
+comparison operatros can be used in Term: $<, >, <=, >=, ==, !=$. LE\_OP refers $<=$,
+GE\_OP refers $>=$, EQ\_OP refers $==$, and NE\_OP refers $!=$.
+\medskip
+
+%----------------------------------------------------------JINHYUNG}
+%----------------------------------------------------------YOUNGHOON{
+
+\subsection{Term Expression}
+\begin{lstlisting}
+term_expr
+	: term_expr `+' term_fact
+	| term_expr `-' term_fact
+	| term_fact
+	;
+\end{lstlisting}
+
+Term Expression is an expression which belongs to a Term.  Term 
+Expressions can consist of binary operators `+' and `-' along with Term
+Factors. These two operators left-associate Term Facts so that Term
+Factors within a Term Expression can be computed with a left priority.
+
+Term Expression, Term Factor, and Term Term are basic blocks that
+consist of Term Expression.  So these three rules can be applied within
+Term Expression, by the definition of MIPL grammar.
+\medskip
+
+\subsubsection{Term Factor}
+
+\begin{lstlisting}
+term_fact
+	: term_fact `*' term_term
+	| term_fact `/' term_term
+	| term_term
+	;
+\end{lstlisting}
+
+Term Factor is an expression which belongs to a Term Expression.  Term 
+Factors can consist of binary operators `*' and `/' along with Term
+Term.  These two operators left-associate Term Terms so that Term
+Terms within a Term Factor can be computed with a left priority. Like,
+mathematical notations, operators `*' and `/' have higher priority than
+operators `+' and `-' since Term Facts are reduced 
+\medskip
+
+
+\subsubsection{Term Term}
+\begin{lstlisting}
+term_term
+	: VARIABLE
+	| NUMBER
+	| `(' term_expr `)'
+	;
+\end{lstlisting}
+
+Term Term is a terminal expression of Term Expression and its derivables,
+belonging to a Term Factor.  Term Terms can consist of a Variable or a
+Number, which serve as the basic blocks of Term Expressions.  Also, a Term
+Expression can be reduced to a Term Term with a pair of parentheses, which
+allows the operators, `-', `+', `*', and `/' can appear recursively in a
+Term Expression.  This also means that `(' and `)' operators have higher
+operation priority than other operators.
+\medskip
+
+\subsection{Term Arguments}
+
+\begin{lstlisting}
+term_args_cand
+	: IDENTIFIER
+	| IDENTIFIER `(' term_args `)'
+	| VARIABLE
+	| `_'
+	| NUMBER
+	| STRING_LITERAL
+	;
+
+term_args
+	: term_args_cand
+	| term_args `,' term_args_cand
+	;
+
+\end{lstlisting}
+
+Term Argument Candidate is an Identifier, a Variable, an Anonymous
+Variable, a Number, or a String.  An Identifier can have one
+or more arguments within a pair of parentheses or no arguments.
+This arguments again consist of Term Argument Candidates, which
+allows a recursive form of argument definition.  For instance, 
+$com(monitor, board(cpu, ram(4, 4)), P)$ is a valid form
+of a Term declaration.
+
+Term Argument List is used for Term definition. Hence, Term
+Argument List can be a part of the declarations of Facts, Rules,
+and Queries.  Sharing the same type of argument list for the
+declarations of FRQs is possible because there are no type and
+variable declarations in MIPL.  Thus, a Job definition and
+a Job-calling Fact basically have the same argument list.
+Also, MIPL's Job definitions allows variable numbers of return
+values dynamically, the generated program
+checks if the numbers of return values from Job and the numbers of
+Fact names are matched.  Otherwise, a run-time error is generated.
+\medskip
+
+\subsection{Job}
+
+\begin{lstlisting}
+job
+	: JOB IDENTIFIER `(' job_args `)' `{' stmt_list `}'
+	;
+
+job_args
+	: job_args ',' VARIABLE
+	| VARIABLE
+	;
+\end{lstlisting}
+
+\label{Job_Section}
+Job is MIPL's basic operation that provides matrix operations.
+Job is a function-like task, with no nested definitions, no
+overloading of definition, or generic types supported. Job uses
+positional parameter passing with call-by-value.  A Job
+definition starts with the keyword JOB. It denotes a number of variables and a set of Job
+Statements.  At runtime, a compiled Job is distributed over
+a MapReduce clusters, computed, and delivered to the user. For
+example, when a user loads two matrices and calls a Job giving those
+matrices, the matrices are split into several smaller matrices,
+distributed to MapReduce clusters, and computed.
+
+Job Arguments play a role in passing data from Facts to Job, by
+delivering number values and converting Facts into matrices
+so that the Job computes the number values and the matrices by
+the algorithm described in the Job.
+\medskip
+
+\subsection{Job Statement}
+
+\begin{lstlisting}
+stmt
+	: selection_stmt
+	| compound_stmt
+	| return_stmt
+	| expr_stmt
+	| iteration_stmt
+	;
+\end{lstlisting}
+
+Job Statement is a sentence in a Job.  There are five types of
+Job Statement: Job Selection Statement, Job Compound Statement,
+Job Return Statement, Job Expression Statement, and Job Iteration
+Statement.  Each of these will be explained in the following
+sections.
+\medskip
+
+\subsubsection{Job Statement List}
+
+\begin{lstlisting}
+stmt_list
+	: stmt
+	| stmt_list stmt
+	;
+\end{lstlisting}
+
+Job Statement List is a set of Job Statement, used in Job
+declarations and Job Compound Statement.
+\medskip
+
+
+\subsubsection{Job Compound Statement}
+
+\begin{lstlisting}
+compound_stmt
+	: `{' `}'
+	| `{' stmt_list `}'
+	;
+\end{lstlisting}
+
+Job Compound Statement is a Job Statement, which includes
+zero or more Job Statements, surrounded by a pair of curly
+brackets.
+\medskip
+
+\subsubsection{Job Return Statement}
+
+\begin{lstlisting}
+return_stmt
+	: `@' expr `.'
+	;
+
+\end{lstlisting}
+
+Job Return Statement is a sentence that returns a matrix.  Since
+Job is likely executed on MapReduce clusters (unless configured
+so or the matrix size is smaller than configured threshold), Job
+Return Statement fetches the matrix.  The most interesting part
+in MIPL with regard to Job Return Statement is a Job can contain
+more than on Job Return Statement for returning values more than
+one.  Accordingly, as a Job can contain a number of Job Selection
+Statements and Job Iterative Statements, the combination of those
+allows a Job to return variable numbers of return values. This is
+possible because Job Return Statement does not ``return" immediately,
+when its program counter meets Job Return Statement.  Instead, a
+MIPL program keeps executing passing that Job Return Statement.
+For example, below MIPL program returns three matrix values.  If
+the given number of names for return values are not matched to the
+number of values the actual Job returns, MIPL reports an error.
+
+\begin{lstlisting}
+I = 3;
+[a, b, c] = job1(matrix1, matrix2, I).
+
+job job1(A, B, NumRepeat) {
+    while (NumRepeat > 0) {
+       A *= B.
+       @A.
+       I = I - 1. 
+    }
+}
+\end{lstlisting}
+
+Because Job Return Statement does not ``return" immediately,
+there's no acceptable Job Return Statement like $@.$, which some
+languages provide to flow control such as ``return;" in C.  The
+return operator $@$ is designed to deliver a matrix value from
+MapReduce clusters to the user.  When a user want to quit the Job
+in the mid of the Job, the user should use Job Control Statements
+such as If Statement to do so.
+\medskip
+
+
+\subsubsection{Job Expression Statement}
+
+\begin{lstlisting}
+expr_stmt
+	: expr `.'
+	;
+\end{lstlisting}
+
+Job Expression Statement is a Job Statement that includes a Job
+Expression.  This allows users use Job Expressions in a Job.
+\medskip
+
+\subsubsection{Job Selection Statement}
+
+\begin{lstlisting}
+selection_stmt
+	: IF `(' bool_expr `)' stmt
+	| IF `(' bool_expr `)' stmt ELSE stmt
+	;
+\end{lstlisting}
+
+Job Selection Statement is a conditional control Job Statement,
+which checks the value of given Job Boolean Expression and executes
+the statements accordingly.  If the value of the Job Expression is
+true, the first Job Statement will be executed.  If the value of
+the expression is false and the ELSE statement is provided, this
+statement will be executed.  The IF ELSE syntax is ambiguous,
+however, by Yacc's default behavior, reduce precedes shift, which
+results in that the ELSE is associated with closer IF.
+\medskip
+
+\subsubsection{Job Iteration Statement}
+
+\begin{lstlisting}
+iteration_stmt
+	: WHILE `(' bool_expr `)' stmt
+	| DO stmt WHILE `(' bool_expr `)' `.'
+	;
+\end{lstlisting}
+
+Job Iteration Statement is a statement, that repeatedly executes
+the given Job Statement according to the value of Job Expression.
+
+WHILE statement executes the given Job Statement while the Job
+Boolean Expression's value is true.  DO WHILE statement executes the
+Job Statement once first, and then executes the Job Statement repeatedly
+while the Job Boolean Expression's value is true.
+\medskip
+
+
+\subsection{Job Expression}
+
+\begin{lstlisting}
+expr
+	: additive_expr
+	| VARIABLE assign_op assign_expr
+	;
+\end{lstlisting}
+
+\label{Expression_Section}
+Job Expression is a grammatical unit that conveys a numeric value,
+which includes a matrix or a number.  Whether a Job Expression
+contains a matrix or a number is decided dynamically at runtime,
+as well as how big is the matrix, since MIPL is dynamic typed.
+
+Job Expressions assigns a numberic value to a Variable contained
+at the left-hand side.  The value of Job Expression is the value
+newly assigned to the Variable.  This may relays multiple times,
+for example, $Variable1 = Variable2 = Variable3 = 3.$.
+\medskip
+
+
+\subsubsection{Job Assignment Operator}
+
+\begin{lstlisting}
+assign_op
+	: `='
+	| LARROW_OP
+	| MUL_ASSIGN
+	| DIV_ASSIGN
+	| MOD_ASSIGN
+	| ADD_ASSIGN
+	| SUB_ASSIGN
+	;
+\end{lstlisting}
+
+Job Assignment Operator has seven types.  1. `=' and ``$<-$" are used
+for Assignment.  2. ``*=" is Muliplication Assignment Operator.  3. 
+``/=" is Division Assignment Operator.  4. ``\%=" is Modular Assignment
+Operator.  5. ``+=" is Addition Assignment Operator.  6. ``-=" is
+Subtraction Assignment Operator.  Each Assignment Operators computes
+the value of the operation using the left-hand side value and the
+right-hand side value and assigns the value to the left-hand side
+Variable.
+\medskip
+
+
+%----------------------------------------------------------YOUNGHOON}
+
+%----------------------------------------------------------AKSHAI{
+\subsubsection{Job Additive Expression}
+
+The character sequence `+' and `-' mean addition and subtraction, 
+respectively. These operators in Additive expressions, or additive\_expr, 
+also associate left to right and have lower precedence than the 
+multiplicative expressions, termed multiplicative\_expr, described next.
+
+\begin{lstlisting}
+additive_expr
+	: multiplicative_expr
+	| additive_expr `+' multiplicative_expr
+	| additive_expr `-' multiplicative_expr
+	;
+\end{lstlisting}
+
+Given two multiplicative expressions, connected by an additive operator, 
+the expression evaluates to the result of applying the operator to the
+operands. However, this depends on the type of the operands, which can
+range from integer or doubles to matrices. In the case of the latter,
+the evaluation of the expression results in a matrix, formed by the 
+application of the operation on the multiplicative expressions.
+The `+' and the `-' operators can be applied to numerical and matrix types 
+and errors are generated for incompatible types.
+\medskip
+
+\subsubsection{Job Multiplicative Expression}
+
+The character sequence `*' and `/' mean multiplication and division, 
+respectively. The sequence `\%' represents the modulus operation. That
+is, the remainder after the division of the right operand into the left
+operand. These operators in Multiplicative expressions, or 
+multiplicative\_expr, associate left to right and have lower precedence 
+than unary expressions.
+
+\begin{lstlisting}
+multiplicative_expr
+	: unary_expr
+	| multiplicative_expr `*' unary_expr
+	| multiplicative_expr `/' unary_expr
+	| multiplicative_expr `%' unary_expr
+	;
+\end{lstlisting}
+
+As with the additive expressions, the operators are applicable to types
+where the mathematical equivalent is valid. For the case of multiplying
+matrices, the requirement that the number of columns of the left operand 
+be equal to the number of rows of the right operand. The result of the
+evaluation of the operation is contained within the set of basic data 
+types. The multiplication of a matrix expression with another results in 
+a matrix expression. As with the additive expressions, errors may be 
+generated at run-time for incompatible operations. For instance, the
+multiplication of two matrices with incompatible number of rows and
+columns will result in an error.
+\medskip
+
+\subsubsection{Job Unary Expression}
+  
+A unary expression contains the unary operators `+' for positive and `-' 
+for negative. The `+' operator when applied to an arithmetic type does
+not change the value of the type. The `-' operator when applied to an
+arithmetic type, produces the negative of its operand. Similarly, for
+matrices, the '+' does not change the contents of the matrix, while
+'-' negates the value of the contents of the matrix.
+
+
+\begin{lstlisting}
+unary_expr
+	: postfix_expr
+	| `+' unary_expr
+	| `-' unary_expr
+	;
+\end{lstlisting}
+\medskip
+
+\subsubsection{Job PostFix Expression}
+
+A postfix expression is either a primary expression, an matrix access or 
+a Job call.
+
+\begin{lstlisting}
+postfix_expr
+	: primary_expr
+	| VARIABLE `[' array_idx_list `]' `[' array_idx_list `]'
+	| IDENTIFIER `(' `)'
+	| IDENTIFIER `(' nested_jobcall_args `)'
+	;
+\end{lstlisting}
+\label{Job_PostFix_Expression}
+
+A VARIABLE is like an IDENTIFIER but it begins with an uppercase letter,
+followed by lowercase or uppercase alphabets or underscore. A VARIABLE
+followed by two `[' and `]' is a matrix access. The matrix is accessed
+by subscripts, also known as the array index list, described in a later
+section. The subscripts correspond exactly to the two dimensional 
+interpretation of the matrix, where the the subscript within the first 
+set of square brackets refers to the row of the matrix while the second
+subscript refers to the corresponding pressure. The VARIABLE must refer 
+to a matrix type. Using array index lists, any subset of the matrix can be
+obtained. The result of this postfix expression can be a single value of
+the type of the matrix or any subset of the matrix.
+
+An IDENTIFIER followed by a set of paranthesis `(' and `)' is a Job
+invocation. A Job is defined according to \ref{Job_Section}. Only a defined
+Job may be invoked using the IDENTIFIER referring to the Job name,
+followed by `(' and `)', where the parantheses enclose arguments passed
+to the Job. If there were no arguments defined for the Job, the
+parantheses do not include anything and if there were arguments defined, 
+arguments that match the number of arguments in the Job definition, must
+be provided. These arguments are provided using the argument\_expr\_list 
+defined below. The arguments passed are by value. That is, the arguments 
+are copied and the copies are passed to the Job being invoked. Special
+care is taken with Matrices as they can be very large. MIPL handles 
+matrices in a lazy fashion. Using a built-in Job to "load" a matrix, 
+does not load it immediately and is kept around as a filename till it is
+accessed.
+\medskip
+
+\subsubsection{Job Primary Expression}
+
+A Job primary expression is the most basic type of expression. In any
+expression, a primary expression has the highest precedence.
+
+\begin{lstlisting}
+primary_expr
+	: IDENTIFIER
+	| VARIABLE
+	| NUMBER
+	| `(' expr `)'
+	;
+\end{lstlisting}
+
+An IDENTIFIER is a primary expression. An IDENTIFIER need not be declared
+as MIPL is dynamically and weakly typed. Any token matching the description
+of an IDENTIFIER, starting with a lowercase letter followed by uppercase and
+underscore characters, is recognized as one. An IDENTIFIER can be referred to
+in Terms.
+
+A VARIABLE is also a primary expression. A VARIABLE is used to denote 
+data types with location values such as matrices in order to distinguish them 
+from IDENTIFIERS.
+
+A NUMBER refers to a the decimal representation of a number and is also a 
+primary expression. Scientific notation is also supported, following the 
+E-notation. $10^{x}$ in scientific notation is simply written with either an
+`e' or an `E' followed by x.
+
+Finally, an expression enclosed with parantheses is also a primary expression 
+and the value of this expression is the same as if the parantheses did not 
+exist.
+\medskip
+
+\subsubsection{Job Array Index List}
+
+An array index list can be used to access the relevant portions of a matrix. 
+The relevant portions of a matrix are referred to using array index elements, 
+described below. The array index elements are evaluated left to right.
+
+\begin{lstlisting}
+array_idx_list
+	: array_idx_elmt
+	| array_idx_list `,' array_idx_elmt
+	;
+\end{lstlisting}
+
+Using the list of array indices, any relevant, valid portion of a matrix may
+be accessed. For instance, given a 5 x 7 matrix A, A[2$\sim$4,6$\sim$][1] produces the
+subset of the matrix A, a 5 x 1 result, consisting of its third, fourth, 
+fifth and seventh rows and its second column.
+\medskip
+
+\subsubsection{Job Array Index Element}
+
+An array index element is used to access a matrix. It consists of either 
+the character `$\sim$' representing all valid indices or any combination of placing
+a NUMBER to either side of the character. 
+
+\begin{lstlisting}
+array_idx_elmt
+	: `\~'
+	| `~' NUMBER
+	| NUMBER
+	| NUMBER `~'
+	| NUMBER `~' NUMBER
+	;
+\end{lstlisting}
+
+NUMBER here refers to any integer that denotes a valid index for the 
+matrix, referring to either its $i^{th}$ row or column. Rows and columns are 
+referred to starting at 0. If a NUMBER is not specified at either 
+the left or the right of the `$\sim$' character, it defaults to the extreme 
+of the matrix subscript. In other words, the smallest valid subscript in 
+the case of the left, which is 0, and the largest valid subscript in the 
+case of the right, which is the total number of rows or columns depending
+on, which is being accessed.
+\medskip
+
+\subsubsection{Job Argument Expression List}
+
+An argument expression list represents the various arguments that may be
+passed to a Job invocation. 
+
+\begin{lstlisting}
+nested_jobcall_args
+	: expr
+	| nested_jobcall_args `,' expr
+	;
+\end{lstlisting}
+
+These arguments are evaluated left to right and can include any assignment 
+expression as described above in \ref{Expression_Section}.
+\medskip
+
+\subsection{Job Boolean Expression}
+
+Job Boolean Expression is a basic Expression that can be evaluated as
+true or false.  Job Selection Statement and Job Iteration Statement
+contains a Job Boolean Expression in order to determine whether to proceed
+or how many times to repeat.  Unlike C Programming Language, MIPL strictly
+distinguish Job Boolean Expressions from Job Expressions as Job Boolean
+Expressions can be used only for conditions in Job Selection Statements
+and Job Iteration Statements.  Thus, a Job Boolean Expression cannot be
+stored in a variable or cannot be used as a statement.
+
+The character sequence OR\_OP refers to the sequence ``\textbardbl", which  
+denotes the logical OR operator. The logical AND expressions that are 
+separated by the logical OR operator associate left. The next section 
+details how the logical AND expressions, logical\_and\_expr, which have 
+higher precedence than the logical OR expression, are evaluated. 
+
+\begin{lstlisting}
+bool_expr
+	: logical_and_expr
+	| bool_expr OR_OP logical_and_expr
+	;
+\end{lstlisting}
+
+Given a binary OR\_OP, the Job Boolean Expression evaluates to true 
+if either of the nested bool\_expr or the logical\_and\_expr evaluates
+to true, and evaluates to false if both of the bool\_expr or
+logical\_and\_expr evaluate to false, The order of evaluation is left
+to right, also known as the ``short circuit" evaluation, whereby
+the logical\_and\_expr on the right of the OR\_OP is evaluated if
+and only if the logical\_and\_expr on the left of the OR\_OP 
+evaluated to false. 
+\medskip
+
+\subsubsection{Job Logical AND Expression}
+
+The character sequence AND\_OP refers to the sequence ``\&\&", which 
+denotes the logical AND operator. The equality expressions that are 
+separated by the logical OR operator associate left. The next section 
+details how equality expressions, equality\_expr, which have higher 
+precedence than the logical OR expression, are evaluated. 
+
+\begin{lstlisting}
+logical_and_expr
+	: equality_expr
+	| logical_and_expr AND_OP equality_expr
+	;
+\end{lstlisting}
+
+Given a binary AND\_OP, the Logical AND expression evaluates to true,
+if both of the logical\_and\_expr evaluate to true and evaluates to false,
+if either of the logical\_and\_expr evaluate to false. 
+The order of evaluation is again left to right, whereby the 
+equality\_expr on the right of the AND\_OP is evaluated if and only 
+if the equality\_expr on the left of the OR\_OP evaluated to true.
+\medskip
+
+\subsubsection{Job Equality Expression}
+
+The character sequence EQ\_OP refers to the sequence ``==" and the 
+character sequence NE\_OP refers to the sequence ``!=". These operators, 
+equal to and not equal to, respectively, cause the expression to 
+evaluate to false and true.  These operators that separate the
+relational expressions, relational\_expr, associate left. The
+operators EQ\_OP and NE\_OP have lower precedence than the 
+operators that constitute the relational expressions, described in the 
+next section. 
+
+\begin{lstlisting}
+equality_expr
+	: relational_expr
+	| expr EQ_OP expr
+	| expr NE_OP expr
+	| equality_expr EQ_OP relational_expr
+	| equality_expr NE_OP relational_expr
+	;
+\end{lstlisting}
+
+Given two relational expressions, connected by a EQ\_OP or a NE\_OP, 
+Job Expression or Job Equality Expression evaluates to true, 
+if and only if the left and the right Job Expressions both evaluate
+to the same value in the case of a EQ\_OP and to different values in
+the case of a NE\_OP.  Otherwise, the equality expression evaluates
+to false.
+\medskip
+
+\subsubsection{Job Relational Expression}
+
+The character sequence LE\_OP refers to the sequence ``$<=$", for less 
+than or equal to and GE\_OP refers to the sequence ``$>=$", for greater 
+than or equal to. The sequences `$<$' and `$>$' mean exactly the same as 
+their mathematical counterpart relations. These operators also associate 
+left to right and have lower precedence than the operators in the additive 
+expression type, additive\_expr, described in the following section. The 
+evaluation of a relational expression is once again a truth value, 
+represented by the false and true. 
+
+\begin{lstlisting}
+relational_expr
+	: boolvalue_expr
+	| expr `<' expr
+	| expr `>' expr
+	| expr LE_OP expr
+	| expr GE_OP expr
+	;
+\end{lstlisting}
+
+Given two Job Expressions, connected by the above mentioned operators, 
+Job Relational Expression evalutes to true if the mathematical relation
+represented by the operation is satisfied. Otherwise, Job Relational
+Expression evaluates to false. 
+\medskip
+
+
+\subsubsection{Job BooleanValue Expression}
+
+\begin{lstlisting}
+boolvalue_expr
+	: TRUE
+	| FALSE
+	| '(' bool_expr ')'
+	;
+\end{lstlisting}
+
+The character sequences TRUE and FALSE refer to the sequences ``true"
+and ``false" respectively.  Job BooleanValue Expression can be expanded
+to a nested Job Boolean Expression embraced with a pare of parentheses.
+\medskip
+
+
+%----------------------------------------------------------AKSHAI}
+%----------------------------------------------------------DANIEL}
+\section{Job Operators}
+MIPL has various Job Operators to support matrix operations in a Job
+description. Although, some of these were discussed in the Syntax
+section above, we reiterate them in the context of matrices and for
+completion. Some of the operators discussed below are not added to 
+the grammar. We propose them here are as very simply modifications 
+are needed to the grammar to incorporate them.
+
+\subsection{Operator $+$}
+Addition or unary plus. A+B adds A and B. A and B must have the same size,
+unless one is a number. A number can be added to a matrix of any size.
+\medskip
+
+\subsection{Operator $-$}
+Subtraction or unary minus. A-B subtracts B from A. A and B must have the
+same size, unless one is a number. A number can be subtracted from a matrix
+of any size.
+\medskip
+
+\subsection{Operator $*$}
+Matrix multiplication. C <- A $*$ B is the linear algebraic product of the
+matrices A and B. More precisely,
+
+$C(i,j) <- \displaystyle\sum\limits_{k=1}^n A(i,k)B(k,j).$
+
+For matrices A and B, the number of columns of A must equal the number of
+rows of B. A number can multiply a matrix of any size.
+\medskip
+
+\subsection{Operator $.*$}
+Cell-wise matrix multiplication. A.*B is the element-by-element product
+of the matrices A and B. A and B must have the same size, unless one of
+them is a number.
+\medskip
+
+\subsection{Operator $/$}
+Matrix division. Given A/B, B should be a number while A can be either a
+number or a matrix.
+\medskip
+
+\subsection{Operator $./$}
+Cell-wise Matrix division. A./B is the matrix with elements A(i,j)/B(i,j).
+A and B must have the same size, unless one of them is a number.
+\medskip
+
+\subsection{Operator \^{}}
+Matrix power. X\^{}p is X to the power p, if p is a integer. The power
+is computed by repeated multiplication.
+\medskip
+
+\subsection{Operator .\^{}}
+Cell-wise matrix power. A .\^{} B is the matrix with elements A(i,j) to
+the B(i,j) power. A and B must have the same size, unless one of them
+is a number.
+
+\section{Built-in Matrices}
+Built-in Matrices are special type of matrices that can be used for
+various purposes.
+\medskip
+
+\subsection{zeros}
+Keyword zeros creates a matrix of all zeros.
+\begin{lstlisting}
+Y <- zeros.
+\end{lstlisting}
+
+$Y <- zeros.$ returns a matrix of zeros.
+\medskip
+
+\subsection{ones}
+Keyword ones creates a matrix of all ones.
+\begin{lstlisting}
+Y <- ones.
+\end{lstlisting}
+
+$Y <- ones.$ returns a matrix of ones.
+\medskip
+
+\subsection{eye}
+Keyword eye returns the identity matrix.
+\begin{lstlisting}
+Y <- eye.
+\end{lstlisting}
+
+$Y <- eye.$ returns a matrix with 1's on the diagonal and 0's elsewhere.
+\medskip
+
+\subsection{rand}
+Keyword rand generates a matrix of random numbers whose elements are
+uniformly distributed in the interval (0,1).
+\begin{lstlisting}
+Y <- rand.
+rand
+\end{lstlisting}
+
+Y <- rand. returns a matrix of random entries. Note that a random value
+is generated when an element of rand is accessed. For example,
+$B <- rand + A. C <- rand + A.$ results in two different matrices B and A.
+In order to get a constant random matrix, a Job rand() can be used.
+$R <- rand(3,4). B <- R + A. C <- R + A.$ results in the same two matrices B
+and A.
+
+
+\section{Built-in Jobs}
+There are several Built-in Jobs, while MIPL provides an easy way
+to add a new Job.
+\medskip
+
+\subsection{zeros()}
+Keyword zeros(n, m) creates a n-by-m matrix of all zeros.
+\begin{lstlisting}
+Y <- zeros(10, 20).
+\end{lstlisting}
+
+$Y <- zeros(10, 20).$ returns a 10-by-20 matrix of zeros.
+\medskip
+
+\subsection{ones()}
+Keyword ones(n, m) creates a n-by-m matrix of all ones.
+\begin{lstlisting}
+Y <- ones(10, 20).
+\end{lstlisting}
+
+$Y <- ones(10, 20).$ returns a 10-by-20 matrix of ones.
+Job ones() is defined as the following:
+\begin{lstlisting}
+job ones(N, M) {
+    @zeros(N, M) + 1.
+}
+\end{lstlisting}
+\medskip
+
+\subsection{eye()}
+Keyword eye(n) returns the identity n-by-n matrix.
+\begin{lstlisting}
+Y <- eye.
+\end{lstlisting}
+
+$Y <- eye(10).$ returns a 10-by-10 matrix with 1's on the diagonal and 0's elsewhere.
+Job eye() is defined as the following:
+\begin{lstlisting}
+job eye(N) {
+    @zeros(N, N) + eye.
+} 
+\end{lstlisting}
+\medskip
+
+\subsection{rand()}
+Keyword rand(n, m) generates a n-by-m matrix of random numbers whose elements are
+uniformly distributed in the interval (0,1).
+\begin{lstlisting}
+Y <- rand(10, 20).
+rand
+\end{lstlisting}
+
+Y <- rand(10, 20). returns a 10-by-20 matrix of random entries.
+
+Job rand() is defined as the following:
+\begin{lstlisting}
+job rand(N, M) {
+    @zeros(N, M) + rand.
+} 
+\end{lstlisting}
+\medskip
+
+\subsection{bind()}
+Job bind() concatenates matrices horizontally.
+\begin{lstlisting}
+C <- bind(A,B).
+\end{lstlisting}
+
+$C <- bind(A,B).$ concatenates the matrices A and B horizontally.
+\medskip
+
+\subsection{vbind()}
+Job vbind() concatenates matrices vertically.
+\begin{lstlisting}
+C <- vbind(A,B).
+\end{lstlisting}
+
+$C <- vbind(A,B).$ concatenates the matrices A and B vertically.
+\medskip
+
+\subsection{eig()}
+Job eig() returns a vector of the eigenvalues of matrix.
+\begin{lstlisting}
+D <- eig(A).
+\end{lstlisting}
+
+$d <- eig(A)$ returns a vector of the eigenvalues of matrix A.
+\medskip
+
+\subsection{max()}
+Job max() returns the largest elements of a matrix.
+\begin{lstlisting}
+C <- max(A).
+\end{lstlisting}
+
+$D <- max(A).$ returns the largest element in A.
+\medskip
+
+\subsection{mean()}
+Job mean() returns the mean values of the elements of a matrix.
+\begin{lstlisting}
+M <- mean(A).
+\end{lstlisting}
+
+$D <- mean(A).$ returns the mean value of A.
+\medskip
+
+\subsection{min()}
+Job min() returns the smallest elements of a matrix.
+\begin{lstlisting}
+C <- min(A).
+\end{lstlisting}
+
+$D <- min(A).$ returns the smallest element in A.
+\medskip
+
+\subsection{sum()}
+Job sum() returns sums of a matrix.
+\begin{lstlisting}
+B <- sum(A).
+\end{lstlisting}
+
+$D <- sum(A).$ returns the sum of the elements.
+\medskip
+
+\subsection{abs()}
+Job abs() returns the absolute value.
+\begin{lstlisting}
+Y <- abs(X).
+\end{lstlisting}
+
+$D <- abs(X).$ returns the absolute value, X, for each element of X.
+\medskip
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+
+\section*{Appendix - Grammar}
+
+MIPL's full grammar is here. MIPL's Yacc grammar has only one
+shift/reduce conflict, which C language also has, without using
+operator associativity declarations. This grammar does not 
+include some of the additional operators and the built-in matrices
+and Jobs. They can, however, be easily incorporated.
+
+\lstinputlisting{../../build/mipl.grammar}
+%\input{../../build/mipl_grammar.tex}
+%\lstinputlisting{tablified_grammar}
+
+% Appendix
+%\appendix
+%\section*{APPENDIX}
+%\setcounter{section}{1}
+%In this appendix, we measure
+
+%\appendixhead{ZHOU}
+
+% Acknowledgments
+%\begin{acks}
+%The authors would like to thank Dr. Maura Turolla of Telecom
+%\end{acks}
+
+% Bibliography
+%\bibliographystyle{acmsmall}
+%\bibliography{reference_manual_ref}
+
+% History dates
+%\received{February 2007}{March 2009}{June 2009}
+
+% Electronic Appendix
+%\elecappendix
+
+\medskip
+
+%\section{This is an example of Appendix section head}
+
+\end{document}

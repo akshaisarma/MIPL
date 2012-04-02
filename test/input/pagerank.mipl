@@ -6,7 +6,7 @@
 # Description: A MIPL program that implements PageRank
 #              algorithm and uses it.
 
-pagerank(G, P, U) {
+job pagerank(G, P, U) {
 	Alpha = 0.85.
 	Max_iteration = 20.
 	I = 0.
@@ -14,6 +14,7 @@ pagerank(G, P, U) {
 		P = Alpha * (G * P) + (1 - Alpha) * (ones * U * P).
 		I = I + 1.
 	}
+	@P.
 }
 
 [personal_dat] <- load('personal.dat').

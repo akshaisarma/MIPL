@@ -19,6 +19,9 @@ public class Rule extends Knowledge {
 
 		this.term = term;
 		this.source = source;
+
+		add(term);
+		add(source);
 	}
 
 	public Term getTerm() {

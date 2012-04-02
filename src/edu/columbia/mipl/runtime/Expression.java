@@ -29,11 +29,13 @@ public class Expression extends Traversable {
 	Expression right;
 
 	public Expression(Type type, Term term) {
-		assert (type == Type.TERM && 
+		assert (type == Type.TERM &&
 			(term.getType() == Term.Type.VARIABLE || term.getType() == Term.Type.NUMBER));
 
 		this.type = type;
 		this.term = term;
+
+		add(term);
 	}
 
 	public Expression(Type type, int value) {
@@ -42,7 +44,7 @@ public class Expression extends Traversable {
 
 	public Expression(Type type, double value) {
 		assert (type == Type.TERM && term.getType() == Term.Type.NUMBER);
-		
+
 		term.setValue(value);
 	}
 
@@ -52,6 +54,9 @@ public class Expression extends Traversable {
 
 		left = expr1;
 		right = expr2;
+
+		add(expr1);
+		add(expr2);
 	}
 
 	public Term getTerm() {
@@ -61,14 +66,27 @@ public class Expression extends Traversable {
 		return new Term(Term.Type.EXPRESSION, this);
 	}
 
-	double calculateValue(VariableStack vs) /* throws InsuffArgInitException, NonArithmeticArgException */ {
+	public Type getType() {
+		return type;
+	}
+
+	public Expression getExpr1() {
+		return left;
+	}
+
+	public Expression getExpr2() {
+		return right;
+	}
+
+	/*
+	double calculateValue(VariableStack vs) /* throws InsuffArgInitException, NonArithmeticArgException / {
 		switch (type) {
 			case TERM:
 				Term term  = vs.get(this.term);
 				if (term == null)
-					/* throw new InsuffArgInitException() */;
+					/* throw new InsuffArgInitException() /;
 				if (term.getType() != Term.Type.NUMBER)
-					/* throw new NonArithmeticArgException() */;
+					/* throw new NonArithmeticArgException() /;
 
 				value = term.getValue();
 				break;
@@ -87,4 +105,5 @@ public class Expression extends Traversable {
 		}
 		return value;
 	}
+	*/
 }
