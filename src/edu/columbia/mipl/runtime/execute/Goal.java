@@ -13,20 +13,18 @@ import java.util.*;
 import edu.columbia.mipl.runtime.*;
 
 public class Goal extends Stack<Term> {
-	List<Term> targetArguments;
+	Map<String, Term> initialVariableMap;
 
 	Goal(Term initialGoal) {
-		targetArguments = initialGoal.getArguments();
 		push(initialGoal);
 	}
 
 	Goal(Goal clone) {
 		addAll(clone);
-		targetArguments = new ArrayList<Term>();
-		targetArguments.addAll(clone.targetArguments);
+		initialVariableMap = clone.initialVariableMap;
 	}
 
-	List<Term> getTargetArguments() {
-		return targetArguments;
+	void setInitialVariableMap(Map<String, Term> map) {
+		initialVariableMap = map;
 	}
 }

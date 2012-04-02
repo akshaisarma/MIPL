@@ -94,4 +94,8 @@ public class Traversable extends ArrayList<Traversable> implements Serializable 
 		return result;
 	}
 
+	public int hashCode() {
+		return System.identityHashCode(this);
+	}
+
 }

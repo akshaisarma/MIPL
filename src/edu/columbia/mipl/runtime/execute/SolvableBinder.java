@@ -40,6 +40,10 @@ class VariableGrouper implements Traverser {
 		return true;
 	}
 
+	public Map<String, Term> getVariableMap() {
+		return map;
+	}
+
 	public void finish() {
 	}
 }
@@ -48,9 +52,12 @@ public class SolvableBinder extends Binder implements Solvable {
 	Goal goal;
 	VariableStack vs;
 
-	SolvableBinder(Goal goal) {
-		this.goal = goal;
+	SolvableBinder(Term term) {
+		goal = new Goal(term);
 		vs = new VariableStack();
+		VariableGrouper grouper = new VariableGrouper(vs);
+		term.traverse(grouper);
+		goal.setInitialVariableMap(grouper.getVariableMap());
 	}
 
 	boolean bind() {
@@ -75,16 +82,20 @@ public class SolvableBinder extends Binder implements Solvable {
 		else if (target.getType() == Term.Type.VARIABLE &&
 				source.getType() != Term.Type.VARIABLE) {
 
-			if (vs.get(target) == null)
-				vs.put(target, source);
+			if (vs.get(target) == null) {
+				vs.put(target, source); //TODO clone and put
+				return true;
+			}
 
 			return match(vs.get(target), source, vs);
 		}
 		else if (target.getType() != Term.Type.VARIABLE &&
 				source.getType() == Term.Type.VARIABLE) {
 
-			if (vs.get(source) == null)
-				vs.put(source, target);
+			if (vs.get(source) == null) {
+				vs.put(source, target); //TODO clone and put
+				return true;
+			}
 
 			return match(vs.get(source), target, vs);
 		}
@@ -116,9 +127,16 @@ public class SolvableBinder extends Binder implements Solvable {
 
 	boolean bind(Goal goal, VariableStack vs, Solvable solver) {
 		boolean result = false;
-		Term currentGoal = goal.pop();
+		Term currentGoal;
 
-		while (currentGoal != null) {
+		if (goal.empty()) {
+			solver.solve(goal, vs);
+			return true;
+		}
+
+		currentGoal = goal.pop();
+
+		if (true) {
 			List<Knowledge> knowledges;
 			Term newTerm;
 			Rule rule;
@@ -127,18 +145,25 @@ public class SolvableBinder extends Binder implements Solvable {
 			if (knowledges == null)
 				return false;
 
+
 			for (Knowledge knowledge : knowledges) {
 				VariableStack newVs = new VariableStack(vs);
 				knowledge.traverse(new VariableGrouper(newVs));
 
+
 				if (knowledge instanceof Job)
 					continue;
+
 
 				if (!match(currentGoal, knowledge.getTerm(), newVs))
 					continue;
 
-				if (knowledge instanceof Fact)
-					return bind(new Goal(goal), newVs, solver);
+
+				if (knowledge instanceof Fact) {
+					result = result || bind(new Goal(goal), newVs, solver);
+					continue;
+				}
+
 
 				rule = (Rule) knowledge;
 				Term source = rule.getSource();
@@ -164,15 +189,19 @@ public class SolvableBinder extends Binder implements Solvable {
 				} while (orTermRhs != null);
 			}
 		}
-		solver.solve(goal, vs);
+//		solver.solve(goal, vs);
 
-		return true;
+		return result;
 	}
 
 	public boolean solve(Goal goal, VariableStack vs) {
+		/*
 		if (vs.keySet().containsAll(goal.getTargetArguments())) {
 			// print
 		}
+		*/
+		System.out.println("Solved Goal!");
+
 		return true;
 	}
 }

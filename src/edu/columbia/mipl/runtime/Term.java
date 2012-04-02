@@ -312,4 +312,7 @@ public class Term extends Traversable {
 		return true;
 	}
 */
+	public String toString() {
+		return "([" + type + "]" + name + ")";
+	}
 }
