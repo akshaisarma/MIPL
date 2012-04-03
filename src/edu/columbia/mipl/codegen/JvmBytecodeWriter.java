@@ -24,9 +24,10 @@ public class JvmBytecodeWriter extends InstructionWriter {
 
 	/* read http://commons.apache.org/bcel/manual.html */
 	public JvmBytecodeWriter() {
-		String output = "MiplProgram"; /* Should be read from Configuration */
+	}
 
-		ClassGen cg = new ClassGen(output, "java.lang.Object",
+	public void init(String path, String filename) {
+		ClassGen cg = new ClassGen(filename, "java.lang.Object",
 				"<generated>", Constants.ACC_PUBLIC | Constants.ACC_SUPER,
 				null);
 		ConstantPoolGen cp = cg.getConstantPool();
@@ -36,7 +37,7 @@ public class JvmBytecodeWriter extends InstructionWriter {
 				Type.VOID,
 				new Type[] {new ArrayType(Type.STRING, 1)},
 				new String[] {"argv"},
-				"main", output,
+				"main", filename,
 				il, cp);
 
 		InstructionFactory factory = new InstructionFactory(cg);

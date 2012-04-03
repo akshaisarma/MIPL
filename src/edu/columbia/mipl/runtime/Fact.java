@@ -25,7 +25,8 @@ public class Fact extends Knowledge  {
 	List<Term> terms;
 
 	public Fact(Term term) {
-		assert (term.getType() == Term.Type.TERM);
+		assert (term.getType() == Term.Type.TERM ||
+			term.getType() == Term.Type.MATRIX);
 
 		this.term = term;
 		name = term.getName();

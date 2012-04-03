@@ -59,33 +59,39 @@ public class JavaSourceWriter extends InstructionWriter {
 	}
 
 	public JavaSourceWriter() {
-		String output = "MiplProgram"; /* Should be read from Configuration */
+	}
 
-		stack = new Stack<String>() {
+	public void init(String path, String filename) {
+
+		stack = new Stack<String>() /* {
 			public String push(String a) {
-//				System.out.println("PUSH: " + a);
+				System.out.println("PUSH: " + a);
 				return super.push(a);
 			}
 			public String pop() {
 				String a = super.pop();
-//				System.out.println("POP: " + a);
+				System.out.println("POP: " + a);
 				return a;
 			}
-		};
+		} */;
 
 		resetDeclarationList();
 
-		File file = new File(output + ".java");
+		File file = new File(path + "/" + filename + ".java");
 		try {
 			out = new BufferedWriter(new FileWriter(file));
 
 			println("import java.io.*;");
-			println("import java.util.*;\n");
+			println("import java.util.*;");
+			println("");
 			println("import edu.columbia.mipl.runtime.*;");
-			println("import edu.columbia.mipl.runtime.execute.*;\n");
-			println("import edu.columbia.mipl.datastr.*;\n");			
-			println("public class " + output + " {");
-			println("public static void main(String[] args) {");
+			println("import edu.columbia.mipl.runtime.execute.*;");
+			println("");
+			println("import edu.columbia.mipl.datastr.*;");
+			println("");
+			println("public class " + filename + " {");
+			println("public static void main(String[] args) throws MiplRuntimeException {");
+			println("KnowledgeTable knowledgeTable = KnowledgeTableFactory.getKnowledgeTable();");
 			println("Program program = new Program(new ProgramExecutor());");
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -240,7 +246,8 @@ public class JavaSourceWriter extends InstructionWriter {
 	public void createFact(Fact.Type type, Term term) {
 	// Fact.Type.FACT
 
-		println("program.add(new Fact(" + stack.pop() + "));\n");
+		println("program.add(new Fact(" + stack.pop() + "));");
+		println("");
 
 		resetDeclarationList();
 	}
@@ -258,7 +265,7 @@ public class JavaSourceWriter extends InstructionWriter {
 				stringArgs += ", ";
 			if (terms.get(i).getType() == Term.Type.TERM) {
 				// check if this is acomplex term, and then throw an exception
-				stringArgs += "KnowledgeTable.get(\"" + terms.get(i).getName() + "\").getMatix()";
+				stringArgs += "knowledgeTable.getFactMatrix(\"" + terms.get(i).getName() + "\")";
 			}
 			else if (terms.get(i).getType() == Term.Type.NUMBER)
 				stringArgs += "new PrimitiveDouble(" + terms.get(i).getValue() + ")";
@@ -272,7 +279,7 @@ public class JavaSourceWriter extends InstructionWriter {
 		println("	throw new UnmatchedNumberOfReturenException();");
 
 		for (i = 0; i < names.size(); i++)
-			println("program.add(new Fact(\"" + names.get(i) + "\", " + rvName + ".get(" + i + ")));");
+			println("program.add(new Fact(new Term(Term.Type.MATRIX, \"" + names.get(i) + "\", " + rvName + ".get(" + i + "))));");
 		println("");
 
 		resetDeclarationList();
@@ -281,13 +288,15 @@ public class JavaSourceWriter extends InstructionWriter {
 	public void createRule(Term term, Term source) {
 		String t = stack.pop();
 		String s = stack.pop();
-		println("program.add(new Rule(" + t + ", " + s + "));\n");
+		println("program.add(new Rule(" + t + ", " + s + "));");
+		println("");
 
 		resetDeclarationList();
 	}
 
 	public void createQuery(Term term) {
-		println("program.add(new Query(" + stack.pop() + "));\n");
+		println("program.add(new Query(" + stack.pop() + "));");
+		println("");
 
 		resetDeclarationList();
 	}
@@ -476,6 +485,7 @@ public class JavaSourceWriter extends InstructionWriter {
 	public void finish() {
 		try {
 			println("}");
+			println("");
 			println(jobDeclarations);
 			println("}");
 			out.close();

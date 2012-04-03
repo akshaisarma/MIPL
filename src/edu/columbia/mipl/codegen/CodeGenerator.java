@@ -21,10 +21,11 @@ public class CodeGenerator extends RuntimeTraverser {
 		return Method.POST;
 	}
 
-	public CodeGenerator() {
+	public CodeGenerator(String path, String output) {
 		String target = "JavaSrc"; /* read this from Configuration */
 		writer = InstructionWriterFactory.getInstructionWriter(target);
 		assert (writer != null);
+		writer.init(path, output);
 	}
 
 	public boolean reachTerm(Term term) {
@@ -67,6 +68,7 @@ public class CodeGenerator extends RuntimeTraverser {
 			case REGEXQUERYALL:
 			case STRING:
 				writer.createTerm(term.getType(), term.getName());
+				break;
 			case EXPRESSION:
 				writer.createTerm(Term.Type.EXPRESSION, term.getExpr1());
 				break;

@@ -91,6 +91,20 @@ public class Term extends Traversable {
 		this(type, name, new PrimitiveMatrix<Double>(data));
 	}
 
+	public Term(Type type, String name, PrimitiveType value) {
+		assert (type == Type.MATRIX);
+
+		this.type = type;
+		this.name = name;
+
+		if (value instanceof PrimitiveMatrix)
+			matrix = (PrimitiveMatrix<Double>) value;
+		else {
+			matrix = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(1, 1));
+			matrix.setValue(0, 0, ((PrimitiveDouble) value).getData());
+		}
+	}
+
 	public Term(Type type, String name, PrimitiveMatrix<Double> matrix) {
 		assert (type == Type.MATRIX);
 

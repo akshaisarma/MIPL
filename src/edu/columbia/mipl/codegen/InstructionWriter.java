@@ -25,6 +25,8 @@ public abstract class InstructionWriter {
 		InstructionWriterFactory.registerInstructionWriter(this);
 	}
 
+	public abstract void init(String path, String filename);
+
 	public abstract String getName();
 
 	public abstract void createTerm(Term.Type type, Term term1,

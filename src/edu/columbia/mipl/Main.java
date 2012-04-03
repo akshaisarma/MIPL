@@ -33,6 +33,6 @@ public class Main {
 			System.out.println("There are semantic errors!");
 			return;
 		}
-		parser.getProgram().traverse(new CodeGenerator());
+		parser.getProgram().traverse(new CodeGenerator("build", "MiplProgram"));
 	}
 }
