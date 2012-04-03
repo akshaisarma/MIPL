@@ -27,4 +27,8 @@ public class Goal extends Stack<Term> {
 	void setInitialVariableMap(Map<String, Term> map) {
 		initialVariableMap = map;
 	}
+
+	Map<String, Term> getInitialVariableMap() {
+		return initialVariableMap;
+	}
 }

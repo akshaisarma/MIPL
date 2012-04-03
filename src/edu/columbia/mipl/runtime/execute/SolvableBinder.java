@@ -195,12 +195,13 @@ public class SolvableBinder extends Binder implements Solvable {
 	}
 
 	public boolean solve(Goal goal, VariableStack vs) {
-		/*
-		if (vs.keySet().containsAll(goal.getTargetArguments())) {
-			// print
-		}
-		*/
 		System.out.println("Solved Goal!");
+		new Exception().printStackTrace();
+		Map<String, Term> variables = goal.getInitialVariableMap();
+
+		for (String variable : variables.keySet()) {
+			System.out.println(variable + " = ");
+		}
 
 		return true;
 	}
