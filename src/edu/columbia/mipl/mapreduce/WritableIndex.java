@@ -52,10 +52,11 @@ public class WritableIndex implements Writable, WritableComparable {
 		return ind.col - col;
 	}
 	
-	public String toString() {
+	public String toString()
+	{
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append(row + " " + col);
+//		sb.append(row + " " + col);
 		return sb.toString();
 	}
 }
