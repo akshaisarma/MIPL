@@ -29,10 +29,10 @@ public class Main {
 			System.out.println("Error on parsing input!");
 			return;
 		}
-		if (!parser.getProgram().traverse(new SemanticChecker())) {
-			System.out.println("There are semantic errors!");
-			return;
-		}
+		//if (!parser.getProgram().traverse(new SemanticChecker())) {
+		//	System.out.println("There are semantic errors!");
+		//	return;
+		//}
 		parser.getProgram().traverse(new CodeGenerator("build", "MiplProgram"));
 	}
 }
