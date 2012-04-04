@@ -39,8 +39,8 @@ public class MatrixAddition {
 				OutputCollector<LongWritable, WritableArray> output, Reporter reporter)
 				throws IOException {
 
-			System.out.println("key = " + key.toString());
-			System.out.println("val = " + val.toString());
+//			System.out.println("key = " + key.toString());
+//			System.out.println("val = " + val.toString());
 			int n = 1;
 			WritableArray array = new WritableArray(1, n, key.get());
 
@@ -55,19 +55,21 @@ public class MatrixAddition {
 				n++;
 //				array.printMatrix();
 			}
-			array.printMatrix();
-			System.out.println("array = " + array.getCol() + " " + array.getRow());
+//			array.printMatrix();
+//			System.out.println("array = " + array.getCol() + " " + array.getRow());
 ///			System.out.println("key = " + key.toString());
 
-			System.out.println(array.toString());
-			if (array.getCol() < MIN_MATRIX_SIZE) {
+//			System.out.println(array.toString());
+//			if (array.getCol() < MIN_MATRIX_SIZE) {
 //				newKey.set(n);
+//			key.set(n);
 				output.collect(key, array);
-				return;
-			}
+//				return;
+//			}
 			
-			System.out.println("new");
+//			System.out.println("new");
 
+				/*
 			int nSplitCols = ((array.getCol() - 1) / NUM_MATRIX_SPLIT) + 1;
 			// int paddedLength = nSplitCols * NUM_MATRIX_SPLIT;
 			double[] data = array.getData();
@@ -76,6 +78,7 @@ public class MatrixAddition {
 				// TODO: adjust nSplitCols for the last unaligned data!
 				output.collect(newKey, new WritableArray(1, nSplitCols, Arrays.copyOfRange(data, n * nSplitCols, nSplitCols), key.get()));
 			}
+			*/
 		}
 	}
 	
@@ -83,7 +86,7 @@ public class MatrixAddition {
 		implements Partitioner<LongWritable, WritableArray> {
 
 		public int getPartition(LongWritable writ, WritableArray arr, int numPartitions) {
-			System.out.println("getPartition : " + writ.get() + " " + numPartitions);
+//			System.out.println("getPartition : " + writ.get() + " " + numPartitions);
 			return 0;
 		}
 	}
@@ -99,10 +102,11 @@ public class MatrixAddition {
 
 			boolean first = true;
 			StringBuilder toReturn = new StringBuilder();
-			System.out.println("key = " + key.toString());
-			System.out.println(values.toString());
+//			System.out.println("key = " + key.toString());
+//			System.out.println(values.toString());
 			
 			WritableArray sumArr = null;
+//			System.out.println("====================================================================");
 			while (values.hasNext()) {
 				WritableArray array = values.next();
 				
@@ -115,15 +119,17 @@ public class MatrixAddition {
 					
 				}
 				
-				System.out.println(array.getCol() + " " + array.getRow());
+//				System.out.println(array.getCol() + " " + array.getRow());
 //				System.out.println(array.toString());
-				array.printMatrix();
+//				array.printMatrix();
 //				System.out.print(array.getValue(row, col))
 //				sortedMap.put(array.getPos(), array);
 			}
+//			sumArr.printMatrix();
+//			System.out.println();
 			output.collect(new WritableIndex(key.get(), key.get()), sumArr);
-			System.out.println();
-			int nSplitRows = ((sortedMap.size() - 1) / NUM_MATRIX_SPLIT) + 1;
+//			System.out.println();
+//			int nSplitRows = ((sortedMap.size() - 1) / NUM_MATRIX_SPLIT) + 1;
 			// int nPaddedRows = nSplitRows * NUM_MATRIX_SPLIT;
 
 			/*

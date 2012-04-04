@@ -7,7 +7,6 @@ import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 
-import edu.columbia.mipl.datastr.*;
 
 public class MapReduceProxy {
 	/* refer to : http://gdfm.me/2011/06/10/iterative-algorithms-in-hadoop/ */
@@ -18,8 +17,9 @@ public class MapReduceProxy {
 	 *  
 	 *  You can subclass the OutputFormat.java class and write your own. You can look at the code of TextOutputFormat MultipleOutputFormat.java etc. for reference. It might be the case that you only need to do minor changes to any of the existing Output Format classes. To do that you can just subclass that class and override the methods you need to change. 
 	 */
-	JobConf conf;
-
+	public MapReduceProxy() {
+	}
+	
 	private void job(Class jobClass, Class keyClass, Class valueClass, 
 			Class<? extends org.apache.hadoop.mapred.Mapper> mapClass,
 			Class<? extends org.apache.hadoop.mapred.Reducer> reduceClass,
@@ -32,27 +32,6 @@ public class MapReduceProxy {
 			Class<? extends org.apache.hadoop.mapred.Reducer> reduceClass,
 			String outputPath, String firstInputPath, String secondInputPath) {
 
-		JobClient client = new JobClient();
-		conf = new JobConf(jobClass);
-
-		conf.setJobName(jobClass.getName());
-		
-		conf.setMapOutputKeyClass(LongWritable.class);
-		conf.setMapOutputValueClass(WritableArray.class);
-
-		conf.setOutputKeyClass(WritableIndex.class);
-		conf.setOutputValueClass(WritableArray.class);
-
-		FileInputFormat.addInputPath(conf, new Path(firstInputPath));
-		if (secondInputPath != null)
-			FileInputFormat.addInputPath(conf, new Path(secondInputPath));
-
-		FileOutputFormat.setOutputPath(conf, new Path(outputPath));
-
-		conf.setMapperClass(mapClass);
-		conf.setReducerClass(reduceClass);
-
-		client.setConf(conf);
 
 	}
 
@@ -61,9 +40,36 @@ public class MapReduceProxy {
 			MatrixAddition.MatrixMapper.class, MatrixAddition.MatrixReducer.class,
 			outputPath, inputPath);
 	}
+	
+	private void job(Class jobClass, JobClient client, JobConf conf) {
+		conf.setJobName(MatrixAddition.class.getName());
+		
+		conf.setMapOutputKeyClass(LongWritable.class);
+		conf.setMapOutputValueClass(WritableArray.class);
+
+		conf.setOutputKeyClass(WritableIndex.class);
+		conf.setOutputValueClass(WritableArray.class);
+
+
+		conf.setMapperClass(MatrixAddition.MatrixMapper.class);
+		conf.setReducerClass(MatrixAddition.MatrixReducer.class);
+
+		client.setConf(conf);
+		
+
+	}
 
 	public void add(String inputPath1, String inputPath2, String outputPath) {
 		try {
+			JobClient client = new JobClient();
+			JobConf conf = new JobConf(MatrixAddition.class);
+			
+			job(MatrixAddition.class, client, conf);
+			
+			FileInputFormat.addInputPath(conf, new Path(inputPath1));
+			FileInputFormat.addInputPath(conf, new Path(inputPath2));
+			FileOutputFormat.setOutputPath(conf, new Path(outputPath));
+
 			JobClient.runJob(conf);
 		} catch (Exception e) {
 			e.printStackTrace();
