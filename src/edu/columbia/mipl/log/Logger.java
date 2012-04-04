@@ -8,7 +8,9 @@
  */
 package edu.columbia.mipl.log;
 
+import org.apache.log4j.*;
 import java.util.*;
 
 public class Logger {
+
 }
