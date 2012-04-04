@@ -36,12 +36,64 @@ class VariableGrouper implements Traverser {
 				else
 					vs.group(exist, t);
 			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public Map<String, Term> getVariableMap() {
 		return map;
+	}
+
+	public void finish() {
+	}
+}
+
+class StringGenerator implements Traverser {
+	Stack<String> stack;
+
+	public StringGenerator(Term t) {
+		stack = new Stack<String>();
+		t.traverse(this);
+	}
+
+	public Method getMethod() {
+		return Method.POST;
+	}
+
+	public String toString() {
+		return stack.pop();
+	}
+
+	public boolean reach(Traversable t) {
+		String line;
+		int i;
+
+		if (t instanceof Term) {
+			Term target = (Term) t;
+			switch(target.getType()) {
+				case NUMBER:
+					stack.push(new Double(target.getValue()).toString());
+					break;
+				case STRING:
+				case VARIABLE:
+					stack.push(target.getName());
+					break;
+				case TERM:
+					line = target.getName() + "(";
+					i = target.getArguments().size();
+					for (Term arg : target.getArguments()) {
+						line += stack.pop();
+						if (--i > 0)
+							line += ", ";
+					}
+					line += ")";
+					stack.push(line);
+					break;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	public void finish() {
@@ -196,11 +248,12 @@ public class SolvableBinder extends Binder implements Solvable {
 
 	public boolean solve(Goal goal, VariableStack vs) {
 		System.out.println("Solved Goal!");
-		new Exception().printStackTrace();
+		//new Exception().printStackTrace();
 		Map<String, Term> variables = goal.getInitialVariableMap();
 
 		for (String variable : variables.keySet()) {
-			System.out.println(variable + " = ");
+			Term valueTerm = vs.get(variables.get(variable));
+			System.out.println(variable + " = " + new StringGenerator(valueTerm));
 		}
 
 		return true;
