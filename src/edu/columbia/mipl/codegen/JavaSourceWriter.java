@@ -84,6 +84,7 @@ public class JavaSourceWriter extends InstructionWriter {
 			println("import java.io.*;");
 			println("import java.util.*;");
 			println("");
+			println("import edu.columbia.mipl.builtin.*;");
 			println("import edu.columbia.mipl.runtime.*;");
 			println("import edu.columbia.mipl.runtime.execute.*;");
 			println("");
@@ -269,10 +270,26 @@ public class JavaSourceWriter extends InstructionWriter {
 			}
 			else if (terms.get(i).getType() == Term.Type.NUMBER)
 				stringArgs += "new PrimitiveDouble(" + terms.get(i).getValue() + ")";
+			else if (terms.get(i).getType() == Term.Type.STRING)
+				stringArgs += "new PrimitiveString(\"" + terms.get(i).getName() + "\")";
 			else
 				; // exception
 		}
 
+		if (name.equals("load")) { /* TODO: hard coding  ==> from builtin symbol table*/
+			String rvName = "returnVal" + (idxName++);
+			println("List<PrimitiveType> " + rvName + " = new BuiltinLoad().jobImplementation(" + stringArgs + ");");
+			println("if (" + rvName + ".size() != " + names.size() + ")");
+			println("       throw new UnmatchedNumberOfReturenException();");
+
+			for (i = 0; i < names.size(); i++)
+				println("program.add(new Fact(new Term(Term.Type.MATRIX, \"" + names.get(i) + "\", " + rvName + ".get(" + i + "))));");
+			println("");
+
+			resetDeclarationList();
+
+			return;
+		}
 		String rvName = "returnVal" + (idxName++);
 		println("List<PrimitiveType> " + rvName + " = " + name + "(" + stringArgs + ");");
 		println("if (" + rvName + ".size() != " + names.size() + ")");

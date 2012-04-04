@@ -12,8 +12,9 @@ import java.util.*;
 import java.lang.reflect.*;
 
 import edu.columbia.mipl.datastr.*;
+import edu.columbia.mipl.runtime.execute.*;
 
 public interface BuiltinJob {
 	public String getName();
-	public List<PrimitiveType> jobImplementation(PrimitiveType args[]);
+	public List<PrimitiveType> jobImplementation(PrimitiveType ... args)  throws MiplRuntimeException;
 }
