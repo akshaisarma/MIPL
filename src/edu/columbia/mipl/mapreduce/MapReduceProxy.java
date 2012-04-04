@@ -62,8 +62,8 @@ public class MapReduceProxy {
 	}
 
 	public void split(String inputPath, String outputPath) {
-		job(MatrixSplitter.class, WritableIndex.class, WritableArray.class,
-			MatrixSplitter.MatrixMapper.class, MatrixSplitter.MatrixReducer.class,
+		job(MatrixAddition.class, WritableIndex.class, WritableArray.class,
+			MatrixAddition.MatrixMapper.class, MatrixAddition.MatrixReducer.class,
 			outputPath, inputPath);
 	}
 
