@@ -80,14 +80,17 @@ class StringGenerator implements Traverser {
 					stack.push(target.getName());
 					break;
 				case TERM:
-					line = target.getName() + "(";
+					line = target.getName();
 					i = target.getArguments().size();
+					if (i > 0)
+						line = "(";
 					for (Term arg : target.getArguments()) {
 						line += stack.pop();
 						if (--i > 0)
 							line += ", ";
 					}
-					line += ")";
+					if (target.getArguments().size() > 0)
+						line += ")";
 					stack.push(line);
 					break;
 			}
