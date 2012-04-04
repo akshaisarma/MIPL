@@ -11,7 +11,7 @@ package edu.columbia.mipl.datastr;
 import java.util.*;
 import java.lang.reflect.*;
 
-public class PrimitiveMatrix<T> extends PrimitiveType {
+public class PrimitiveMatrix<T> implements PrimitiveType {
 	PrimitiveArray data;
 
 	public enum Status {
@@ -23,7 +23,7 @@ public class PrimitiveMatrix<T> extends PrimitiveType {
 		PM_STATUS_UNBOUND_MATRIX,
 		/* Reference or SubMatrix Type may be added for performance */
 	};
-	Status status;
+	protected Status status;
 	String uri;
 
 	int sparseRow;
