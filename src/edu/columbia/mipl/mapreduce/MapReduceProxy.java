@@ -18,6 +18,7 @@ public class MapReduceProxy {
 	 *  
 	 *  You can subclass the OutputFormat.java class and write your own. You can look at the code of TextOutputFormat MultipleOutputFormat.java etc. for reference. It might be the case that you only need to do minor changes to any of the existing Output Format classes. To do that you can just subclass that class and override the methods you need to change. 
 	 */
+	JobConf conf;
 
 	private void job(Class jobClass, Class keyClass, Class valueClass, 
 			Class<? extends org.apache.hadoop.mapred.Mapper> mapClass,
@@ -32,7 +33,7 @@ public class MapReduceProxy {
 			String outputPath, String firstInputPath, String secondInputPath) {
 
 		JobClient client = new JobClient();
-		JobConf conf = new JobConf(jobClass);
+		conf = new JobConf(jobClass);
 
 		conf.setJobName(jobClass.getName());
 		
@@ -53,12 +54,6 @@ public class MapReduceProxy {
 
 		client.setConf(conf);
 
-		try {
-			JobClient.runJob(conf);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// waitForComplete?
 	}
 
 	public void split(String inputPath, String outputPath) {
@@ -68,6 +63,12 @@ public class MapReduceProxy {
 	}
 
 	public void add(String inputPath1, String inputPath2, String outputPath) {
+		try {
+			JobClient.runJob(conf);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		// job(MatrixAdder.class, WritableIndex.class, WritableArray.class,
 		//	MatrixAdder.MatrixMapper.class, MatrixAdder.MatrixReducer.class,
 		//	outputPath, inputPath1, inputPath2);
