@@ -10,7 +10,7 @@ package edu.columbia.mipl.datastr;
 import edu.columbia.mipl.matops.*;
 
 public class PrimitiveOperations {
-	static MatrixOperations ops;
+	static MapReduceMatrixOperations ops;
 	static {
 		ops = new MapReduceMatrixOperations(); //TODO: read from Configuration
 	}
@@ -145,7 +145,9 @@ public class PrimitiveOperations {
 			PrimitiveMatrix t = (PrimitiveMatrix) target;
 			if (source instanceof PrimitiveMatrix) {
 				PrimitiveMatrix s = (PrimitiveMatrix) source;
-				ops.add(t.getData(), s.getData());
+				ops.addMatrix(t, s);
+
+//				ops.add(t.getData(), s.getData());
 			}
 			else if (source instanceof PrimitiveDouble) {
 				PrimitiveDouble s = (PrimitiveDouble) source;

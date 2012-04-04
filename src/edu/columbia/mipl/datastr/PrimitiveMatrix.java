@@ -133,4 +133,12 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		// throw new InvalidStatusException();
 		return null;
 	}
+	
+	public String getURI() {
+		return uri;
+	}
+	
+	public Status getStatus() {
+		return status;
+	}
 }
