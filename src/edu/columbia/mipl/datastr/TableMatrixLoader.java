@@ -15,7 +15,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.File;
 import java.io.FileWriter;
+import java.nio.*;
+import java.nio.channels.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -73,8 +77,43 @@ public class TableMatrixLoader extends MatrixLoader {
 		return null;
 	}
 
+	public static void copyFile(File sourceFile, File destFile) {
+		try {
+			if (!destFile.exists()) {
+				destFile.createNewFile();
+			}
+
+			FileChannel source = null;
+			FileChannel destination = null;
+
+			try {
+				source = new FileInputStream(sourceFile).getChannel();
+				destination = new FileOutputStream(destFile).getChannel();
+				destination.transferFrom(source, 0, source.size());
+			}
+			finally {
+				if (source != null) {
+					source.close();
+				}
+				if (destination != null) {
+					destination.close();
+				}
+			}
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+
 	public void saveMatrix(String file, PrimitiveMatrix matrix) {
-		saveMatrix(file, matrix.getData());
+		if (matrix.getStatus() == PrimitiveMatrix.Status.PM_STATUS_LOADED_FULL)
+			saveMatrix(file, matrix.getData());
+		else if (matrix.getStatus() == PrimitiveMatrix.Status.PM_STATUS_URI_LOCAL)
+			copyFile(new File(matrix.getURI()), new File(file));
+		else if (matrix.getStatus() == PrimitiveMatrix.Status.PM_STATUS_URI_REMOTE)
+			new Exception("Not Implemented").printStackTrace();
+		else
+			new Exception("Not Implemented").printStackTrace();
 	}
 
 	void saveMatrix(String file, PrimitiveArray matrix) {

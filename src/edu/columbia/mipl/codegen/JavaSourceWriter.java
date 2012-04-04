@@ -296,9 +296,15 @@ public class JavaSourceWriter extends InstructionWriter {
 		}
 		if (name.equals("save")) { /* TODO: hard coding  ==> from builtin symbol table*/
 			String rvName = "returnVal" + (idxName++);
-			println("List<PrimitiveType> " + rvName + " = new BuiltinLoad().jobImplementation(" + stringArgs + ");");
-			println("if (" + rvName + ".size() != " + namesSize + ")");
-			println("       throw new UnmatchedNumberOfReturenException();");
+			println("List<PrimitiveType> " + rvName + " = new BuiltinSave().jobImplementation(" + stringArgs + ");");
+			if (namesSize == 0) {
+				println("if (" + rvName + " != null)");
+				println("       throw new UnmatchedNumberOfReturenException();");
+			}
+			else {
+				println("if (" + rvName + ".size() != " + namesSize + ")");
+				println("	throw new UnmatchedNumberOfReturenException();");
+			}
 
 			for (i = 0; i < namesSize; i++)
 				println("program.add(new Fact(new Term(Term.Type.MATRIX, \"" + names.get(i) + "\", " + rvName + ".get(" + i + "))));");

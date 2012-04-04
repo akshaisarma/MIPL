@@ -56,7 +56,7 @@ public final class MatrixLoaderFactory {
 		MatrixLoaderFactory.instance.loaderMap.put(name.toLowerCase(), loader);
 	}
 
-	static MatrixLoader getMatrixLoader(String name) {
+	public static MatrixLoader getMatrixLoader(String name) {
 		return MatrixLoaderFactory.instance.loaderMap.get(name.toLowerCase());
 	}
 }
