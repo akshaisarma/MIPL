@@ -1,25 +1,25 @@
 /*
  * MIPL: Mining Integrated Programming Language
  *
- * File: MPLogger.java
+ * File: Log.java
  * Author: Jin Hyung Park (jp2105)
  * Reviewer: YoungHoon Jung (yj2244)
- * Description: MPLogger
+ * Description: Log
  */
 package edu.columbia.mipl.log;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-public class MPLogger {
-	private static MPLogger instance = null;
+public class Log {
+	private static Log instance = null;
 
-	MPLogger() {
+	Log() {
 	}
 
-	public static synchronized MPLogger getInstance() {
+	public static synchronized Log getInstance() {
 		if (instance == null) {
-			instance = new MPLogger();
+			instance = new Log();
 		}
 
 		return instance;
