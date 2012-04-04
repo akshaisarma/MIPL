@@ -15,19 +15,19 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 	public WritableArray() {
 
 		super(0, 0);
-		System.out.println("WritableArray()");
+//		System.out.println("WritableArray()");
 	}
 	
 	public WritableArray(int row, int col, long pos) {
 		super(row, col);
 		this.pos = pos;
-		System.out.println("WritableArray(int row, int col, long pos)");
+//		System.out.println("WritableArray(int row, int col, long pos)");
 	}
 
 	public WritableArray(int row, int col, double[] data, long pos) {
 		super(row, col, data);
 		this.pos = pos;
-		System.out.println("WritableArray(int row, int col, double[] data, long pos)");
+//		System.out.println("WritableArray(int row, int col, double[] data, long pos)");
 	}
 
 	public long getPos() {
@@ -35,7 +35,7 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 	}
 
 	public void readFields(DataInput in) throws IOException {
-		System.out.println("readFields");
+//		System.out.println("readFields");
 		int i;
 		int j;
 		
@@ -64,7 +64,7 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		int col = getCol();
 		int paddedCol = getPaddedCol();
 
-		System.out.println("write " + row + " " + col + " " + paddedCol);
+//		System.out.println("write " + row + " " + col + " " + paddedCol);
 		out.writeInt(row);
 		out.writeInt(col);
 		out.writeInt(paddedCol);

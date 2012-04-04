@@ -10,6 +10,7 @@
 package edu.columbia.mipl.matops;
 
 import edu.columbia.mipl.datastr.*;
+import edu.columbia.mipl.mapreduce.MapReduceProxy;
 
 public class MapReduceMatrixOperations extends ClMatrixOperations {
 
@@ -23,25 +24,16 @@ public class MapReduceMatrixOperations extends ClMatrixOperations {
 		return (arg1.getRow() == arg2.getRow() && arg1.getCol() == arg2.getCol());
 	}
 
-	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!checkDimensionSame(arg1, arg2))
-			/* throw new UncompatiableMatrixDimensionException() */;
+	public PrimitiveMatrix addMatrix(PrimitiveMatrix arg1,  PrimitiveMatrix arg2) {
+		
+		MapReduceProxy mapred = new MapReduceProxy();
 
-		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
-		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
-		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
-		double data1[] = a1.getData();
-		double data2[] = a2.getData();
-		double data[] = result.getData();
-
-		int i;
-		int j;
-		int offset = 0;
-		int pos;
-
-		/* Use GPGPU */
-
-		return result;
+		mapred.add(arg1.getURI(), arg2.getURI(), "temp");
+		//mapred.add(arg1., inputPath2, outputPath)
+		
+//		mapred.
+		return null;
+		//return result;
 	}
 
 //	public PrimitiveArray add(final PrimitiveArray arg1, double arg2);
