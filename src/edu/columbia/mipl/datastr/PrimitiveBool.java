@@ -10,7 +10,7 @@ package edu.columbia.mipl.datastr;
 
 import java.util.*;
 
-public class PrimitiveBool extends PrimitiveType {
+public class PrimitiveBool /*extends Boolean*/ implements PrimitiveType {
 	boolean value;
 
 	public PrimitiveBool(boolean value) {

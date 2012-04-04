@@ -55,6 +55,10 @@ public class ProgramExecutor extends RuntimeTraverser {
 	}
 
 	public boolean reachQuery(Query query) {
+		SolvableBinder sb = new SolvableBinder(query.getTerm());
+		if (!sb.bind()) {
+			System.out.println("Fail: No solution can be reached, after binding.");
+		}
 		return true;
 	}
 

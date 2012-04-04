@@ -10,7 +10,7 @@ package edu.columbia.mipl.datastr;
 
 import java.util.*;
 
-public class PrimitiveDouble extends PrimitiveType {
+public class PrimitiveDouble /*extends Double*/ implements PrimitiveType {
 	Double value;
 
 	public PrimitiveDouble(Double value) {
