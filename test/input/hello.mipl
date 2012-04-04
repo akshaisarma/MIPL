@@ -9,4 +9,6 @@
 say(hello, world).
 
 say(X, Y)?
+
+[x] <- load("haha.txt").
 # * = (hello, world)

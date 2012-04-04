@@ -12,16 +12,23 @@ import java.util.*;
 import java.lang.reflect.*;
 
 import edu.columbia.mipl.datastr.*;
+import edu.columbia.mipl.runtime.execute.*;
 
 public class BuiltinLoad implements BuiltinJob {
 	public String getName() {
 		return "load";
 	}
 
-	public List<PrimitiveType> jobImplementation(PrimitiveType args[]) {
+	public List<PrimitiveType> jobImplementation(PrimitiveType ... args) throws MiplRuntimeException {
+		if (args.length != 1)
+			throw new MiplRuntimeException();
+
+		if (!(args[0] instanceof PrimitiveString))
+			throw new MiplRuntimeException();
+
 		List<PrimitiveType> list = new ArrayList<PrimitiveType>();
 
-		String filename = list.get(0).toString();
+		String filename = ((PrimitiveString) args[0]).getData();
 
 		list.add(new PrimitiveMatrix<Double>(filename));
 		
