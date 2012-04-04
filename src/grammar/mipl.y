@@ -51,7 +51,7 @@ command
 fact
 	: term '.'								{ $$ = new Fact((Term) $1); }
 	| '[' id_list ']' LARROW_OP jobcall '.'	{ $$ = new Fact((List<String>) $2, (Term) $5); }
-	| '[' ']' LARROW_OP jobcall '.'			{ $$ = new Fact((List<String>) null, (Term) $5); }
+	| '[' ']' LARROW_OP jobcall '.'			{ $$ = new Fact((List<String>) null, (Term) $4); }
 	;
 
 jobcall

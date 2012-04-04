@@ -258,6 +258,10 @@ public class JavaSourceWriter extends InstructionWriter {
 	// Fact.Type.MATRIXASFACTS
 	// SHOULD CHECK IF THE JOB IS DEFINED BEFORE THIS FACT OR LATER
 		int i;
+		int namesSize = 0;
+		if (names != null)
+			namesSize = names.size();
+
 
 		String stringArgs = "";
 		for (i = 0; i < terms.size(); i++) {
@@ -279,10 +283,24 @@ public class JavaSourceWriter extends InstructionWriter {
 		if (name.equals("load")) { /* TODO: hard coding  ==> from builtin symbol table*/
 			String rvName = "returnVal" + (idxName++);
 			println("List<PrimitiveType> " + rvName + " = new BuiltinLoad().jobImplementation(" + stringArgs + ");");
-			println("if (" + rvName + ".size() != " + names.size() + ")");
+			println("if (" + rvName + ".size() != " + namesSize + ")");
 			println("       throw new UnmatchedNumberOfReturenException();");
 
-			for (i = 0; i < names.size(); i++)
+			for (i = 0; i < namesSize; i++)
+				println("program.add(new Fact(new Term(Term.Type.MATRIX, \"" + names.get(i) + "\", " + rvName + ".get(" + i + "))));");
+			println("");
+
+			resetDeclarationList();
+
+			return;
+		}
+		if (name.equals("save")) { /* TODO: hard coding  ==> from builtin symbol table*/
+			String rvName = "returnVal" + (idxName++);
+			println("List<PrimitiveType> " + rvName + " = new BuiltinLoad().jobImplementation(" + stringArgs + ");");
+			println("if (" + rvName + ".size() != " + namesSize + ")");
+			println("       throw new UnmatchedNumberOfReturenException();");
+
+			for (i = 0; i < namesSize; i++)
 				println("program.add(new Fact(new Term(Term.Type.MATRIX, \"" + names.get(i) + "\", " + rvName + ".get(" + i + "))));");
 			println("");
 
@@ -292,10 +310,16 @@ public class JavaSourceWriter extends InstructionWriter {
 		}
 		String rvName = "returnVal" + (idxName++);
 		println("List<PrimitiveType> " + rvName + " = " + name + "(" + stringArgs + ");");
-		println("if (" + rvName + ".size() != " + names.size() + ")");
-		println("	throw new UnmatchedNumberOfReturenException();");
+		if (namesSize == 0) {
+			println("if (" + rvName + " != null)");
+			println("       throw new UnmatchedNumberOfReturenException();");
+		}
+		else {
+			println("if (" + rvName + ".size() != " + namesSize + ")");
+			println("	throw new UnmatchedNumberOfReturenException();");
+		}
 
-		for (i = 0; i < names.size(); i++)
+		for (i = 0; i < namesSize; i++)
 			println("program.add(new Fact(new Term(Term.Type.MATRIX, \"" + names.get(i) + "\", " + rvName + ".get(" + i + "))));");
 		println("");
 
