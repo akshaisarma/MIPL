@@ -45,8 +45,4 @@ public class Log {
 		Logger logger = LogManager.getLogger(methodCaller.getClassName());
 		logger.error(log);
 	}
-
-	public static void err(String log) {
-		instance.error(log);
-	}
 }
