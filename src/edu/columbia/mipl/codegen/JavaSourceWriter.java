@@ -12,8 +12,9 @@ package edu.columbia.mipl.codegen;
 import java.io.*;
 import java.util.*;
 
-import edu.columbia.mipl.runtime.*;
+import edu.columbia.mipl.builtin.*;
 import edu.columbia.mipl.datastr.*;
+import edu.columbia.mipl.runtime.*;
 
 public class JavaSourceWriter extends InstructionWriter {
 	Set<String> declarationList;
@@ -280,42 +281,13 @@ public class JavaSourceWriter extends InstructionWriter {
 				; // exception
 		}
 
-		if (name.equals("load")) { /* TODO: hard coding  ==> from builtin symbol table*/
-			String rvName = "returnVal" + (idxName++);
-			println("List<PrimitiveType> " + rvName + " = new BuiltinLoad().jobImplementation(" + stringArgs + ");");
-			println("if (" + rvName + ".size() != " + namesSize + ")");
-			println("       throw new UnmatchedNumberOfReturenException();");
-
-			for (i = 0; i < namesSize; i++)
-				println("program.add(new Fact(new Term(Term.Type.MATRIX, \"" + names.get(i) + "\", " + rvName + ".get(" + i + "))));");
-			println("");
-
-			resetDeclarationList();
-
-			return;
-		}
-		if (name.equals("save")) { /* TODO: hard coding  ==> from builtin symbol table*/
-			String rvName = "returnVal" + (idxName++);
-			println("List<PrimitiveType> " + rvName + " = new BuiltinSave().jobImplementation(" + stringArgs + ");");
-			if (namesSize == 0) {
-				println("if (" + rvName + " != null)");
-				println("       throw new UnmatchedNumberOfReturenException();");
-			}
-			else {
-				println("if (" + rvName + ".size() != " + namesSize + ")");
-				println("	throw new UnmatchedNumberOfReturenException();");
-			}
-
-			for (i = 0; i < namesSize; i++)
-				println("program.add(new Fact(new Term(Term.Type.MATRIX, \"" + names.get(i) + "\", " + rvName + ".get(" + i + "))));");
-			println("");
-
-			resetDeclarationList();
-
-			return;
-		}
 		String rvName = "returnVal" + (idxName++);
-		println("List<PrimitiveType> " + rvName + " = " + name + "(" + stringArgs + ");");
+		if (BuiltinTable.existJob(name)) {
+			println("List<PrimitiveType> " + rvName + " = BuiltinTable.job(\"" + name + "\", " + stringArgs + ");");
+		}
+		else {
+			println("List<PrimitiveType> " + rvName + " = " + name + "(" + stringArgs + ");");
+		}
 		if (namesSize == 0) {
 			println("if (" + rvName + " != null)");
 			println("       throw new UnmatchedNumberOfReturenException();");
