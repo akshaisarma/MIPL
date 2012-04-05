@@ -6,7 +6,7 @@
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
  * Description: Built-in Unbound Matrix Rand
  */
-package edu.columbia.mipl.builtin;
+package edu.columbia.mipl.builtin.matrix;
 
 import java.util.*;
 import java.lang.reflect.*;

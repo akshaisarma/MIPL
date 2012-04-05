@@ -14,6 +14,7 @@ import java.lang.reflect.*;
 import edu.columbia.mipl.datastr.*;
 import edu.columbia.mipl.builtin.job.*;
 import edu.columbia.mipl.builtin.matrix.*;
+import edu.columbia.mipl.builtin.matrix.UnboundOnes;
 import edu.columbia.mipl.runtime.execute.*;
 
 public class BuiltinTable {
