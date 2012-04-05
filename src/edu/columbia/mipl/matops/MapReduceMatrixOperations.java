@@ -29,10 +29,13 @@ public class MapReduceMatrixOperations extends ClMatrixOperations {
 		MapReduceProxy mapred = new MapReduceProxy();
 
 		mapred.add(arg1.getURI(), arg2.getURI(), "temp");
+		
+		
+		return new PrimitiveMatrix("temp/part-00000", true);
 		//mapred.add(arg1., inputPath2, outputPath)
 		
 //		mapred.
-		return null;
+//		return null;
 		//return result;
 	}
 
