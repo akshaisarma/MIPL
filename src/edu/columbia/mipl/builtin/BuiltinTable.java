@@ -18,15 +18,17 @@ import edu.columbia.mipl.runtime.execute.*;
 
 public class BuiltinTable {
 	static Map<String, BuiltinJob> jobTable;
-	static Map<String, UnboundMatrix> matrixTable;
+	static Map<String, PrimitiveMatrix<Double>> matrixTable;
 
 	static {
 		// TODO: read directory name from Configuration
 		jobTable = new HashMap<String, BuiltinJob>();
-		matrixTable = new HashMap<String, UnboundMatrix>();
+		matrixTable = new HashMap<String, PrimitiveMatrix<Double>>();
 
 		jobTable.put("load", new BuiltinLoad());
 		jobTable.put("save", new BuiltinSave());
+
+		matrixTable.put("ones", new UnboundOnes());
 	}
 
 	public static boolean existJob(String name) {
@@ -40,5 +42,18 @@ public class BuiltinTable {
 		}
 
 		return jobTable.get(name).jobImplementation(args);
+	}
+
+	public static boolean existMatrix(String name) {
+		return (matrixTable.get(name) != null);
+	}
+
+	public static PrimitiveMatrix<Double> matrix(String name) {
+		if (!existMatrix(name)) {
+			new Exception("No such matrix!").printStackTrace();
+			return null;
+		}
+
+		return matrixTable.get(name);
 	}
 }

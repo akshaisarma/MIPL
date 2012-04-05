@@ -270,7 +270,8 @@ public class JavaSourceWriter extends InstructionWriter {
 			if (i != 0)
 				stringArgs += ", ";
 			if (terms.get(i).getType() == Term.Type.TERM) {
-				// check if this is acomplex term, and then throw an exception
+				// check if this is a complex term, and then throw an exception
+				// which means .getArguments().size() != 0
 				stringArgs += "knowledgeTable.getFactMatrix(\"" + terms.get(i).getName() + "\")";
 			}
 			else if (terms.get(i).getType() == Term.Type.NUMBER)
@@ -499,6 +500,25 @@ public class JavaSourceWriter extends InstructionWriter {
 			stack.push(term.getName());
 		else if (term.getType() == Term.Type.NUMBER)
 			stack.push("new PrimitiveDouble(" + term.getValue() + ")");
+		else if (term.getType() == Term.Type.TERM) {
+			if (term.getArguments().size() == 0) {
+				// Builtin matrix
+				if (!BuiltinTable.existMatrix(term.getName())) {
+					new Exception("No such builtin matrix!").printStackTrace();
+					stack.push("new Double(0.0)");
+				}
+				stack.push("BuiltinTable.matrix(\"" + term.getName() + "\")");
+			}
+			else {
+				// Nested Job Call
+				new Exception("Nested Job Call is not implemented!").printStackTrace();
+				stack.push("new Double(0.0)");
+			}
+		}
+		else {
+			new Exception("This Job expr is not implemented!").printStackTrace();
+			stack.push("new Double(0.0)");
+		}
 	}
 
 	public void finish() {
