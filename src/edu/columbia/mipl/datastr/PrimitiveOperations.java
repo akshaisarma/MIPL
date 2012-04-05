@@ -145,7 +145,7 @@ public class PrimitiveOperations {
 			PrimitiveMatrix t = (PrimitiveMatrix) target;
 			if (source instanceof PrimitiveMatrix) {
 				PrimitiveMatrix s = (PrimitiveMatrix) source;
-				ops.addMatrix(t, s);
+				return ops.addMatrix(t, s);
 
 //				ops.add(t.getData(), s.getData());
 			}
