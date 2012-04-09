@@ -585,4 +585,22 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 		return result;
 	}
+
+	public PrimitiveArray abs(final PrimitiveArray arg1) {
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
+		int i, j;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			for (j = 0; j < arg1.getCol(); j++) {
+				Double value = (Double) arg1.getValue(i, j);
+				if (value >= 0)
+					result.setValue(i, j, value);
+				else
+					result.setValue(i, j, -value);
+			}
+		}
+
+		return result;
+	}
 }

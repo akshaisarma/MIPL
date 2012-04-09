@@ -50,4 +50,6 @@ public interface MatrixOperations {
 	public double mean(final PrimitiveArray arg1);
 	public PrimitiveArray rowsum(final PrimitiveArray arg1);
 	public PrimitiveArray rowmean(final PrimitiveArray arg1);
+
+	public PrimitiveArray abs(final PrimitiveArray arg1);
 }
