@@ -15,6 +15,27 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	boolean checkDimensionMutipliable(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		return (arg1.getCol() == arg2.getRow());
 	}
+	
+	public PrimitiveArray abs(final PrimitiveArray arg1)
+	{
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
+		double[] data1 = a1.getData();
+		double[] data = result.getData();
+		
+		int i, j, pos, offset = 0;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
+			for (j = 0; j < arg1.getCol(); j++) {
+				data[pos] = Math.abs(data1[pos]);
+				pos++;
+			}
+			offset += arg1.getPaddedRow();
+		}
+
+		return result;
+	}
 
 	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		if (!arg1.equalsDimensionally(arg2))
