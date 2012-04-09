@@ -12,6 +12,8 @@ package edu.columbia.mipl.matops;
 import edu.columbia.mipl.datastr.*;
 
 public interface MatrixOperations {
+	public PrimitiveArray abs(final PrimitiveArray arg1);
+	
 	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2);
 	public PrimitiveArray add(final PrimitiveArray arg1, double arg2);
 	public PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2);
