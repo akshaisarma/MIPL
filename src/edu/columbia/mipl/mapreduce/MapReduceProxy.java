@@ -36,13 +36,13 @@ public class MapReduceProxy {
 	}
 
 	public void split(String inputPath, String outputPath) {
-		job(MatrixAddition.class, WritableIndex.class, WritableArray.class,
-			MatrixAddition.MatrixMapper.class, MatrixAddition.MatrixReducer.class,
+		job(MatrixAdd.class, WritableIndex.class, WritableArray.class,
+			MatrixAdd.MatrixMapper.class, MatrixAdd.MatrixReducer.class,
 			outputPath, inputPath);
 	}
 	
 	private void job(Class jobClass, JobClient client, JobConf conf) {
-		conf.setJobName(MatrixAddition.class.getName());
+		conf.setJobName(MatrixAdd.class.getName());
 		
 		conf.setMapOutputKeyClass(LongWritable.class);
 		conf.setMapOutputValueClass(WritableArray.class);
@@ -51,8 +51,8 @@ public class MapReduceProxy {
 		conf.setOutputValueClass(WritableArray.class);
 
 
-		conf.setMapperClass(MatrixAddition.MatrixMapper.class);
-		conf.setReducerClass(MatrixAddition.MatrixReducer.class);
+		conf.setMapperClass(MatrixAdd.MatrixMapper.class);
+		conf.setReducerClass(MatrixAdd.MatrixReducer.class);
 
 		client.setConf(conf);
 		
@@ -62,9 +62,9 @@ public class MapReduceProxy {
 	public void add(String inputPath1, String inputPath2, String outputPath) {
 		try {
 			JobClient client = new JobClient();
-			JobConf conf = new JobConf(MatrixAddition.class);
+			JobConf conf = new JobConf(MatrixAdd.class);
 			
-			job(MatrixAddition.class, client, conf);
+			job(MatrixAdd.class, client, conf);
 			
 			FileInputFormat.addInputPath(conf, new Path(inputPath1));
 			FileInputFormat.addInputPath(conf, new Path(inputPath2));
