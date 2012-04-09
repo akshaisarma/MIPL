@@ -29,6 +29,7 @@ public class MatrixAddition {
 	static final int NUM_MATRIX_SPLIT = 8;
 	static final int MIN_MATRIX_SIZE = NUM_MATRIX_SPLIT * 8;
 
+	private static int count;
 	public static class MatrixMapper extends MapReduceBase
 			implements Mapper<LongWritable, Text, LongWritable, WritableArray> {
 
@@ -41,6 +42,8 @@ public class MatrixAddition {
 //			System.out.println("key = " + key.toString());
 //			System.out.println("val = " + val.toString());
 			int n = 1;
+			
+			if (key.get() == 0) count = 0;
 			WritableArray array = new WritableArray(1, n, key.get());
 
 			String line = val.toString();
@@ -60,9 +63,10 @@ public class MatrixAddition {
 
 //			System.out.println(array.toString());
 //			if (array.getCol() < MIN_MATRIX_SIZE) {
-//				newKey.set(n);
+				newKey.set(count);
 //			key.set(n);
-				output.collect(key, array);
+				output.collect(newKey, array);
+				count++;
 //				return;
 //			}
 			
