@@ -6,7 +6,7 @@
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
  * Description: A Class that implements Built-in Save Job
  */
-package edu.columbia.mipl.builtin;
+package edu.columbia.mipl.builtin.job;
 
 import java.util.*;
 import java.lang.reflect.*;

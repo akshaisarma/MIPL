@@ -6,7 +6,7 @@
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
  * Description: An Abstract Class for Built-in Jobs
  */
-package edu.columbia.mipl.builtin;
+package edu.columbia.mipl.builtin.job;
 
 import java.util.*;
 import java.lang.reflect.*;

@@ -12,8 +12,9 @@ package edu.columbia.mipl.codegen;
 import java.io.*;
 import java.util.*;
 
-import edu.columbia.mipl.runtime.*;
+import edu.columbia.mipl.builtin.*;
 import edu.columbia.mipl.datastr.*;
+import edu.columbia.mipl.runtime.*;
 
 public class JavaSourceWriter extends InstructionWriter {
 	Set<String> declarationList;
@@ -149,7 +150,7 @@ public class JavaSourceWriter extends InstructionWriter {
 			for (j = 0; j < matrix.getCol(); j++)
 				println(pa + ".setValue(" + i + ", " + j + ", " + matrix.getValue(i, j) + ");");
 
-		stack.push("new Term(Term.Type.MATRIX, \"" + name + "\", new PrimitiveMatrix<Double>(" + pa + "));");
+		stack.push("new Term(Term.Type.MATRIX, \"" + name + "\", new PrimitiveMatrix<Double>(" + pa + "))");
 	}
 
 	public void createTerm(Term.Type type, Term term1, Term term2) {
@@ -269,7 +270,8 @@ public class JavaSourceWriter extends InstructionWriter {
 			if (i != 0)
 				stringArgs += ", ";
 			if (terms.get(i).getType() == Term.Type.TERM) {
-				// check if this is acomplex term, and then throw an exception
+				// check if this is a complex term, and then throw an exception
+				// which means .getArguments().size() != 0
 				stringArgs += "knowledgeTable.getFactMatrix(\"" + terms.get(i).getName() + "\")";
 			}
 			else if (terms.get(i).getType() == Term.Type.NUMBER)
@@ -280,42 +282,13 @@ public class JavaSourceWriter extends InstructionWriter {
 				; // exception
 		}
 
-		if (name.equals("load")) { /* TODO: hard coding  ==> from builtin symbol table*/
-			String rvName = "returnVal" + (idxName++);
-			println("List<PrimitiveType> " + rvName + " = new BuiltinLoad().jobImplementation(" + stringArgs + ");");
-			println("if (" + rvName + ".size() != " + namesSize + ")");
-			println("       throw new UnmatchedNumberOfReturenException();");
-
-			for (i = 0; i < namesSize; i++)
-				println("program.add(new Fact(new Term(Term.Type.MATRIX, \"" + names.get(i) + "\", " + rvName + ".get(" + i + "))));");
-			println("");
-
-			resetDeclarationList();
-
-			return;
-		}
-		if (name.equals("save")) { /* TODO: hard coding  ==> from builtin symbol table*/
-			String rvName = "returnVal" + (idxName++);
-			println("List<PrimitiveType> " + rvName + " = new BuiltinSave().jobImplementation(" + stringArgs + ");");
-			if (namesSize == 0) {
-				println("if (" + rvName + " != null)");
-				println("       throw new UnmatchedNumberOfReturenException();");
-			}
-			else {
-				println("if (" + rvName + ".size() != " + namesSize + ")");
-				println("	throw new UnmatchedNumberOfReturenException();");
-			}
-
-			for (i = 0; i < namesSize; i++)
-				println("program.add(new Fact(new Term(Term.Type.MATRIX, \"" + names.get(i) + "\", " + rvName + ".get(" + i + "))));");
-			println("");
-
-			resetDeclarationList();
-
-			return;
-		}
 		String rvName = "returnVal" + (idxName++);
-		println("List<PrimitiveType> " + rvName + " = " + name + "(" + stringArgs + ");");
+		if (BuiltinTable.existJob(name)) {
+			println("List<PrimitiveType> " + rvName + " = BuiltinTable.job(\"" + name + "\", " + stringArgs + ");");
+		}
+		else {
+			println("List<PrimitiveType> " + rvName + " = " + name + "(" + stringArgs + ");");
+		}
 		if (namesSize == 0) {
 			println("if (" + rvName + " != null)");
 			println("       throw new UnmatchedNumberOfReturenException();");
@@ -527,6 +500,25 @@ public class JavaSourceWriter extends InstructionWriter {
 			stack.push(term.getName());
 		else if (term.getType() == Term.Type.NUMBER)
 			stack.push("new PrimitiveDouble(" + term.getValue() + ")");
+		else if (term.getType() == Term.Type.TERM) {
+			if (term.getArguments().size() == 0) {
+				// Builtin matrix
+				if (!BuiltinTable.existMatrix(term.getName())) {
+					new Exception("No such builtin matrix!").printStackTrace();
+					stack.push("new Double(0.0)");
+				}
+				stack.push("BuiltinTable.matrix(\"" + term.getName() + "\")");
+			}
+			else {
+				// Nested Job Call
+				new Exception("Nested Job Call is not implemented!").printStackTrace();
+				stack.push("new Double(0.0)");
+			}
+		}
+		else {
+			new Exception("This Job expr is not implemented!").printStackTrace();
+			stack.push("new Double(0.0)");
+		}
 	}
 
 	public void finish() {

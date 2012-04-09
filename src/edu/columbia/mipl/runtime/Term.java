@@ -140,10 +140,30 @@ public class Term extends Traversable {
 	public Term(Type type, String name, List<Term> arguments) {
 		assert (type == Type.TERM || type == Type.REGEXTERM);
 
+		boolean convertToMatrix = true;
+
 		this.type = type;
 		this.name = name;
 		if (arguments == null)
 			arguments = new ArrayList<Term>();
+
+		for (Term arg : arguments) {
+			if (arg.getType() != Type.NUMBER) {
+				convertToMatrix = false;
+				break;
+			}
+		}
+
+		if (arguments.size() != 0 && convertToMatrix) {
+			int i = 0;
+			this.type = Type.MATRIX;
+			matrix = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(1, arguments.size()));
+			for (Term arg : arguments) {
+				matrix.setValue(0, i, arg.getValue());
+				i++;
+			}
+			return;
+		}
 
 		this.arguments = arguments;
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm temp -rf
+
 echo "1. build the project"
 #ant
 

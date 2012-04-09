@@ -6,7 +6,7 @@
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
  * Description: An Abstract Class for Built-in Unbound Matrices
  */
-package edu.columbia.mipl.builtin;
+package edu.columbia.mipl.builtin.matrix;
 
 import java.util.*;
 import java.lang.reflect.*;
