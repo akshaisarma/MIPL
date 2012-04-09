@@ -107,7 +107,8 @@
 	    <antcall target="checkstyle"/>
     </target>
 
-    <target name="parser" depends="docs" description="Generates Yylex.java and Parser.java using JFlex and BYacc/J from mipl.jflex and mipl.y">
+    <!--<target name="parser" depends="docs" description="Generates Yylex.java and Parser.java using JFlex and BYacc/J from mipl.jflex and mipl.y">-->
+    <target name="parser" description="Generates Yylex.java and Parser.java using JFlex and BYacc/J from mipl.jflex and mipl.y">
 	    <java jar="${tool}/JFlex.jar" fork="true" failonerror="true">
 		    <arg value="${src}/grammar/mipl.jflex" />
 		    <arg value="-d" />
