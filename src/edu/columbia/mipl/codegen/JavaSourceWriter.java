@@ -150,7 +150,7 @@ public class JavaSourceWriter extends InstructionWriter {
 			for (j = 0; j < matrix.getCol(); j++)
 				println(pa + ".setValue(" + i + ", " + j + ", " + matrix.getValue(i, j) + ");");
 
-		stack.push("new Term(Term.Type.MATRIX, \"" + name + "\", new PrimitiveMatrix<Double>(" + pa + "));");
+		stack.push("new Term(Term.Type.MATRIX, \"" + name + "\", new PrimitiveMatrix<Double>(" + pa + "))");
 	}
 
 	public void createTerm(Term.Type type, Term term1, Term term2) {

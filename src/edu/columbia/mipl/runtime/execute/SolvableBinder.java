@@ -10,6 +10,7 @@ package edu.columbia.mipl.runtime.execute;
 
 import java.util.*;
 
+import edu.columbia.mipl.datastr.*;
 import edu.columbia.mipl.runtime.*;
 import edu.columbia.mipl.runtime.traverse.*;
 
@@ -180,6 +181,38 @@ public class SolvableBinder extends Binder implements Solvable {
 		return true;
 	}
 
+	boolean matchMatrix(Term target, PrimitiveMatrix<Double> matrix, int row, VariableStack vs) {
+		int i = 0;
+		if (target.getType() == Term.Type.MATRIX) {
+			PrimitiveMatrix<Double> tm = target.getMatrix();
+			if (tm.getCol() != matrix.getCol())
+				return false;
+			for (i = 0; i < tm.getCol(); i++) {
+				if (tm.getValue(0, i) != matrix.getValue(row, i))
+					return false;
+			}
+			return true;
+		}
+		else if (target.getType() == Term.Type.TERM) {
+			List<Term> arguments = target.getArguments();
+			if (arguments.size() != matrix.getCol())
+				return false;
+			for (Term arg : arguments) {
+				if (arg.getType() == Term.Type.NUMBER) {
+					if (matrix.getValue(row, i) != arg.getValue())
+						return false;
+				}
+				else if (arg.getType() == Term.Type.VARIABLE)
+					vs.put(arg, new Term(Term.Type.NUMBER, matrix.getValue(row, i)));
+				else
+					return false;
+				i++;
+			}
+			return true;
+		}
+		return false;
+	}
+
 	boolean bind(Goal goal, VariableStack vs, Solvable solver) {
 		boolean result = false;
 		Term currentGoal;
@@ -200,25 +233,32 @@ public class SolvableBinder extends Binder implements Solvable {
 			if (knowledges == null)
 				return false;
 
-
 			for (Knowledge knowledge : knowledges) {
 				VariableStack newVs = new VariableStack(vs);
 				knowledge.traverse(new VariableGrouper(newVs));
 
-
 				if (knowledge instanceof Job)
 					continue;
 
+				if (knowledge.getTerm().getType() == Term.Type.MATRIX) {
+					int i;
+					PrimitiveMatrix<Double> matrix = knowledge.getTerm().getMatrix();
+					for (i = 0; i < matrix.getRow(); i++) {
+						VariableStack rowVs = new VariableStack(newVs);
+						if (matchMatrix(currentGoal, matrix, i, rowVs)) {
+							result = bind(new Goal(goal), rowVs, solver) || result;
+						}
+					}
+					continue;
+				}
 
 				if (!match(currentGoal, knowledge.getTerm(), newVs))
 					continue;
 
-
 				if (knowledge instanceof Fact) {
-					result = result || bind(new Goal(goal), newVs, solver);
+					result = bind(new Goal(goal), newVs, solver) || result;
 					continue;
 				}
-
 
 				rule = (Rule) knowledge;
 				Term source = rule.getSource();
@@ -240,7 +280,7 @@ public class SolvableBinder extends Binder implements Solvable {
 					assert (source.getType() == Term.Type.TERM);
 					goal.push(source);
 
-					result = result || bind(new Goal(goal), newVs, solver);
+					result = bind(new Goal(goal), newVs, solver) || result;
 				} while (orTermRhs != null);
 			}
 		}

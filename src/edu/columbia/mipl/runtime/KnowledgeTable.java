@@ -17,7 +17,10 @@ public class KnowledgeTable extends HashMap<String, List<Knowledge>> {
 		List<Knowledge> prev = super.get(key);
 		if (prev == null)
 			prev = new ArrayList<Knowledge>();
-		prev.add(value);
+
+		if (!mergeMatrix(prev, value))
+			prev.add(value);
+
 		super.put(key, prev);
 	}
 
@@ -39,5 +42,37 @@ public class KnowledgeTable extends HashMap<String, List<Knowledge>> {
 			return term.getMatrix();
 		}
 		return null;
+	}
+
+	private static PrimitiveMatrix<Double> getMatrix(Knowledge knowledge) {
+		if (!(knowledge instanceof Fact))
+			return null;
+
+		Fact fact = (Fact) knowledge;
+		Term term = fact.getTerm();
+		if (term.getType() != Term.Type.MATRIX)
+			return null;
+
+		return term.getMatrix();
+	}
+	
+	private static boolean mergeMatrix(List<Knowledge> list, Knowledge knowledge) {
+		PrimitiveMatrix<Double> matrix = getMatrix(knowledge);
+		if (matrix == null)
+			return false;
+
+		for (Knowledge k : list) {
+			PrimitiveMatrix<Double> m = getMatrix(k);
+			if (m == null)
+				continue;
+
+			if (matrix.getCol() != m.getCol())
+				continue;
+
+			m.mergeVertically(matrix);
+			return true;
+		}
+
+		return false;
 	}
 }

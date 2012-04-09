@@ -58,7 +58,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 
 	public int getRow() {
 		if (status == Status.PM_STATUS_LOADED_FULL)
-			return data.getCol();
+			return data.getRow();
 		return sparseRow;
 	}
 
@@ -140,5 +140,13 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 	
 	public Status getStatus() {
 		return status;
+	}
+
+	public void mergeVertically(PrimitiveMatrix<T> source) {
+		data.mergeVertically(source.getData());
+	}
+
+	public void print() {
+		data.printMatrix();
 	}
 }

@@ -79,7 +79,7 @@ public abstract class PrimitiveArray {
 		int prevRow = row;
 		increaseRow(source.getRow());
 
-		copyRange(source, 0, source.getRow(), 0, source.getCol(), prevRow, col);
+		copyRange(source, 0, 0, prevRow, 0, source.getRow(), source.getCol());
 	}
 
 	abstract public void copyRange(PrimitiveArray source, int srcRow, int srcCol,
