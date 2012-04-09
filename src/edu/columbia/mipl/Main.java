@@ -23,7 +23,7 @@ public class Main {
 		//Parser parser = new Parser("test/input/multireturn.mipl", new Program(new SemanticChecker(), new ProgramExecutor())); // Interpreter Mode
 		//Parser parser = new Parser("test/input/multireturn.mipl", new SemanticChecker()); // CheckingOnly mode		
 				
-		Map<String, String> optMap = new HashMap<String, String> ();
+		Map<String, String> optMap = new HashMap<String, String>();
 		int index = getOpt(args, "help;h version;v syntax;s interactive;i config;c:", optMap);
 		if (index < 0) {
 			return;
@@ -86,15 +86,15 @@ public class Main {
 	}
 	
 	public static int getOpt(String[] args, String optStr, Map<String, String> optMap) {		
-		Set<String> optSingle = new HashSet<String> ();
-		Set<String> optPair = new HashSet<String> ();
+		Set<String> optSingle = new HashSet<String>();
+		Set<String> optPair = new HashSet<String>();
 		
 		// (shortName, longName)
-		Map<String, String> shortNameTab = new HashMap<String, String> ();
+		Map<String, String> shortNameTab = new HashMap<String, String>();
 		
 		String[] optStrList = optStr.split("[ \t]+");
 		for (String s : optStrList) {
-			Set<String> optTarget = optSingle; 			
+			Set<String> optTarget = optSingle;
 			if (s.endsWith(":")) {
 				optTarget = optPair;
 				s = s.substring(0, s.length() - 1);
