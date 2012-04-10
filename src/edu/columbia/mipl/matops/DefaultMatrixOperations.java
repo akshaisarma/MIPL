@@ -10,36 +10,24 @@
 package edu.columbia.mipl.matops;
 
 import edu.columbia.mipl.datastr.*;
+import edu.columbia.mipl.log.*;
 
 public class DefaultMatrixOperations implements MatrixOperations {
+	private Log log;
+
+	public DefaultMatrixOperations() {
+		log = Log.getInstance();
+	}
+
 	boolean checkDimensionMutipliable(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		return (arg1.getCol() == arg2.getRow());
 	}
 	
-	public PrimitiveArray abs(final PrimitiveArray arg1)
-	{
-		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
-		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
-		double[] data1 = a1.getData();
-		double[] data = result.getData();
-		
-		int i, j, pos, offset = 0;
-
-		for (i = 0; i < arg1.getRow(); i++) {
-			pos = offset;
-			for (j = 0; j < arg1.getCol(); j++) {
-				data[pos] = Math.abs(data1[pos]);
-				pos++;
-			}
-			offset += arg1.getPaddedRow();
-		}
-
-		return result;
-	}
-
 	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!arg1.equalsDimensionally(arg2))
+		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Two input matrices should have same dimensions.");
+		}
 
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
@@ -81,8 +69,10 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!arg1.equalsDimensionally(arg2))
+		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Two input matrices should have same dimensions.");
+		}
 
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
@@ -124,8 +114,10 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray cellmult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!arg1.equalsDimensionally(arg2))
+		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Two input matrices should have same dimensions.");
+		}
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg2.getCol());
@@ -148,8 +140,10 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray mult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!checkDimensionMutipliable(arg1, arg2))
+		if (!checkDimensionMutipliable(arg1, arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("To multiply, two input matrices should have same dimensions and squares.");
+		}
 
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
@@ -194,8 +188,10 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray celldiv(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!arg1.equalsDimensionally(arg2))
+		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Two input matrices should have same dimensions.");
+		}
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg2.getCol());
@@ -210,6 +206,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 			for (j = 0; j < arg1.getCol(); j++) {
 				if (data2[pos] == 0) {
 					/* throw new divideByZeroException() */
+					log.error("The matrix cannot be divided by zero.");
 					return null;
 				}
 				data[pos] = data1[pos] / data2[pos];
@@ -222,10 +219,14 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray div(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!arg1.equalsDimensionally(arg2))
+		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
-		if (arg1.getRow() != arg1.getCol())
+			log.error("Two input matrices should have same dimensions.");
+		}
+		if (arg1.getRow() != arg1.getCol()) {
 			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("To divide, the column of the matrix should be same the row of the other matrix.");
+		}
 
 		PrimitiveDoubleArray invArg2 = (PrimitiveDoubleArray) this.inverse(arg2);
 		PrimitiveDoubleArray result = 
@@ -235,8 +236,10 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray div(final PrimitiveArray arg1, final double arg2) {
-		if (arg2 == 0)
+		if (arg2 == 0) {
 			/* throw new divideByZeroException() */;
+			log.error("The matrix cannot be divided by zero.");
+		}
 
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
@@ -257,8 +260,10 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!arg1.equalsDimensionally(arg2))
+		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Two input matrices should have same dimensions.");
+		}
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
 		for (int i = 0; i < arg1.getRow(); ++i)
@@ -490,8 +495,10 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray mod(final PrimitiveArray arg1, PrimitiveArray arg2) {
-		if (!arg1.equalsDimensionally(arg2))
+		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Two input matrices should have same dimensions.");
+		}
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
 		PrimitiveDoubleArray r = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
