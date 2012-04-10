@@ -11,6 +11,7 @@ import edu.columbia.mipl.datastr.*;
 
 public class WritableArray extends PrimitiveDoubleArray implements Writable, WritableComparable<WritableArray>  {
 	long pos;
+	int operation;
 
 	public WritableArray() {
 
@@ -29,6 +30,18 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		this.pos = pos;
 //		System.out.println("WritableArray(int row, int col, double[] data, long pos)");
 	}
+	
+	public boolean isFirstMatrix() {
+		return (operation != 0);
+	}
+	
+	public void setOperation(int op) {
+		this.operation = op;
+	}
+	
+	public int getOperation() {
+		return operation;
+	}
 
 	public long getPos() {
 		return pos;
@@ -42,6 +55,7 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		int row = in.readInt();
 		int col = in.readInt();
 		int paddedCol = in.readInt();
+		operation = in.readInt();
 		
 		pos = in.readLong();
 		
@@ -68,6 +82,7 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		out.writeInt(row);
 		out.writeInt(col);
 		out.writeInt(paddedCol);
+		out.writeInt(operation);
 
 		
 		out.writeLong(pos);
