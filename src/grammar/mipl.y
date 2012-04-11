@@ -68,6 +68,7 @@ jobcall_args_cand
 	: IDENTIFIER		{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
 	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); }
 	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
+	| '-' NUMBER		{ $$ = new Term(Term.Type.NUMBER, -1 * (Double) $2); }
 	| STRING_LITERAL	{ $$ = new Term(Term.Type.STRING, (String) $1); }
 	| jobcall			/* Default Action $$ = $1 */
 	;
@@ -128,6 +129,7 @@ term_fact
 term_term
 	: VARIABLE			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); } /* TODO: Should check VariableMatcher for the same command */
 	| NUMBER			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
+	| '-' NUMBER		{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.NUMBER, -1 * (Double) $2)); }
 	| '(' term_expr ')'	{ $$ = $2; }
 	;
 
@@ -137,6 +139,7 @@ term_args_cand
 	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same command */
 	| '_'				{ $$ = new Term(Term.Type.VARIABLE, "_"); }
 	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
+	| '-' NUMBER		{ $$ = new Term(Term.Type.NUMBER, -1 * (Double) $2); }
 	| STRING_LITERAL	{ $$ = new Term(Term.Type.STRING, (String) $1); }
 	;
 
