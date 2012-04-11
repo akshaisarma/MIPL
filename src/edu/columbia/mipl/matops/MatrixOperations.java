@@ -12,42 +12,42 @@ package edu.columbia.mipl.matops;
 import edu.columbia.mipl.datastr.*;
 
 public interface MatrixOperations {
-	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2);
-	public PrimitiveArray add(final PrimitiveArray arg1, double arg2);
-	public PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2);
-	public PrimitiveArray sub(final PrimitiveArray arg1, double arg2);
+	public PrimitiveMatrix add(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public PrimitiveMatrix add(final PrimitiveMatrix arg1, double arg2);
+	public PrimitiveMatrix sub(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public PrimitiveMatrix sub(final PrimitiveMatrix arg1, double arg2);
 
-	public PrimitiveArray cellmult(final PrimitiveArray arg1, final PrimitiveArray arg2);
-	public PrimitiveArray mult(final PrimitiveArray arg1, final PrimitiveArray arg2);
-	public PrimitiveArray mult(final PrimitiveArray arg1, final double arg2);
+	public PrimitiveMatrix cellmult(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public PrimitiveMatrix mult(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public PrimitiveMatrix mult(final PrimitiveMatrix arg1, final double arg2);
 
-	public PrimitiveArray celldiv(final PrimitiveArray arg1, final PrimitiveArray arg2);
-	public PrimitiveArray div(final PrimitiveArray arg1, final PrimitiveArray arg2);
-	public PrimitiveArray div(final PrimitiveArray arg1, final double arg2);
+	public PrimitiveMatrix celldiv(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public PrimitiveMatrix div(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public PrimitiveMatrix div(final PrimitiveMatrix arg1, final double arg2);
 
-	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2);
-	public void assign(PrimitiveArray arg1, double arg2);
-	public void addassign(PrimitiveArray arg1, final PrimitiveArray arg2);
-	public void addassign(PrimitiveArray arg1, double arg2);
-	public void subassign(PrimitiveArray arg1, final PrimitiveArray arg2);
-	public void subassign(PrimitiveArray arg1, double arg2);
+	public void assign(PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public void assign(PrimitiveMatrix arg1, double arg2);
+	public void addassign(PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public void addassign(PrimitiveMatrix arg1, double arg2);
+	public void subassign(PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public void subassign(PrimitiveMatrix arg1, double arg2);
 
-	public void cellmultassign(PrimitiveArray arg1, final PrimitiveArray arg2);
-	public void multassign(PrimitiveArray arg1, final PrimitiveArray arg2);
-	public void multassign(PrimitiveArray arg1, double arg2);
-	public void celldivassign(PrimitiveArray arg1, final PrimitiveArray arg2);
-	public void divassign(PrimitiveArray arg1, final PrimitiveArray arg2);
-	public void divassign(PrimitiveArray arg1, double arg2);
+	public void cellmultassign(PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public void multassign(PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public void multassign(PrimitiveMatrix arg1, double arg2);
+	public void celldivassign(PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public void divassign(PrimitiveMatrix arg1, final PrimitiveMatrix arg2);
+	public void divassign(PrimitiveMatrix arg1, double arg2);
 
-	public PrimitiveArray transpose(final PrimitiveArray arg1);
-	public PrimitiveArray inverse(final PrimitiveArray arg1);
+	public PrimitiveMatrix transpose(final PrimitiveMatrix arg1);
+	public PrimitiveMatrix inverse(final PrimitiveMatrix arg1);
 
-	public PrimitiveArray mod(final PrimitiveArray arg1, double arg2);
-	public PrimitiveArray mod(final PrimitiveArray arg1, PrimitiveArray arg2);
-	public double sum(final PrimitiveArray arg1);
-	public double mean(final PrimitiveArray arg1);
-	public PrimitiveArray rowsum(final PrimitiveArray arg1);
-	public PrimitiveArray rowmean(final PrimitiveArray arg1);
+	public PrimitiveMatrix mod(final PrimitiveMatrix arg1, double arg2);
+	public PrimitiveMatrix mod(final PrimitiveMatrix arg1, PrimitiveMatrix arg2);
+	public double sum(final PrimitiveMatrix arg1);
+	public double mean(final PrimitiveMatrix arg1);
+	public PrimitiveMatrix rowsum(final PrimitiveMatrix arg1);
+	public PrimitiveMatrix rowmean(final PrimitiveMatrix arg1);
 
-	public PrimitiveArray abs(final PrimitiveArray arg1);
+	public PrimitiveMatrix abs(final PrimitiveMatrix arg1);
 }

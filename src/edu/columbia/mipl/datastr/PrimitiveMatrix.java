@@ -86,7 +86,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		status = Status.PM_STATUS_LOADED_FULL;
 	}
 
-	PrimitiveArray getData() {
+	public PrimitiveArray getData() {
 		if (data == null) {
 			// throw new DataRequestedToSparseMatrix();
 			// or, transform into a full matrix

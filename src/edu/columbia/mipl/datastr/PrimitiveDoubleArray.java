@@ -25,7 +25,7 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 		this(row, col, data, false);
 	}
 
-    private void newPrimitiveDoubleArrayWrapper(int row, int col, double data[], boolean padded) {
+	private void newPrimitiveDoubleArrayWrapper(int row, int col, double data[], boolean padded) {
 		this.row = row;
 		this.col = col;
 
@@ -58,12 +58,12 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 	}
 
 	public PrimitiveDoubleArray(int row, int col, double data[], boolean padded) /* throws UnalignedMatrixSizeException */ {
-        this.newPrimitiveDoubleArrayWrapper(row, col, data, padded);
-    }
+		this.newPrimitiveDoubleArrayWrapper(row, col, data, padded);
+	}
 
-    public void reallocateSizeWithNewData(int row, int col, double newData[]) {
-        this.newPrimitiveDoubleArrayWrapper(row, col, newData, true);
-    }
+	public void reallocateSizeWithNewData(int row, int col, double newData[]) {
+		this.newPrimitiveDoubleArrayWrapper(row, col, newData, true);
+	}
 
 	public void reallocateSize() {
 		data = Arrays.copyOf(data, paddedCol * paddedRow);
