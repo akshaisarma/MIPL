@@ -22,8 +22,12 @@ public class UnboundRowMatrix extends UnboundMatrix {
 		setData(m.getData());
 	}
 
+	public PrimitiveArray getData() {
+		return null;
+	}
+
 	public int getCol() {
-		return getData().getCol();
+		return super.getData().getCol();
 	}
 
 	public  String getName() {
@@ -31,6 +35,6 @@ public class UnboundRowMatrix extends UnboundMatrix {
 	}
 
 	public Double getValue(int row, int col) {
-		return (Double) getData().getValue(0, col);
+		return (Double) super.getData().getValue(0, col);
 	}
 }

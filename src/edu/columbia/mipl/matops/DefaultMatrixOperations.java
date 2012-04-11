@@ -19,47 +19,235 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		log = Log.getInstance();
 	}
 
-	boolean checkDimensionMutipliable(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		return (arg1.getCol() == arg2.getRow());
+	boolean checkDimensionMutipliable(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		if (arg1.getCol() == -1 && arg2.getRow() == -1)
+			return false;
+		if (arg1.getCol() != -1 && arg2.getRow() != -1 && arg1.getCol() != arg2.getRow())
+			return false;
+		if (arg1.getRow() == -1 || arg2.getCol() == -1)
+			return false;
+		return true;
+	}
+
+	boolean checkDimension(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		if ((arg1.getCol() == -1 && arg2.getCol() == -1) ||
+			(arg1.getRow() == -1 && arg2.getRow() == -1))
+			return false;
+		if (arg1.getCol() != -1 && arg2.getCol() != -1 && arg1.getCol() != arg2.getCol())
+			return false;
+		if (arg1.getRow() != -1 && arg2.getRow() != -1 && arg1.getRow() != arg2.getRow())
+			return false;
+		return true;
+	}
+
+	boolean containsUnboundMatrix(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		return arg1.getRow() == -1 || arg1.getCol() == -1 ||
+			arg2.getRow() == 1 || arg2.getCol() == -1;
+	}
+
+	boolean containsUnboundMatrix(final PrimitiveMatrix arg1) {
+		return arg1.getRow() == -1 || arg1.getCol() == -1;
+	}
+
+	int getRow(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		if (arg1.getRow() == -1)
+			return arg2.getRow();
+		return arg1.getRow();
+	}
+
+	int getCol(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		if (arg1.getCol() == -1)
+			return arg2.getCol();
+		return arg1.getCol();
 	}
 
 	public PrimitiveMatrix add(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		if (!checkDimension(arg1, arg2)) {
+			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Two input matrices should have same dimensions.");
+		}
+
+		if (containsUnboundMatrix(arg1, arg2)) {
+			int i, j;
+			int row = getRow(arg1, arg2);
+			int col = getCol(arg1, arg2);
+
+			PrimitiveMatrix result = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(row, col));
+
+			for (i = 0; i < row; i++) {
+				for (j = 0; j < col; j++) {
+					result.setValue(i, j, (Double) arg1.getValue(i, j) + (Double) arg2.getValue(i, j));
+				}
+			}
+			return result;
+		}
+
 		return new PrimitiveMatrix(add(arg1.getData(), arg2.getData()));
 	}
 
 	public PrimitiveMatrix add(final PrimitiveMatrix arg1, double arg2) {
+		if (containsUnboundMatrix(arg1)) {
+			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Cannot add a value to a unbound matrix.");
+		}
+
 		return new PrimitiveMatrix(add(arg1.getData(), arg2));
 	}
 
 	public PrimitiveMatrix sub(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		if (!checkDimension(arg1, arg2)) {
+			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Two input matrices should have same dimensions.");
+		}
+
+		if (containsUnboundMatrix(arg1, arg2)) {
+			int i, j;
+			int row = getRow(arg1, arg2);
+			int col = getCol(arg1, arg2);
+
+			PrimitiveMatrix result = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(row, col));
+
+			for (i = 0; i < row; i++) {
+				for (j = 0; j < col; j++) {
+					result.setValue(i, j, (Double) arg1.getValue(i, j) - (Double) arg2.getValue(i, j));
+				}
+			}
+			return result;
+		}
+
 		return new PrimitiveMatrix(sub(arg1.getData(), arg2.getData()));
 	}
 
 	public PrimitiveMatrix sub(final PrimitiveMatrix arg1, double arg2) {
+		if (containsUnboundMatrix(arg1)) {
+			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Cannot subtract a value from a unbound matrix.");
+		}
+
 		return new PrimitiveMatrix(sub(arg1.getData(), arg2));
 	}
 
 	public PrimitiveMatrix cellmult(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		if (!checkDimension(arg1, arg2)) {
+			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Two input matrices should have same dimensions.");
+		}
+
+		if (containsUnboundMatrix(arg1, arg2)) {
+			int i, j;
+			int row = getRow(arg1, arg2);
+			int col = getCol(arg1, arg2);
+
+			PrimitiveMatrix result = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(row, col));
+
+			for (i = 0; i < row; i++) {
+				for (j = 0; j < col; j++) {
+					result.setValue(i, j, (Double) arg1.getValue(i, j) * (Double) arg2.getValue(i, j));
+				}
+			}
+			return result;
+		}
+
 		return new PrimitiveMatrix(cellmult(arg1.getData(), arg2.getData()));
 	}
 
 	public PrimitiveMatrix mult(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		if (!checkDimensionMutipliable(arg1, arg2)) {
+			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("To multiply, two input matrices should have same dimensions and squares.");
+		}
+
+		if (containsUnboundMatrix(arg1, arg2)) {
+			int i, j, k;
+			int len = arg1.getCol();
+			if (len == -1)
+				len = arg2.getRow();
+
+			PrimitiveMatrix result = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(arg1.getRow(), arg2.getCol()));
+
+			for (i = 0; i < arg1.getRow(); i++) {
+				for (j = 0; j < arg2.getCol(); j++) {
+					double sum = 0;
+					for (k = 0; k < len; k++)
+						sum += (Double) arg1.getValue(i, k) * (Double) arg2.getValue(k, j);
+					result.setValue(i, j, sum);
+				}
+			}
+			return result;
+		}
+
 		return new PrimitiveMatrix(mult(arg1.getData(), arg2.getData()));
 	}
 
 	public PrimitiveMatrix mult(final PrimitiveMatrix arg1, final double arg2) {
+		if (!containsUnboundMatrix(arg1)) {
+			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Cannot multiply a value to a unbound matrix.");
+		}
+
 		return new PrimitiveMatrix(mult(arg1.getData(), arg2));
 	}
 
 	public PrimitiveMatrix celldiv(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		if (!checkDimension(arg1, arg2)) {
+			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Two input matrices should have same dimensions.");
+		}
+
+		if (containsUnboundMatrix(arg1, arg2)) {
+			int i, j;
+			int row = getRow(arg1, arg2);
+			int col = getCol(arg1, arg2);
+
+			PrimitiveMatrix result = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(row, col));
+
+			for (i = 0; i < row; i++) {
+				for (j = 0; j < col; j++) {
+					result.setValue(i, j, (Double) arg1.getValue(i, j) / (Double) arg2.getValue(i, j));
+				}
+			}
+			return result;
+		}
+
 		return new PrimitiveMatrix(celldiv(arg1.getData(), arg2.getData()));
 	}
 
 	public PrimitiveMatrix div(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		if (!checkDimensionMutipliable(arg1, arg2)) {
+			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("To multiply, two input matrices should have same dimensions and squares.");
+		}
+
+		/*
+		if (containsUnboundMatrix(arg1, arg2)) {
+			int i, j, k;
+			int len = arg1.getCol();
+			if (len == -1)
+				len = arg2.getRow();
+
+			PrimitiveMatrix result = new PrimitiveMatrix<Double>(new PrimitiveDoubleArray(arg1.getRow(), arg2.getCol()));
+
+			for (i = 0; i < arg1.getRow(); i++) {
+				for (j = 0; j < arg2.getCol(); j++) {
+					double sum = 0;
+					for (k = 0; k < len; k++)
+						sum += (Double) arg1.getValue(i, k) * (Double) arg2.getValue(k, j);
+					result.setValue(i, j, sum);
+				}
+			}
+			return result;
+		}
+		*/
+
 		return new PrimitiveMatrix(div(arg1.getData(), arg2.getData()));
 	}
 
 	public PrimitiveMatrix div(final PrimitiveMatrix arg1, final double arg2) {
+		if (!containsUnboundMatrix(arg1)) {
+			/* throw new UncompatiableMatrixDimensionException() */;
+			log.error("Cannot divide a unbound matrix by a value.");
+		}
+
 		return new PrimitiveMatrix(div(arg1.getData(), arg2));
 	}
 
@@ -151,11 +339,6 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 	
 	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!arg1.equalsDimensionally(arg2)) {
-			/* throw new UncompatiableMatrixDimensionException() */;
-			log.error("Two input matrices should have same dimensions.");
-		}
-
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
@@ -267,11 +450,6 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveArray mult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!checkDimensionMutipliable(arg1, arg2)) {
-			/* throw new UncompatiableMatrixDimensionException() */;
-			log.error("To multiply, two input matrices should have same dimensions and squares.");
-		}
-
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg2.getCol());

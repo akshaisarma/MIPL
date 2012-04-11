@@ -425,4 +425,19 @@ public class PrimitiveOperations {
 	...
 	*/
 
+	public static PrimitiveType abs(PrimitiveType arg1) {
+		if (arg1 instanceof PrimitiveMatrix) {
+			PrimitiveMatrix a = (PrimitiveMatrix) arg1;
+			return ops.abs(a);
+		}
+		else if (arg1 instanceof PrimitiveDouble) {
+			PrimitiveDouble a = (PrimitiveDouble) arg1;
+			double d = a.getData();
+			if (d < 0)
+				d = -d;
+			return new PrimitiveDouble(d);
+		}
+		else
+			return null;
+	}
 }
