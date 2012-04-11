@@ -1,0 +1,23 @@
+job pop(Dst, N) {
+	T = Dst.
+	I = 0.
+
+	if (N % 2 == 0) {
+		while (I < N)
+			T -= D.
+	}
+	else {
+		while (I < N)
+			T += D.
+	}
+
+	@T.
+}
+
+sample(1, 2, 3).
+sample(2, 3, 4).
+sample(3, 4, 5).
+
+[target] <- pop(sample, 2).
+
+target(X, Y, Z)?
