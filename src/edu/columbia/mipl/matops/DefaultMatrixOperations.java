@@ -260,15 +260,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!arg1.equalsDimensionally(arg2)) {
-			/* throw new UncompatiableMatrixDimensionException() */;
-			log.error("Two input matrices should have same dimensions.");
-		}
-		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
-		for (int i = 0; i < arg1.getRow(); ++i)
-			for (int j = 0; j < arg1.getCol(); ++j)
-				a1.setValue(i, j, a2.getValue(i, j));
+		PrimitiveDoubleArray a1 = new PrimitiveDoubleArray(a2.getRow(), a2.getCol(), a2.getData());
 	}
 	public void assign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
