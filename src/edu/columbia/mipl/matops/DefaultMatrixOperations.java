@@ -260,9 +260,11 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
-		PrimitiveDoubleArray a1 = new PrimitiveDoubleArray(a2.getRow(), a2.getCol(), a2.getData());
+        a1.reallocateSizeWithNewData(a2.getRow(), a2.getCol(), a2.getData());
 	}
+
 	public void assign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		for (int i = 0; i < arg1.getRow(); ++i)
