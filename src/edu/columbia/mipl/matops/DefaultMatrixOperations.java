@@ -42,7 +42,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 	boolean containsUnboundMatrix(final PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
 		return arg1.getRow() == -1 || arg1.getCol() == -1 ||
-			arg2.getRow() == 1 || arg2.getCol() == -1;
+			arg2.getRow() == -1 || arg2.getCol() == -1;
 	}
 
 	boolean containsUnboundMatrix(final PrimitiveMatrix arg1) {
