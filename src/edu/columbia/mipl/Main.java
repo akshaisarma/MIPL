@@ -68,6 +68,7 @@ public class Main {
 			parser.getProgram().traverse(new CodeGenerator("build", "MiplProgram"));
 		}		
 
+		/*
 		// Compiling Mode
 		Parser parser = new Parser(args[0]);
 		if (parser.getNumError() != 0) {
@@ -81,6 +82,7 @@ public class Main {
 		}
 		
 		parser.getProgram().traverse(new CodeGenerator("build", "MiplProgram"));
+		*/
 		
 	}
 	
