@@ -21,6 +21,15 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 		this(row, col, null);
 	}
 
+	/* Reference Type */
+	PrimitiveDoubleArray(PrimitiveDoubleArray ref) {
+		this.row = ref.row;
+		this.col = ref.col;
+		paddedRow = getPaddedLength(row);
+		paddedCol = getPaddedLength(col);
+		this.data = ref.data;
+	}
+
 	public PrimitiveDoubleArray(int row, int col, double data[]) /* throws UnalignedMatrixSizeException */ {
 		this(row, col, data, false);
 	}

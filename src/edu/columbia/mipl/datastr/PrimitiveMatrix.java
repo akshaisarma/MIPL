@@ -105,7 +105,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		data.increaseRow(n);
 	}
 
-	void setData(PrimitiveArray data) {
+	protected void setData(PrimitiveArray data) {
 		this.data = data;
 		status = Status.PM_STATUS_LOADED_FULL;
 	}
