@@ -25,10 +25,12 @@ public class BuiltinTable {
 		jobTable = new HashMap<String, BuiltinJob>();
 		matrixTable = new HashMap<String, PrimitiveMatrix<Double>>();
 
+		// TODO: and remove below hard codede loadings
 		jobTable.put("load", new BuiltinLoad());
 		jobTable.put("save", new BuiltinSave());
 		jobTable.put("urow", new BuiltinURow());
 		jobTable.put("ucol", new BuiltinUCol());
+		jobTable.put("abs", new BuiltinAbs());
 
 		matrixTable.put("ones", new UnboundOnes());
 	}
