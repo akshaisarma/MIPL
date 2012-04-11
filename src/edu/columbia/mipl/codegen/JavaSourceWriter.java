@@ -403,23 +403,23 @@ public class JavaSourceWriter extends InstructionWriter {
 				stack.push(name + " = PrimitiveOperations.assign(" + name + ", " + stack.pop() + ")");
 				break;
 			case MULASSIGN:
-				stack.push("PrimitiveOperations.assign(" + name + ", PrimitiveOperations.mult(" + name + ", " + stack.pop() + "))");
+				stack.push(name + " = PrimitiveOperations.assign(" + name + ", PrimitiveOperations.mult(" + name + ", " + stack.pop() + "))");
 //				stack.push("PrimitiveOperations.multiAssign(" + name + ", " + stack.pop() + ")");
 				break;
 			case DIVASSIGN:
-				stack.push("PrimitiveOperations.assign(" + name + ", PrimitiveOperations.div(" + name + ", " + stack.pop() + "))");
+				stack.push(name + " = PrimitiveOperations.assign(" + name + ", PrimitiveOperations.div(" + name + ", " + stack.pop() + "))");
 //				stack.push("PrimitiveOperations.divAssign(" + name + ", " + stack.pop() + ")");
 				break;
 			case MODASSIGN:
-				stack.push("PrimitiveOperations.assign(" + name + ", PrimitiveOperations.mod(" + name + ", " + stack.pop() + "))");
+				stack.push(name + " = PrimitiveOperations.assign(" + name + ", PrimitiveOperations.mod(" + name + ", " + stack.pop() + "))");
 //				stack.push("PrimitiveOperations.modAssign(" + name + ", " + stack.pop() + ")");
 				break;
 			case ADDASSIGN:
-				stack.push("PrimitiveOperations.assign(" + name + ", PrimitiveOperations.add(" + name + ", " + stack.pop() + "))");
+				stack.push(name + " = PrimitiveOperations.assign(" + name + ", PrimitiveOperations.add(" + name + ", " + stack.pop() + "))");
 //				stack.push("PrimitiveOperations.addAssign(" + name + ", " + stack.pop() + ")");
 				break;
 			case SUBASSIGN:
-				stack.push("PrimitiveOperations.assign(" + name + ", PrimitiveOperations.sub(" + name + ", " + stack.pop() + "))");
+				stack.push(name + " = PrimitiveOperations.assign(" + name + ", PrimitiveOperations.sub(" + name + ", " + stack.pop() + "))");
 //				stack.push("PrimitiveOperations.subAssign(" + name + ", " + stack.pop() + ")");
 				break;
 		}

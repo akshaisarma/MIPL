@@ -17,42 +17,46 @@ public class PrimitiveOperations {
 		ops = new DefaultMatrixOperations();
 	}
 
-	public static PrimitiveType assign(PrimitiveType target, PrimitiveType source) {
-		if (target == null) {
-			if (source instanceof PrimitiveMatrix)
-				target = new PrimitiveMatrix();
-			else if (source instanceof PrimitiveDouble)
-				target = new PrimitiveDouble(0.0);
+	public static PrimitiveType assign(PrimitiveType arg1, PrimitiveType arg2) {
+		if (arg1 == null) {
+			if (arg2 instanceof PrimitiveMatrix) {
+				PrimitiveMatrix m = (PrimitiveMatrix) arg2;
+				arg1 = new PrimitiveMatrix(m.getRow(), m.getCol());
+			}
+			else if (arg2 instanceof PrimitiveDouble) {
+				return new PrimitiveDouble(0.0);
+			}
 			else
 				assert (false);
 		}
 		
-		assert (source != null);
+		assert (arg2 != null);
 		
-		if (target instanceof PrimitiveMatrix) {
-			PrimitiveMatrix t = (PrimitiveMatrix) target;
-			if (source instanceof PrimitiveMatrix) {
-				PrimitiveMatrix s = (PrimitiveMatrix) source;
+		if (arg1 instanceof PrimitiveMatrix) {
+			PrimitiveMatrix t = (PrimitiveMatrix) arg1;
+			if (arg2 instanceof PrimitiveMatrix) {
+				PrimitiveMatrix s = (PrimitiveMatrix) arg2;
 				ops.assign(t, s);
 			}
-			else if (source instanceof PrimitiveDouble) {
-				PrimitiveDouble s = (PrimitiveDouble) source;
+			else if (arg2 instanceof PrimitiveDouble) {
+				PrimitiveDouble s = (PrimitiveDouble) arg2;
 //				ops.assign(t.getData(), s.getData());
-				target = new PrimitiveDouble(s.getData());
+				arg1 = new PrimitiveDouble(s.getData());
 			}
 			else
 				assert (false);
 		}
-		else if (target instanceof PrimitiveDouble) {
-			PrimitiveDouble t = (PrimitiveDouble) target;
-			if (source instanceof PrimitiveMatrix) {
-				assert (false);
-				return null;
+		else if (arg1 instanceof PrimitiveDouble) {
+			if (arg2 instanceof PrimitiveMatrix) {
+				PrimitiveMatrix m = (PrimitiveMatrix) arg2;
+				arg1 = new PrimitiveMatrix(m.getRow(), m.getCol());
+				ops.assign((PrimitiveMatrix) arg1, m);
 			}
-			else if (source instanceof PrimitiveDouble) {
-				PrimitiveDouble s = (PrimitiveDouble) source;
-//				target = new PrimitiveDouble(s.getData());
-				t.setData(s.getData());
+			else if (arg2 instanceof PrimitiveDouble) {
+				PrimitiveDouble d1 = (PrimitiveDouble) arg1;
+				PrimitiveDouble d2 = (PrimitiveDouble) arg2;
+//				arg1 = new PrimitiveDouble(s.getData());
+				d1.setData(d2.getData());
 			}
 			else
 				assert (false);
@@ -62,7 +66,7 @@ public class PrimitiveOperations {
 //			return null;
 		}
 
-		return target;
+		return arg1;
 	}
 /*	
 	public static PrimitiveType addAssign(PrimitiveType target, PrimitiveType source) {
@@ -201,10 +205,7 @@ public class PrimitiveOperations {
 		else if (expr1 instanceof PrimitiveDouble && expr2 instanceof PrimitiveDouble) {
 			PrimitiveDouble e1 = (PrimitiveDouble) expr1;
 			PrimitiveDouble e2 = (PrimitiveDouble) expr2;
-			boolean bb = (e1.getData() == e2.getData());
-			int asa = Double.compare(e1.getData(), e2.getData());
-			PrimitiveBool b = new  PrimitiveBool(e1.getData() == e2.getData());
-			return new PrimitiveBool(e1.getData() == e2.getData());
+			return new PrimitiveBool(e1.getData().compareTo(e2.getData()) == 0);
 		}
 		else if (expr1 instanceof PrimitiveBool && expr2 instanceof PrimitiveBool) {
 			PrimitiveBool e1 = (PrimitiveBool) expr1;
