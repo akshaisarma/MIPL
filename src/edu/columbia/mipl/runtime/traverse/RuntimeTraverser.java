@@ -38,6 +38,9 @@ public abstract class RuntimeTraverser implements Traverser {
 		else if (t instanceof JobExpr) {
 			return reachJobExpr((JobExpr) t);
 		}
+		else if (t instanceof Program) {
+			return true; /* Return true as at root of AST with unique program */
+		}
 
 		// TODO: print error log
 		return false;
