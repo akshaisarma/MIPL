@@ -31,10 +31,16 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 
 	Map<String, T> sparseList;
 
+	protected PrimitiveMatrix() {
+		status = Status.PM_STATUS_INVALID;
+	}
+
 	/* SparseMatrix */
-	public PrimitiveMatrix() {
+	public PrimitiveMatrix(int row, int col) {
 		sparseList = new HashMap<String, T>();
 		status = Status.PM_STATUS_LOADED_SPARSE;
+		sparseRow = row;
+		sparseCol = col;
 	}
 
 	/* FullMatrix */
@@ -88,9 +94,28 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 
 	public PrimitiveArray getData() {
 		if (data == null) {
+			// TODO:
 			// throw new DataRequestedToSparseMatrix();
 			// or, transform into a full matrix
-			;
+			switch (status) {
+				case PM_STATUS_INVALID:
+					// error
+					break;
+				case PM_STATUS_URI_LOCAL:
+				case PM_STATUS_URI_REMOTE:
+					loadMatrix();
+					break;
+				case PM_STATUS_LOADED_FULL:
+					// error
+					break;
+				case PM_STATUS_LOADED_SPARSE:
+					data = new PrimitiveDoubleArray(sparseRow, sparseCol);
+					break;
+				case PM_STATUS_UNBOUND_MATRIX:
+					// error
+					break;
+			}
+
 		}
 		return data;
 	}
@@ -104,7 +129,9 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 			// sparseList = matrixLoader.loadMatrix(uri);
 			// status = Status.PM_STATUS_LOADED_SPARSE
 		}
-		// status == REMOTE : similar to LOCAL or MatrixFactory returns a remote matrix loader;
+		else if (status == Status.PM_STATUS_URI_REMOTE) {
+		// TODO: similar to LOCAL or MatrixFactory returns a remote matrix loader;
+		}
 	}
 
 	public void setValue(int row, int col, T value) /* throws OutOfBoundExcpetion */ {
