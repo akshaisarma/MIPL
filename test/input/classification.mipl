@@ -9,7 +9,7 @@
 job classify(A, M, Ca, Cb) {
     B = A - urow(M).
 
-    B = B/abs(B).
+    B = B./abs(B).
 
     Ba = B * Ca.
     Bb = B * Cb.
