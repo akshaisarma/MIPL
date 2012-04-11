@@ -336,7 +336,7 @@ public class JavaSourceWriter extends InstructionWriter {
 		jobDeclarations += "public static List<PrimitiveType> " + name + "(" + argsString + ") {\n";
 		jobDeclarations += "List<PrimitiveType> returnVal = new ArrayList<PrimitiveType>();\n";
 		for (String decl : declarationList)
-			jobDeclarations += "PrimitiveType " + decl + ";\n";
+			jobDeclarations += "PrimitiveType " + decl + " = null;\n";
 	
 		for (i = 0; i < stmts.size(); i++)
 			jobDeclarations += stack.pop();
@@ -400,22 +400,27 @@ public class JavaSourceWriter extends InstructionWriter {
 		declarationList.add(name);
 		switch (type) {
 			case ASSIGN:
-				stack.push("PrimitiveOperations.assign(" + name + ", " + stack.pop() + ")");
+				stack.push(name + " = PrimitiveOperations.assign(" + name + ", " + stack.pop() + ")");
 				break;
 			case MULASSIGN:
-				stack.push("PrimitiveOperations.multiAssign(" + name + ", " + stack.pop() + ")");
+				stack.push("PrimitiveOperations.assign(" + name + ", PrimitiveOperations.mult(" + name + ", " + stack.pop() + "))");
+//				stack.push("PrimitiveOperations.multiAssign(" + name + ", " + stack.pop() + ")");
 				break;
 			case DIVASSIGN:
-				stack.push("PrimitiveOperations.divAssign(" + name + ", " + stack.pop() + ")");
+				stack.push("PrimitiveOperations.assign(" + name + ", PrimitiveOperations.div(" + name + ", " + stack.pop() + "))");
+//				stack.push("PrimitiveOperations.divAssign(" + name + ", " + stack.pop() + ")");
 				break;
 			case MODASSIGN:
-				stack.push("PrimitiveOperations.modAssign(" + name + ", " + stack.pop() + ")");
+				stack.push("PrimitiveOperations.assign(" + name + ", PrimitiveOperations.mod(" + name + ", " + stack.pop() + "))");
+//				stack.push("PrimitiveOperations.modAssign(" + name + ", " + stack.pop() + ")");
 				break;
 			case ADDASSIGN:
-				stack.push("PrimitiveOperations.addAssign(" + name + ", " + stack.pop() + ")");
+				stack.push("PrimitiveOperations.assign(" + name + ", PrimitiveOperations.add(" + name + ", " + stack.pop() + "))");
+//				stack.push("PrimitiveOperations.addAssign(" + name + ", " + stack.pop() + ")");
 				break;
 			case SUBASSIGN:
-				stack.push("PrimitiveOperations.subAssign(" + name + ", " + stack.pop() + ")");
+				stack.push("PrimitiveOperations.assign(" + name + ", PrimitiveOperations.sub(" + name + ", " + stack.pop() + "))");
+//				stack.push("PrimitiveOperations.subAssign(" + name + ", " + stack.pop() + ")");
 				break;
 		}
 	}

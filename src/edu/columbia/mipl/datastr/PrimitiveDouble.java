@@ -11,7 +11,7 @@ package edu.columbia.mipl.datastr;
 import java.util.*;
 
 public class PrimitiveDouble /*extends Double*/ implements PrimitiveType {
-	Double value;
+	private Double value;
 
 	public PrimitiveDouble(Double value) {
 		this.value = value;
@@ -19,5 +19,9 @@ public class PrimitiveDouble /*extends Double*/ implements PrimitiveType {
 
 	public Double getData() {
 		return value;
+	}
+	
+	public void setData(Double value) {
+		this.value = value;
 	}
 }
