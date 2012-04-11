@@ -259,7 +259,7 @@ public class MatrixOperationTest extends TestCase {
         final PrimitiveMatrix mat2 = new PrimitiveMatrix(i_mat3x3);
 
 		PrimitiveMatrix matI = matOpObj.inverse(mat1);
-		PrimitiveMatrix matII = matOpObj.mult(matI, mat2);
+		PrimitiveMatrix matII = matOpObj.mult(matI, mat1);
 
 		assertTrue(matII.getData().equalsSemantically(mat2.getData()));
 	}
