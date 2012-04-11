@@ -151,27 +151,6 @@ public class ClMatrixOperations extends DefaultMatrixOperations {
 	}
 	*/
 
-	PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2) {
-		if (!checkDimensionSame(arg1, arg2))
-			/* throw new UncompatiableMatrixDimensionException() */;
-
-		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
-		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
-		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
-		double data1[] = a1.getData();
-		double data2[] = a2.getData();
-		double data[] = result.getData();
-
-		int i;
-		int j;
-		int offset = 0;
-		int pos;
-
-		/* Use GPGPU */
-
-		return result;
-	}
-
 //	PrimitiveArray add(final PrimitiveArray arg1, double arg2);
 
 //	PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2);
