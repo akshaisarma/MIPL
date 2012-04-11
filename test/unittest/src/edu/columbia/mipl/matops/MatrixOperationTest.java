@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import edu.columbia.mipl.datastr.*;
 import edu.columbia.mipl.matops.*;
-import edu.columbia.mipl.builtin.*;
+import edu.columbia.mipl.builtin.matrix.*;
 
 public class MatrixOperationTest extends TestCase {
 	double data3x3_1[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
