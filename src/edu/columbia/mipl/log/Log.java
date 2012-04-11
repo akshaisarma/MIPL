@@ -43,6 +43,7 @@ public class Log {
 		Throwable t = new Throwable();
 		StackTraceElement methodCaller = t.getStackTrace()[1];
 		Logger logger = LogManager.getLogger(methodCaller.getClassName());
+        new Exception().printStackTrace();
 		logger.error(log);
 	}
 }
