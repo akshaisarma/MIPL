@@ -351,7 +351,7 @@ public class MatrixOperationTest extends TestCase {
         final PrimitiveDoubleArray resultData = new PrimitiveDoubleArray(3, 3, result3x3_1);
         final PrimitiveMatrix<Double> result3x3 = new PrimitiveMatrix(resultData);
 
-        PrimitiveMatrix resultMat = matOpObj.add(mat1x3, urMat);
+        PrimitiveMatrix resultMat = matOpObj.add(mat3x3, urMat);
 
         assertTrue(resultMat.getData().equalsSemantically(result3x3.getData()));
     }
