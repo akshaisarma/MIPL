@@ -6,26 +6,31 @@
 # Description: A MIPL program that shows the example of the classification
 #
 
-job classify(A, M) {
+job classify(A, M, C1, C2) {
     B = A - urow(M).
 
-    T = B = B/abs(B).
+    B = B/abs(B).
 
-    B1 = vsplit(B, 0).
-    B2 = vsplit(B, 1).
+    B1 = B * C1.
+    B2 = B * C2.
     R = (B1 - 1)/2 + (B1 + 1)/2 * B2
 
     @R.
 }
 
+c1(1).
+c1(0).
+c2(0).
+c2(1).
+
 # Temp, Rain(1 = Rain, 0 = No Rain)
-A(60, 1).
-A(60, 0).
-A(-40, 1).
-A(40, 0).
+a(60, 1).
+a(60, 0).
+a(-40, 1).
+a(40, 0).
 
-M(50, 0.5).
+m(50, 0.5).
 
-[result] <- classify(A, M).
+[result] <- classify(a, m, c1, c2).
 
 result(*)?
