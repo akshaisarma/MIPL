@@ -67,8 +67,7 @@ jobcall_args
 jobcall_args_cand
 	: IDENTIFIER		{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
 	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); }
-	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
-	| '-' NUMBER		{ $$ = new Term(Term.Type.NUMBER, -1 * (Double) $2); }
+	| numerical_value	{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
 	| STRING_LITERAL	{ $$ = new Term(Term.Type.STRING, (String) $1); }
 	| jobcall			/* Default Action $$ = $1 */
 	;
@@ -128,8 +127,7 @@ term_fact
 
 term_term
 	: VARIABLE			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); } /* TODO: Should check VariableMatcher for the same command */
-	| NUMBER			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
-	| '-' NUMBER		{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.NUMBER, -1 * (Double) $2)); }
+	| numerical_value	{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
 	| '(' term_expr ')'	{ $$ = $2; }
 	;
 
@@ -138,8 +136,7 @@ term_args_cand
 	| IDENTIFIER '(' term_args ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
 	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same command */
 	| '_'				{ $$ = new Term(Term.Type.VARIABLE, "_"); }
-	| NUMBER			{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
-	| '-' NUMBER		{ $$ = new Term(Term.Type.NUMBER, -1 * (Double) $2); }
+	| numerical_value	{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
 	| STRING_LITERAL	{ $$ = new Term(Term.Type.STRING, (String) $1); }
 	;
 
@@ -191,6 +188,11 @@ selection_stmt
 iteration_stmt
 	: WHILE '(' bool_expr ')' stmt		{ $$ = new JobStmt(JobStmt.Type.WHILE, (JobExpr) $3, (JobStmt) $5); }
 	| DO stmt WHILE '(' bool_expr ')' '.'	{ $$ = new JobStmt(JobStmt.Type.DOWHILE, (JobExpr) $5, (JobStmt) $2); }
+	;
+
+numerical_value
+	: NUMBER 				{ $$ = $1; }
+	| '-' numerical_value 	{ $$ = -1 * (Double) $2; }
 	;
 
 expr
