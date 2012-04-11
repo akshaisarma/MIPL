@@ -11,6 +11,28 @@ package edu.columbia.mipl.datastr;
 import java.util.*;
 import java.lang.reflect.*;
 
+class HashIndex {
+	int row;
+	int col;
+
+	public HashIndex(int row, int col) {
+		this.row = row;
+		this.col = col;
+	}
+
+	public int getRow() {
+		return row;
+	}
+	
+	public int getCol() {
+		return col;
+	}
+
+	public int hashCodee() {
+		return row << 16 | col;
+	}
+}
+
 public class PrimitiveMatrix<T> implements PrimitiveType {
 	PrimitiveArray data;
 
@@ -29,7 +51,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 	int sparseRow;
 	int sparseCol;
 
-	Map<String, T> sparseList;
+	Map<HashIndex, T> sparseList;
 
 	protected PrimitiveMatrix() {
 		status = Status.PM_STATUS_INVALID;
@@ -37,7 +59,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 
 	/* SparseMatrix */
 	public PrimitiveMatrix(int row, int col) {
-		sparseList = new HashMap<String, T>();
+		sparseList = new HashMap<HashIndex, T>();
 		status = Status.PM_STATUS_LOADED_SPARSE;
 		sparseRow = row;
 		sparseCol = col;
@@ -83,10 +105,6 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		data.increaseRow(n);
 	}
 
-	String makeHashKey(int row, int col) {
-		return row + "," + col;
-	}
-
 	void setData(PrimitiveArray data) {
 		this.data = data;
 		status = Status.PM_STATUS_LOADED_FULL;
@@ -110,6 +128,8 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 					break;
 				case PM_STATUS_LOADED_SPARSE:
 					data = new PrimitiveDoubleArray(sparseRow, sparseCol);
+					for (HashIndex hi : sparseList.keySet())
+						data.setValue(hi.getRow(), hi.getCol(), sparseList.get(hi));
 					break;
 				case PM_STATUS_UNBOUND_MATRIX:
 					// error
@@ -138,7 +158,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		loadMatrix();
 
 		if (status == Status.PM_STATUS_LOADED_SPARSE) {
-			sparseList.put(makeHashKey(row, col), value);
+			sparseList.put(new HashIndex(row, col), value);
 		}
 		else if (status == Status.PM_STATUS_LOADED_FULL) {
 			data.setValue(row, col, (Object) value);
@@ -149,7 +169,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		loadMatrix();
 
 		if (status == Status.PM_STATUS_LOADED_SPARSE) {
-			return sparseList.get(makeHashKey(row, col));
+			return sparseList.get(new HashIndex(row, col));
 		}
 		else if (status == Status.PM_STATUS_LOADED_FULL) {
 			if (data == null)

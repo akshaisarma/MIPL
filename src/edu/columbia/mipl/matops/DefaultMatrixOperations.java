@@ -150,7 +150,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	
-	PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public PrimitiveArray add(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("Two input matrices should have same dimensions.");
@@ -177,7 +177,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	PrimitiveArray add(final PrimitiveArray arg1, double arg2) {
+	public PrimitiveArray add(final PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
 		double[] data1 = a1.getData();
@@ -195,7 +195,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("Two input matrices should have same dimensions.");
@@ -221,7 +221,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	PrimitiveArray sub(final PrimitiveArray arg1, double arg2) {
+	public PrimitiveArray sub(final PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
 		double[] data1 = a1.getData();
@@ -240,7 +240,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	PrimitiveArray cellmult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public PrimitiveArray cellmult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("Two input matrices should have same dimensions.");
@@ -266,7 +266,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	PrimitiveArray mult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public PrimitiveArray mult(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		if (!checkDimensionMutipliable(arg1, arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("To multiply, two input matrices should have same dimensions and squares.");
@@ -295,7 +295,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		}
 		return result;
 	}
-	PrimitiveArray mult(final PrimitiveArray arg1, final double arg2) {
+	public PrimitiveArray mult(final PrimitiveArray arg1, final double arg2) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
 		double[] data1 = a1.getData();
@@ -314,7 +314,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	PrimitiveArray celldiv(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public PrimitiveArray celldiv(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("Two input matrices should have same dimensions.");
@@ -345,7 +345,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	PrimitiveArray div(final PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public PrimitiveArray div(final PrimitiveArray arg1, final PrimitiveArray arg2) {
 		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("Two input matrices should have same dimensions.");
@@ -362,7 +362,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	PrimitiveArray div(final PrimitiveArray arg1, final double arg2) {
+	public PrimitiveArray div(final PrimitiveArray arg1, final double arg2) {
 		if (arg2 == 0) {
 			/* throw new divideByZeroException() */;
 			log.error("The matrix cannot be divided by zero.");
@@ -386,70 +386,70 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	void assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void assign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray a2 = (PrimitiveDoubleArray) arg2;
 		a1.reallocateSizeWithNewData(a2.getRow(), a2.getCol(), a2.getData());
 	}
 
-	void assign(PrimitiveArray arg1, double arg2) {
+	public void assign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		for (int i = 0; i < arg1.getRow(); ++i)
 			for (int j = 0; j < arg1.getCol(); ++j)
 				a1.setValue(i, j, arg2);
 	}
 
-	void addassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void addassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.add(arg1, arg2);
 		this.assign(arg1, result);
 	}
 
-	void addassign(PrimitiveArray arg1, double arg2) {
+	public void addassign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.add(arg1, arg2);
 		this.assign(arg1, result);
 	}
 
-	void subassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void subassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.sub(arg1, arg2);
 		this.assign(arg1, result);
 	}
 
-	void subassign(PrimitiveArray arg1, double arg2) {
+	public void subassign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.sub(arg1, arg2);
 		this.assign(arg1, result);
 	}
 
-	void cellmultassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void cellmultassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.cellmult(arg1, arg2);
 		this.assign(arg1, result);
 	}
 
-	void multassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void multassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.mult(arg1, arg2);
 		this.assign(arg1, result);
 	}
 
-	void multassign(PrimitiveArray arg1, double arg2) {
+	public void multassign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.mult(arg1, arg2);
 		this.assign(arg1, result);
 	}
 
-	void celldivassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void celldivassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.celldiv(arg1, arg2);
 		this.assign(arg1, result);
 	}
 
-	void divassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
+	public void divassign(PrimitiveArray arg1, final PrimitiveArray arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.div(arg1, arg2);
 		this.assign(arg1, result);
 	}
 
-	void divassign(PrimitiveArray arg1, double arg2) {
+	public void divassign(PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray result = (PrimitiveDoubleArray) this.div(arg1, arg2);
 		this.assign(arg1, result);
 	}
 
-	PrimitiveArray transpose(final PrimitiveArray arg1) {
+	public PrimitiveArray transpose(final PrimitiveArray arg1) {
 		int pos, offset = 0;
 		int row = arg1.getRow();
 		int col = arg1.getCol();
@@ -469,7 +469,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 	
 	/* Private Functions for calculating inverse matrix */
-	double determinant(final PrimitiveArray arg1) {
+	public double determinant(final PrimitiveArray arg1) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		int row = arg1.getRow();
 		int col = arg1.getCol();
@@ -507,7 +507,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return sum;
 	}
 
-	PrimitiveArray minor(final PrimitiveArray arg1, int removeRow, int removeCol) {
+	public PrimitiveArray minor(final PrimitiveArray arg1, int removeRow, int removeCol) {
 		int row = arg1.getRow();
 		int col = arg1.getCol();
 		int ar = 0, ac = 0, pos, offset = 0;
@@ -532,12 +532,12 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return coMat;
 	}
 
-	double cofactor(PrimitiveArray arg1, int row, int col) {
+	public double cofactor(PrimitiveArray arg1, int row, int col) {
 		PrimitiveArray matI = this.minor(arg1, row, col);
 		return this.determinant(matI) * Math.pow((-1), (row + col));
 	}
 
-	PrimitiveArray unitMatrix(int k) {
+	public PrimitiveArray unitMatrix(int k) {
 		PrimitiveDoubleArray r = new PrimitiveDoubleArray(k, k);
 		double[] data = r.getData();
 
@@ -557,7 +557,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 	/* We do not use determinant to calculate inverse.
 	 * this inverse function uses the Gaussian elimination. */
-	PrimitiveArray inverse(final PrimitiveArray arg1) {
+	public PrimitiveArray inverse(final PrimitiveArray arg1) {
 		int row = arg1.getRow();
 		int col = arg1.getCol();
 		double[][] temp = new double[row][row];
@@ -616,7 +616,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return r;
 	}
 
-	PrimitiveArray mod(final PrimitiveArray arg1, PrimitiveArray arg2) {
+	public PrimitiveArray mod(final PrimitiveArray arg1, PrimitiveArray arg2) {
 		if (!arg1.equalsDimensionally(arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("Two input matrices should have same dimensions.");
@@ -632,7 +632,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return r;
 	}
 
-	PrimitiveArray mod(final PrimitiveArray arg1, double arg2) {
+	public PrimitiveArray mod(final PrimitiveArray arg1, double arg2) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray r = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
 		for (int i = 0; i < arg1.getRow(); ++i)
@@ -643,7 +643,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return r;
 	}
 
-	double sum(final PrimitiveArray arg1) {
+	public double sum(final PrimitiveArray arg1) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		double[] data1 = a1.getData();
 		double result = 0;
@@ -662,12 +662,12 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	double mean(final PrimitiveArray arg1) {
+	public double mean(final PrimitiveArray arg1) {
 		double sum = this.sum(arg1);
 		return sum / (arg1.getRow() * arg1.getCol());
 	}
 
-	PrimitiveArray rowsum(final PrimitiveArray arg1) {
+	public PrimitiveArray rowsum(final PrimitiveArray arg1) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(1, arg1.getCol());
 		double[] data1 = a1.getData();
@@ -688,7 +688,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	PrimitiveArray rowmean(final PrimitiveArray arg1) {
+	public PrimitiveArray rowmean(final PrimitiveArray arg1) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(1, arg1.getCol());
 		double[] data1 = a1.getData();
@@ -715,7 +715,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	PrimitiveArray abs(final PrimitiveArray arg1) {
+	public PrimitiveArray abs(final PrimitiveArray arg1) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), arg1.getCol());
 		int i, j;
