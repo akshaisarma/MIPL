@@ -30,11 +30,11 @@ public abstract class UnboundMatrix extends PrimitiveMatrix<Double> {
 		status = Status.PM_STATUS_UNBOUND_MATRIX;
 	}
 
-	public final int getRow() {
+	public int getRow() {
 		return -1;
 	}
 
-	public final int getCol() {
+	public int getCol() {
 		return -1;
 	}
 
