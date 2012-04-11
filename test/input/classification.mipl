@@ -1,0 +1,31 @@
+# MIPL: Mining Integrated Programming Language
+#
+# File: classification.mipl
+# Author: Jin Hyung Park <jp2105@columbia.edu>
+# Reviwer: YoungHoon Jung <yj2244@columbia.edu>
+# Description: A MIPL program that shows the example of the classification
+#
+
+job classify(A, M) {
+    B = A - urow(M).
+
+    T = B = B/abs(B).
+
+    B1 = vsplit(B, 0).
+    B2 = vsplit(B, 1).
+    R = (B1 - 1)/2 + (B1 + 1)/2 * B2
+
+    @R.
+}
+
+# Temp, Rain(1 = Rain, 0 = No Rain)
+A(60, 1).
+A(60, 0).
+A(-40, 1).
+A(40, 0).
+
+M(50, 0.5).
+
+[result] <- classify(A, M).
+
+result(*)?
