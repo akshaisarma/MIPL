@@ -24,7 +24,7 @@ public class PrimitiveOperations {
 			else if (source instanceof PrimitiveDouble)
 				target = new PrimitiveDouble(0.0);
 			else
-				assert(false);
+				assert (false);
 		}
 		
 		assert (source != null);
