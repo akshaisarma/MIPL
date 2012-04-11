@@ -44,7 +44,7 @@ public class Main {
 		// read configuration file
 		if (optMap.containsKey("config")) {			
 		}
-		
+
 		if (optMap.containsKey("interactive")) {
 			// interactive mode
 		}
@@ -69,7 +69,6 @@ public class Main {
 		}		
 
 		// Compiling Mode
-		/*
 		Parser parser = new Parser(args[0]);
 		if (parser.getNumError() != 0) {
 			System.out.println("Error on parsing input!");
@@ -82,7 +81,7 @@ public class Main {
 		}
 		
 		parser.getProgram().traverse(new CodeGenerator("build", "MiplProgram"));
-		*/
+		
 	}
 	
 	public static int getOpt(String[] args, String optStr, Map<String, String> optMap) {		
