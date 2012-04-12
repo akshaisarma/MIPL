@@ -13,7 +13,7 @@ job classify(A, M, Ca, Cb) {
 
     Ba = B * Ca.
     Bb = B * Cb.
-    R = (Ba - 1)/2 + (Bb + 1)/2 * Bb.
+    R = (Ba - 1)/2 + (Bb + 1)/2 .* Bb.
 
     @R.
 }
@@ -33,4 +33,4 @@ m(50, 0.5).
 
 [result] <- classify(a, m, ca, cb).
 
-result(*)?
+result(X)?

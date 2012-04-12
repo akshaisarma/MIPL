@@ -23,7 +23,7 @@ public class BuiltinAbs implements BuiltinJob {
 		if (args.length != 1)
 			throw new MiplRuntimeException();
 
-		if (!(args[0] instanceof PrimitiveString))
+		if (!(args[0] instanceof PrimitiveMatrix))
 			throw new MiplRuntimeException();
 
 		PrimitiveMatrix<Double> m = (PrimitiveMatrix<Double>) args[0];

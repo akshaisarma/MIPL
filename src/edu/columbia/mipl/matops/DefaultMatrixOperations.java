@@ -155,6 +155,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		if (!checkDimensionMutipliable(arg1, arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("To multiply, two input matrices should have same dimensions and squares.");
+			arg1.getData().printMatrix();
+			arg2.getData().printMatrix();
 		}
 
 		if (containsUnboundMatrix(arg1, arg2)) {
@@ -180,7 +182,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveMatrix mult(final PrimitiveMatrix arg1, final double arg2) {
-		if (!containsUnboundMatrix(arg1)) {
+		if (containsUnboundMatrix(arg1)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("Cannot multiply a value to a unbound matrix.");
 		}
@@ -243,7 +245,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 	}
 
 	public PrimitiveMatrix div(final PrimitiveMatrix arg1, final double arg2) {
-		if (!containsUnboundMatrix(arg1)) {
+		if (containsUnboundMatrix(arg1)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("Cannot divide a unbound matrix by a value.");
 		}

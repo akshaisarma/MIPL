@@ -333,7 +333,7 @@ public class JavaSourceWriter extends InstructionWriter {
 			declarationList.remove(args.get(i).getName());
 		}
 
-		jobDeclarations += "public static List<PrimitiveType> " + name + "(" + argsString + ") {\n";
+		jobDeclarations += "public static List<PrimitiveType> " + name + "(" + argsString + ") throws MiplRuntimeException {\n";
 		jobDeclarations += "List<PrimitiveType> returnVal = new ArrayList<PrimitiveType>();\n";
 		for (String decl : declarationList)
 			jobDeclarations += "PrimitiveType " + decl + " = null;\n";
@@ -494,8 +494,20 @@ public class JavaSourceWriter extends InstructionWriter {
 
 	public void createJobExpr(JobExpr.Type type, String name,
 										List<JobExpr> exprs) {
-	// JobExpr.Type.JOBCALL
-
+		// JobExpr.Type.JOBCALL
+		// Builtin jobs
+		if (!BuiltinTable.existJob(name)) {
+			new Exception("No such builtin job!").printStackTrace();
+			return;
+		}
+		int i;
+		String args = "";
+		for (i = 0; i < exprs.size(); i++) {
+			args += stack.pop();
+			if (i != exprs.size() - 1)
+				args += ", ";
+		}
+		stack.push("BuiltinTable.job(\"" + name + "\", " + args + ").get(0)");
 	}
 
 	public void createJobExpr(JobExpr.Type type, Term term) {
@@ -516,7 +528,7 @@ public class JavaSourceWriter extends InstructionWriter {
 			}
 			else {
 				// Nested Job Call
-				new Exception("Nested Job Call is not implemented!").printStackTrace();
+				new Exception("Nested Job Call" + term.getName() + " is not implemented!").printStackTrace();
 				stack.push("new Double(0.0)");
 			}
 		}
