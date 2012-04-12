@@ -342,7 +342,8 @@ public class PrimitiveOperations {
 		else if (arg1 instanceof PrimitiveDouble) {
 			PrimitiveDouble a1 = (PrimitiveDouble) arg1;
 			if (arg2 instanceof PrimitiveMatrix) {
-				assert (false);				
+				PrimitiveMatrix a2 = (PrimitiveMatrix) arg2;
+				target = ops.mult(a2, a1.getData());
 			}
 			else if (arg2 instanceof PrimitiveDouble) {
 				PrimitiveDouble a2 = (PrimitiveDouble) arg2;
@@ -440,4 +441,36 @@ public class PrimitiveOperations {
 		else
 			return null;
 	}
+
+	public static PrimitiveType cellmult(PrimitiveType arg1, PrimitiveType arg2) {
+		PrimitiveType target = null;
+		
+		assert (arg1 != null && arg2 != null);		
+		
+		if (arg1 instanceof PrimitiveMatrix && arg2 instanceof PrimitiveMatrix) {
+			target = ops.cellmult((PrimitiveMatrix) arg1, (PrimitiveMatrix) arg2);
+		}
+		else if (arg1 instanceof PrimitiveDouble) {
+			assert (false);				
+		}		
+
+		return target;
+	}
+
+	public static PrimitiveType celldiv(PrimitiveType arg1, PrimitiveType arg2) {
+		PrimitiveType target = null;
+		
+		assert (arg1 != null && arg2 != null);		
+		
+		if (arg1 instanceof PrimitiveMatrix && arg2 instanceof PrimitiveMatrix) {
+			target = ops.celldiv((PrimitiveMatrix) arg1, (PrimitiveMatrix) arg2);
+		}
+		else if (arg1 instanceof PrimitiveDouble) {
+			assert (false);				
+		}		
+
+		return target;
+	}
+
+
 }

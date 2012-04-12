@@ -468,13 +468,13 @@ public class JavaSourceWriter extends InstructionWriter {
 				stack.push("PrimitiveOperations.mod(" + e + ", " + stack.pop() + ")");
 				break;
 			case MULT_CELL:
-				// TO DO Function needs to be implemented in PrimitiveOperations
+				stack.push("PrimitiveOperations.cellmult(" + e + ", " + stack.pop() + ")");
 				break;
 			case DIV_CELL:
-				// TO DO Function needs to be implemented in PrimitiveOperations
+				stack.push("PrimitiveOperations.celldiv(" + e + ", " + stack.pop() + ")");
 				break;
 			case EXP_CELL:
-				// TO DO Function needs to be implemented in PrimitiveOperations
+				stack.push("PrimitiveOperations.cellexp(" + e + ", " + stack.pop() + ")");
 				break;
 		}
 	}

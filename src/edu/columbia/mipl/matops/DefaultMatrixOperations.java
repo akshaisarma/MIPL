@@ -368,13 +368,15 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		double[] data1 = a1.getData();
 		double[] data = result.getData();
 
-		int i, j, pos = 0;
+		int i, j, pos, offset = 0;
 
 		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
 			for (j = 0; j < arg1.getCol(); j++) {
 				data[pos] = data1[pos] + arg2;
 				pos++;
 			}
+			offset += arg1.getPaddedRow();
 		}
 
 		return result;
