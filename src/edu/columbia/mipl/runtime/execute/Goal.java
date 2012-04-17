@@ -14,14 +14,17 @@ import edu.columbia.mipl.runtime.*;
 
 public class Goal extends Stack<Term> {
 	Map<String, Term> initialVariableMap;
+	Term initialGoal;
 
 	Goal(Term initialGoal) {
+		this.initialGoal = initialGoal;
 		push(initialGoal);
 	}
 
 	Goal(Goal clone) {
 		addAll(clone);
 		initialVariableMap = clone.initialVariableMap;
+		initialGoal = clone.initialGoal;
 	}
 
 	void setInitialVariableMap(Map<String, Term> map) {
@@ -30,5 +33,9 @@ public class Goal extends Stack<Term> {
 
 	Map<String, Term> getInitialVariableMap() {
 		return initialVariableMap;
+	}
+
+	Term getInitialGoal() {
+		return initialGoal;
 	}
 }

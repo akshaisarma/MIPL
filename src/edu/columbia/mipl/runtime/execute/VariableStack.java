@@ -40,6 +40,9 @@ public class VariableStack extends HashMap<Term, VariableGroup> {
 	}
 
 	Term put(Term key, Term value) {
+		if (key.getName().equals("_"))
+			return value;
+
 		Term oldValue = null;
 		VariableGroup group = super.get(key);
 		if (group == null)
@@ -62,6 +65,11 @@ public class VariableStack extends HashMap<Term, VariableGroup> {
 	}
 
 	boolean group(Term key1, Term key2) {
+		if (key1.getName().equals("_"))
+			return true;
+		if (key2.getName().equals("_"))
+			return true;
+
 		VariableGroup group1 = super.get(key1);
 		VariableGroup group2 = super.get(key2);
 		if (group1 != null && group2 != null) {

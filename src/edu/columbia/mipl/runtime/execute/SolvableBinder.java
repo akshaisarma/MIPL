@@ -82,15 +82,15 @@ class StringGenerator implements Traverser {
 					break;
 				case TERM:
 					line = target.getName();
-					i = target.getArguments().size();
+					i = target.size();
 					if (i > 0)
-						line = "(";
-					for (Term arg : target.getArguments()) {
+						line += "(";
+					for (i--; i >= 0; i--) {
 						line += stack.pop();
-						if (--i > 0)
+						if (i > 0)
 							line += ", ";
 					}
-					if (target.getArguments().size() > 0)
+					if (target.size() > 0)
 						line += ")";
 					stack.push(line);
 					break;
@@ -117,7 +117,9 @@ public class SolvableBinder extends Binder implements Solvable {
 	}
 
 	boolean bind() {
-		return bind(goal, vs, this);
+		System.out.println(" ----- Query '" + new StringGenerator(goal.getInitialGoal()) + "?':");
+		boolean result = bind(goal, vs, this);
+		return result;
 	}
 
 	boolean match(Term target, Term source, VariableStack vs) {
@@ -224,81 +226,86 @@ public class SolvableBinder extends Binder implements Solvable {
 
 		currentGoal = goal.pop();
 
-		if (true) {
-			List<Knowledge> knowledges;
-			Term newTerm;
-			Rule rule;
+		List<Knowledge> knowledges;
+		Term newTerm;
+		Rule rule;
 
-			knowledges = KnowledgeTableFactory.getKnowledgeTable().get(currentGoal.getName());
-			if (knowledges == null)
-				return false;
+		knowledges = KnowledgeTableFactory.getKnowledgeTable().get(currentGoal.getName());
+		if (knowledges == null)
+			return false;
 
-			for (Knowledge knowledge : knowledges) {
-				VariableStack newVs = new VariableStack(vs);
-				knowledge.traverse(new VariableGrouper(newVs));
+		for (Knowledge knowledge : knowledges) {
+			VariableStack newVs = new VariableStack(vs);
+			knowledge.traverse(new VariableGrouper(newVs));
 
-				if (knowledge instanceof Job)
-					continue;
+			if (knowledge instanceof Job)
+				continue;
 
-				if (knowledge.getTerm().getType() == Term.Type.MATRIX) {
-					int i;
-					PrimitiveMatrix<Double> matrix = knowledge.getTerm().getMatrix();
-					for (i = 0; i < matrix.getRow(); i++) {
-						VariableStack rowVs = new VariableStack(newVs);
-						if (matchMatrix(currentGoal, matrix, i, rowVs)) {
-							result = bind(new Goal(goal), rowVs, solver) || result;
-						}
+			if (knowledge.getTerm().getType() == Term.Type.MATRIX) {
+				int i;
+				PrimitiveMatrix<Double> matrix = knowledge.getTerm().getMatrix();
+				for (i = 0; i < matrix.getRow(); i++) {
+					VariableStack rowVs = new VariableStack(newVs);
+					if (matchMatrix(currentGoal, matrix, i, rowVs)) {
+						result = bind(new Goal(goal), rowVs, solver) || result;
 					}
-					continue;
 				}
-
-				if (!match(currentGoal, knowledge.getTerm(), newVs))
-					continue;
-
-				if (knowledge instanceof Fact) {
-					result = bind(new Goal(goal), newVs, solver) || result;
-					continue;
-				}
-
-				rule = (Rule) knowledge;
-				Term source = rule.getSource();
-				Term orTermRhs = null;
-
-				if (source.getType() == Term.Type.ORTERMS)
-					orTermRhs = source;
-				
-				do {
-					if (orTermRhs != null) {
-						source = source.getTerm1();
-						orTermRhs = source.getTerm2();
-					}
-
-					while (source.getType() == Term.Type.ANDTERMS) {
-						goal.push(source.getTerm1());
-						source = source.getTerm2();
-					}
-					assert (source.getType() == Term.Type.TERM);
-					goal.push(source);
-
-					result = bind(new Goal(goal), newVs, solver) || result;
-				} while (orTermRhs != null);
+				continue;
 			}
+
+			if (!match(currentGoal, knowledge.getTerm(), newVs))
+				continue;
+
+			if (knowledge instanceof Fact) {
+				result = bind(new Goal(goal), newVs, solver) || result;
+				continue;
+			}
+
+			rule = (Rule) knowledge;
+			Term source = rule.getSource();
+			Term orTermRhs = null;
+
+			if (source.getType() == Term.Type.ORTERMS)
+				orTermRhs = source;
+
+			do {
+				if (orTermRhs != null) {
+					source = source.getTerm1();
+					orTermRhs = source.getTerm2();
+				}
+
+				while (source.getType() == Term.Type.ANDTERMS) {
+					goal.push(source.getTerm1());
+					source = source.getTerm2();
+				}
+				assert (source.getType() == Term.Type.TERM);
+				goal.push(source);
+
+				result = bind(new Goal(goal), newVs, solver) || result;
+			} while (orTermRhs != null);
 		}
-//		solver.solve(goal, vs);
 
 		return result;
 	}
 
-	public boolean solve(Goal goal, VariableStack vs) {
-		System.out.println("Solved Goal!");
+	public void solve(Goal goal, VariableStack vs) {
+		int i = 0;
 		//new Exception().printStackTrace();
 		Map<String, Term> variables = goal.getInitialVariableMap();
 
 		for (String variable : variables.keySet()) {
-			Term valueTerm = vs.get(variables.get(variable));
-			System.out.println(variable + " = " + new StringGenerator(valueTerm));
-		}
+			if (!variable.equals("_") && i == 0)
+				System.out.println("A Possible Solution Set:");
 
-		return true;
+			i++;
+
+			Term valueTerm = vs.get(variables.get(variable));
+			if (variable.equals("_"))
+				i--;
+			else if (valueTerm == null)
+				System.out.println(variable + " = " + "(undecided)");
+			else
+				System.out.println(variable + " = " + new StringGenerator(valueTerm));
+		}
 	}
 }

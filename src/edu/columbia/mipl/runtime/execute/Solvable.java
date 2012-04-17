@@ -11,6 +11,5 @@ package edu.columbia.mipl.runtime.execute;
 import java.util.*;
 
 public interface Solvable {
-	boolean solve(Goal goal, VariableStack vs);
-	
+	void solve(Goal goal, VariableStack vs);
 }
