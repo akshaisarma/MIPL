@@ -120,10 +120,11 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 					// error
 					break;
 				case PM_STATUS_URI_LOCAL:
-				case PM_STATUS_URI_REMOTE:
 					loadMatrix();
 					break;
+				case PM_STATUS_URI_REMOTE:
 				case PM_STATUS_LOADED_FULL:
+					new Exception("Not Implemented").printStackTrace();
 					// error
 					break;
 				case PM_STATUS_LOADED_SPARSE:
@@ -141,18 +142,26 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		return data;
 	}
 
+	void saveMatrix() {
+		if (status == Status.PM_STATUS_LOADED_FULL) {
+			status = Status.PM_STATUS_URI_LOCAL;
+			MatrixLoader matrixLoader = MatrixLoaderFactory.getMatrixLoader("table");
+			matrixLoader.saveMatrix(uri, this);
+		}
+		new Exception("Not Implemented").printStackTrace();
+	}
+
 	void loadMatrix() {
 		if (status == Status.PM_STATUS_URI_LOCAL) {
 			status = Status.PM_STATUS_LOADED_FULL;
 			MatrixLoader matrixLoader = MatrixLoaderFactory.getMatrixLoader("table");
 			data = matrixLoader.loadMatrix(uri);
-			// or
-			// sparseList = matrixLoader.loadMatrix(uri);
-			// status = Status.PM_STATUS_LOADED_SPARSE
+			return;
 		}
 		else if (status == Status.PM_STATUS_URI_REMOTE) {
 		// TODO: similar to LOCAL or MatrixFactory returns a remote matrix loader;
 		}
+		new Exception("Not Implemented").printStackTrace();
 	}
 
 	public void setValue(int row, int col, T value) /* throws OutOfBoundExcpetion */ {
@@ -182,6 +191,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 	}
 	
 	public String getURI() {
+		saveMatrix();
 		return uri;
 	}
 	
