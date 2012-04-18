@@ -38,7 +38,7 @@ class KnowledgeDuplicator implements Traverser {
 			if (target instanceof Term && ((Term) target).getType() == Term.Type.EXPRESSION)
 				stack.pop();
 			if (target instanceof Term && ((Term) target).getType() == Term.Type.TERM)
-				for (i = ((Term) target).getArguments().size(); i > 0; i--)
+				for (i = ((Term) target).getArgumentsSize(); i > 0; i--)
 					stack.pop();
 			if (target instanceof Term && ((Term) target).getType() == Term.Type.ANDTERMS) {
 				stack.pop();
@@ -55,6 +55,8 @@ class KnowledgeDuplicator implements Traverser {
 		}
 
 		if (target instanceof Term) {
+			Term t1;
+			Expression e1;
 			Term t = (Term) target;
 			Term.Type type = t.getType();
 			switch (type) {
@@ -73,12 +75,25 @@ class KnowledgeDuplicator implements Traverser {
 				case MATRIX: 
 					result = new Term(type, t.getName(), t.getMatrix());
 					break;
+				case EQ: 
+				case LT: 
+				case LE: 
+				case GT: 
+				case GE: 
+				case NE: 
+					e1 = (Expression) stack.pop();
+					result = new Term(type, e1, (Expression) stack.pop());
+					break;
+				case IS: 
+					t1 = (Term) stack.pop();
+					result = new Term(type, t1, (Expression) stack.pop());
+					break;
 				case ANDTERMS: 
-					Term t1 = (Term) stack.pop();
+					t1 = (Term) stack.pop();
 					result = new Term(type, t1, (Term) stack.pop());
 					break;
 				case TERM: 
-					i = t.getArguments().size();
+					i = t.getArgumentsSize();
 					List<Term> args = new ArrayList<Term>();
 					while (i-- > 0) {
 						args.add((Term) stack.pop());
@@ -90,7 +105,20 @@ class KnowledgeDuplicator implements Traverser {
 			}
 		}
 		else if (target instanceof Expression) {
+			Expression e1;
 			Expression e = (Expression) target;
+			Expression.Type type = e.getType();
+			switch (type) {
+				case TERM:
+					result = new Expression(type, (Term) stack.pop());
+					break;
+				case MINUS:
+					e1 = (Expression) stack.pop();
+					result = new Expression(type, e1, (Expression) stack.pop());
+					break;
+				default:
+					new Exception("Not Implemented! :" + type).printStackTrace();
+			}
 		}
 		else if (target instanceof Fact) {
 			Fact f = (Fact) target;
@@ -108,6 +136,8 @@ class KnowledgeDuplicator implements Traverser {
 			Term t = (Term) stack.pop();
 			result = new Rule(t, (Term) stack.pop());
 		}
+		else
+			new Exception("Not Implemented!").printStackTrace();
 
 		cache.put(target, result);
 		stack.push(result);
@@ -270,7 +300,7 @@ public class SolvableBinder extends Binder implements Solvable {
 	}
 
 	boolean match(Term target, Term source, VariableStack vs) {
-//System.out.println("match(" + new StringGenerator(target) + ", " + new StringGenerator(source) + ")");
+System.out.println("match(" + new StringGenerator(target) + ", " + new StringGenerator(source) + ")");
 		if (target.getType() != Term.Type.VARIABLE &&
 				target.getType() != Term.Type.QUERYALL &&
 				target.getType() != Term.Type.REGEXQUERYALL &&
@@ -310,6 +340,10 @@ public class SolvableBinder extends Binder implements Solvable {
 			return match(vs.get(source), target, vs);
 		}
 
+		if (target.getType() == Term.Type.NUMBER) {
+			return Double.compare(target.getValue(), source.getValue()) == 0;
+		}
+
 		if (target.getType() == Term.Type.REGEXTERM || target.getType() == Term.Type.REGEXQUERYALL
 				|| target.getType() == Term.Type.STRING) {
 			Pattern p = Pattern.compile(target.getName());
@@ -325,12 +359,8 @@ public class SolvableBinder extends Binder implements Solvable {
 		}
 
 		if (source.getType() == Term.Type.TERM) {
-			int size = 0;
-			if (target.getArguments() != null)
-				size = target.getArguments().size();
-			int srcSize = 0;
-			if (source.getArguments() != null)
-				srcSize = source.getArguments().size();
+			int size = target.getArgumentsSize();
+			int srcSize = source.getArgumentsSize();
 
 			int i;
 
@@ -356,7 +386,7 @@ public class SolvableBinder extends Binder implements Solvable {
 	}
 
 	boolean matchMatrix(Term target, PrimitiveMatrix<Double> matrix, int row, VariableStack vs) {
-//System.out.println("matchMat(" + new StringGenerator(target) + ", " + StringGenerator.matrixToString(matrix, row) + ")");
+System.out.println("matchMat(" + new StringGenerator(target) + ", " + StringGenerator.matrixToString(matrix, row) + ")");
 		int i = 0;
 		if (target.getType() == Term.Type.MATRIX) {
 			PrimitiveMatrix<Double> tm = target.getMatrix();
@@ -372,7 +402,7 @@ public class SolvableBinder extends Binder implements Solvable {
 		}
 		else if (target.getType() == Term.Type.TERM) {
 			List<Term> arguments = target.getArguments();
-			if (arguments.size() != matrix.getCol())
+			if (target.getArgumentsSize() != matrix.getCol())
 				return false;
 			for (Term arg : arguments) {
 				if (arg.getType() == Term.Type.NUMBER) {
@@ -453,9 +483,7 @@ public class SolvableBinder extends Binder implements Solvable {
 				continue;
 			}
 
-			int argc = 0;
-			if (knowledge.getTerm().getArguments() != null)
-				argc = knowledge.getTerm().getArguments().size();
+			int argc = knowledge.getTerm().getArgumentsSize();
 			goal.setInitialVariableMap(createVariableMapForQueryAll(currentGoal, argc));
 
 			if (!match(currentGoal, knowledge.getTerm(), newVs))
@@ -472,6 +500,26 @@ public class SolvableBinder extends Binder implements Solvable {
 		return true;
 	}
 
+	boolean processBuiltinTerm(Term term, VariableStack vs) {
+		if (term.getType() == Term.Type.TERM) {
+			int argc = term.getArgumentsSize();
+
+			if (term.getName().equals("nl")) {
+				if (argc != 0)
+					new RuntimeException("nl cannot have arguments!");
+				System.out.println("");
+				return true;
+			}
+			else if (term.getName().equals("write")) {
+				if (argc != 1)
+					new RuntimeException("write(X) can have only one argument!");
+				System.out.print(new StringGenerator(term.getArguments().get(0), vs));
+				return true;
+			}
+		}
+		return false;
+	}
+
 	boolean bind(Goal goal, VariableStack vs, Solvable solver) {
 		boolean result = false;
 		Term currentGoal;
@@ -482,6 +530,8 @@ public class SolvableBinder extends Binder implements Solvable {
 		}
 
 		currentGoal = goal.pop();
+		if (processBuiltinTerm(currentGoal, vs))
+			return true;
 
 		List<Knowledge> knowledges;
 		Term newTerm;
