@@ -83,10 +83,6 @@ public class CodeGenerator extends RuntimeTraverser {
 		if (expr == null)
 			new Exception("expr null").printStackTrace();
 		
-		System.out.println("1expr :" + expr);
-		System.out.println("expr type:" + expr.getType());
-		System.out.println("2expr :" + expr);
-		
 		switch (expr.getType()) {
 			case TERM:
 				writer.createExpression(Expression.Type.TERM, expr.getTerm());
