@@ -38,6 +38,7 @@ public class Expression extends Traversable {
 		add(term);
 	}
 
+	/*
 	public Expression(Type type, int value) {
 		this(type, (double) value);
 	}
@@ -47,10 +48,13 @@ public class Expression extends Traversable {
 
 		term.setValue(value);
 	}
+	*/
 
 	public Expression(Type type, Expression expr1, Expression expr2) {
 		assert (type == Type.MINUS || type == Type.PLUS ||
 			type == Type.MULTI || type == Type.DIVIDE);
+
+		this.type = type;
 
 		left = expr1;
 		right = expr2;
