@@ -70,9 +70,10 @@ public class Main {
 				return;
 			}
 			
-			if (parser.getProgram().traverse(new SemanticChecker())) {
-				return;
-			}
+//			if (parser.getProgram().traverse(new SemanticChecker())) {
+//				System.out.println("SemanticChecker Error");
+//				return;
+//			}
 			
 			// check only
 			if (optMap.containsKey("syntax")) {
@@ -80,11 +81,11 @@ public class Main {
 				return;
 			}
 		
-			if (optMap.containsKey("output")) {
+			if (!optMap.containsKey("output")) {
 				// interpreter mode
 				parser.getProgram().traverse(new ProgramExecutor());
 			}
-			else {				
+			else {
 				// compile mode				
 				String outName = optMap.get("output");
 				
