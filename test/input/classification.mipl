@@ -21,17 +21,9 @@ job classify(A, M, Ca, Cb, Cc) {
     @R.
 }
 
-ca(1).
-ca(0).
-ca(0).
-
-cb(0).
-cb(1).
-cb(0).
-
-cc(0).
-cc(0).
-cc(1).
+ca(1). cb(0). cc(0).
+ca(0). cb(1). cc(0).
+ca(0). cb(0). cc(1).
 
 # Temp, Rain(1 = No Rain, 0 = Rain), Girl Friend(1 = is comming, 0 = is not comming)
 a(60, 1, 0).
