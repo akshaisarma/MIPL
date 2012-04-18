@@ -3,6 +3,7 @@
  *
  * File: Configuration.java
  * Author: Jin Hyung Park <jp2105@columbia.edu>
+ * Author: Younghoon Jeon <yj2231@columbia.edu>
  * Reviewer: YoungHoon Jung <yj2244@columbia.edu>
  * Description: Configuration
  */

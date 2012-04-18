@@ -7,14 +7,20 @@
 */
 package edu.columbia.mipl.datastr;
 
+import edu.columbia.mipl.conf.Configuration;
 import edu.columbia.mipl.matops.*;
 
 public class PrimitiveOperations {
 //	static MapReduceMatrixOperations ops;
 	private static MatrixOperations ops;	
 	static {
+		int mode = Configuration.getInstance().getMode();
+		if (mode == Configuration.MODE_LOCAL)
+			ops = new DefaultMatrixOperations();
+		else if (mode == Configuration.MODE_REMOTE)
+			ops = new MapReduceMatrixOperations();
 //		ops = new MapReduceMatrixOperations(); //TODO: read from Configuration
-		ops = new DefaultMatrixOperations();
+//		ops = new DefaultMatrixOperations();
 	}
 
 	public static PrimitiveType assign(PrimitiveType arg1, PrimitiveType arg2) {
