@@ -23,7 +23,7 @@ public class Expression extends Traversable {
 	Type type;
 
 	Term term;
-	double value;
+//	double value;
 
 	Expression left;
 	Expression right;

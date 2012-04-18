@@ -15,15 +15,95 @@ import edu.columbia.mipl.datastr.*;
 import edu.columbia.mipl.runtime.*;
 import edu.columbia.mipl.runtime.traverse.*;
 
+class ExpressionEvaluator implements Traverser {
+	Stack<Double> stack;
+	VariableStack vs;
+	double value;
+
+	ExpressionEvaluator(Expression expr, VariableStack vs) {
+		this.vs = vs;
+		stack = new Stack<Double>();
+		expr.traverse(this);
+		value = stack.pop();
+	}
+
+	public Method getMethod() {
+		return Method.POST;
+	}
+
+	public boolean reach(Traversable target) {
+		if (target instanceof Expression) {
+			Expression e = (Expression) target;
+			Expression.Type type = e.getType();
+			Double v1;
+			switch (type) {
+				case TERM:
+					return true;
+				case MINUS:
+					v1 = (Double) stack.pop();
+					stack.push(v1 - (Double) stack.pop());
+					return true;
+				case PLUS:
+					v1 = (Double) stack.pop();
+					stack.push(v1 + (Double) stack.pop());
+					return true;
+				case MULTI:
+					v1 = (Double) stack.pop();
+					stack.push(v1 * (Double) stack.pop());
+					return true;
+				case DIVIDE:
+					v1 = (Double) stack.pop();
+					stack.push(v1 / (Double) stack.pop());
+					return true;
+				default:
+					new Exception("Never reach here!").printStackTrace();
+			}
+		}
+		else if (target instanceof Term) {
+			Term t = (Term) target;
+			Term.Type type = t.getType();
+			Double v1;
+			switch (type) {
+				case NUMBER:
+					stack.push(t.getValue());
+					return true;
+				case VARIABLE:
+					if (vs.get(t) != null) {
+						stack.push(vs.get(t).getValue());
+					}
+					return true;
+				default:
+					new Exception("Never reach here!").printStackTrace();
+			}
+		}
+		else
+			new Exception("Never reach here!").printStackTrace();
+
+		return false;
+	}
+
+	public void finish() {
+	}
+
+	public Term getTerm() {
+		return new Term(Term.Type.NUMBER, value);
+	}
+
+	public double getValue() {
+		return value;
+	}
+}
+
 class KnowledgeDuplicator implements Traverser {
-	Knowledge result;
-	Traversable last;
+	Knowledge export;
 	Stack<Traversable> stack;
 	Map<Traversable, Traversable> cache;
 
-	KnowledgeDuplicator() {
+	KnowledgeDuplicator(Knowledge k) {
 		stack = new Stack<Traversable>();
 		cache = new HashMap<Traversable, Traversable>();
+		k.traverse(this);
+		export = (Knowledge) stack.pop();
 	}
 
 	public Method getMethod() {
@@ -33,7 +113,6 @@ class KnowledgeDuplicator implements Traverser {
 	public boolean reach(Traversable target) {
 		int i;
 		Traversable result = cache.get(target);
-		last = target;
 		if (result != null) {
 			if (target instanceof Term && ((Term) target).getType() == Term.Type.EXPRESSION)
 				stack.pop();
@@ -146,13 +225,11 @@ class KnowledgeDuplicator implements Traverser {
 	}
 
 	public static Knowledge duplicate(Knowledge k) {
-		KnowledgeDuplicator duplicator = new KnowledgeDuplicator();
-		k.traverse(duplicator);
-		return duplicator.result;
+		KnowledgeDuplicator duplicator = new KnowledgeDuplicator(k);
+		return duplicator.export;
 	}
 
 	public void finish() {
-		result = (Knowledge) last;
 	}
 }
 
@@ -237,7 +314,8 @@ class StringGenerator implements Traverser {
 
 		if (t instanceof Term) {
 			Term target = (Term) t;
-			switch(target.getType()) {
+			Term.Type type = target.getType();
+			switch(type) {
 				case NUMBER:
 					stack.push(new Double(target.getValue()).toString());
 					break;
@@ -272,10 +350,27 @@ class StringGenerator implements Traverser {
 				case QUERYALL:
 					stack.push(target.getName() + "(*)");
 					break;
+				case IS:
+				case EQ:
+				case LT:
+				case LE:
+				case GT:
+				case GE:
+				case NE:
+					String e = stack.pop();
+					stack.push(e + " op " + stack.pop());
+					break;
 				default:
-					new Exception("Not implemented!" + t).printStackTrace();
+					new Exception("Not implemented!" + type).printStackTrace();
 			}
 			return true;
+		}
+		if (t instanceof Expression) {
+			Expression e = (Expression) t;
+			stack.pop();
+			if (e.getType() != Expression.Type.TERM)
+				stack.pop();
+			stack.push("expr");
 		}
 		else
 			new Exception("Not implemented!" + t).printStackTrace();
@@ -300,7 +395,7 @@ public class SolvableBinder extends Binder implements Solvable {
 	}
 
 	boolean match(Term target, Term source, VariableStack vs) {
-System.out.println("match(" + new StringGenerator(target) + ", " + new StringGenerator(source) + ")");
+//System.out.println("match(" + new StringGenerator(target) + ", " + new StringGenerator(source) + ")");
 		if (target.getType() != Term.Type.VARIABLE &&
 				target.getType() != Term.Type.QUERYALL &&
 				target.getType() != Term.Type.REGEXQUERYALL &&
@@ -323,7 +418,7 @@ System.out.println("match(" + new StringGenerator(target) + ", " + new StringGen
 				source.getType() != Term.Type.VARIABLE) {
 
 			if (vs.get(target) == null) {
-				vs.put(target, source); //TODO clone and put
+				vs.put(target, source);
 				return true;
 			}
 
@@ -333,7 +428,7 @@ System.out.println("match(" + new StringGenerator(target) + ", " + new StringGen
 				source.getType() == Term.Type.VARIABLE) {
 
 			if (vs.get(source) == null) {
-				vs.put(source, target); //TODO clone and put
+				vs.put(source, target);
 				return true;
 			}
 
@@ -386,7 +481,7 @@ System.out.println("match(" + new StringGenerator(target) + ", " + new StringGen
 	}
 
 	boolean matchMatrix(Term target, PrimitiveMatrix<Double> matrix, int row, VariableStack vs) {
-System.out.println("matchMat(" + new StringGenerator(target) + ", " + StringGenerator.matrixToString(matrix, row) + ")");
+//System.out.println("matchMat(" + new StringGenerator(target) + ", " + StringGenerator.matrixToString(matrix, row) + ")");
 		int i = 0;
 		if (target.getType() == Term.Type.MATRIX) {
 			PrimitiveMatrix<Double> tm = target.getMatrix();
@@ -447,13 +542,12 @@ System.out.println("matchMat(" + new StringGenerator(target) + ", " + StringGene
 	boolean bindAll(Goal goal, VariableStack vs, Solvable solver) {
 		Term currentGoal;
 
-		currentGoal = goal.pop();
+		currentGoal = goal.remove();
 
 		List<Knowledge> knowledges;
 		Term newTerm;
 		Rule rule;
 
-		/* use getRegex() for REGEXTERM */
 		if (currentGoal.getType() == Term.Type.REGEXQUERYALL)
 			knowledges = KnowledgeTableFactory.getKnowledgeTable().getRegex(currentGoal.getName());
 		else
@@ -520,18 +614,61 @@ System.out.println("matchMat(" + new StringGenerator(target) + ", " + StringGene
 		return false;
 	}
 
+	boolean containsComparison(Term term) {
+		return term.getType() == Term.Type.IS ||
+			term.getType() == Term.Type.LT ||
+			term.getType() == Term.Type.LE ||
+			term.getType() == Term.Type.GT ||
+			term.getType() == Term.Type.GE ||
+			term.getType() == Term.Type.EQ ||
+			term.getType() == Term.Type.NE;
+	}
+
+	boolean evaluateExpression(Term term, VariableStack vs) {
+		Term.Type type = term.getType();
+		switch(type) {
+			case IS:
+				vs.put(term.getTerm1(), new ExpressionEvaluator(term.getExpr1(), vs).getTerm());
+				return true;
+			case LT:
+				return new ExpressionEvaluator(term.getExpr1(), vs).getValue() < new ExpressionEvaluator(term.getExpr2(), vs).getValue();
+			case LE:
+				return new ExpressionEvaluator(term.getExpr1(), vs).getValue() <= new ExpressionEvaluator(term.getExpr2(), vs).getValue();
+			case GT:
+				return new ExpressionEvaluator(term.getExpr1(), vs).getValue() > new ExpressionEvaluator(term.getExpr2(), vs).getValue();
+			case GE:
+				return new ExpressionEvaluator(term.getExpr1(), vs).getValue() >= new ExpressionEvaluator(term.getExpr2(), vs).getValue();
+			case EQ:
+				return Double.compare(new ExpressionEvaluator(term.getExpr1(), vs).getValue(), new ExpressionEvaluator(term.getExpr2(), vs).getValue()) == 0;
+			case NE:
+				return Double.compare(new ExpressionEvaluator(term.getExpr1(), vs).getValue(), new ExpressionEvaluator(term.getExpr2(), vs).getValue()) != 0;
+			default:
+				new Exception("Never reach here").printStackTrace();
+		}
+		return false;
+	}
+
 	boolean bind(Goal goal, VariableStack vs, Solvable solver) {
 		boolean result = false;
 		Term currentGoal;
 
-		if (goal.empty()) {
+		if (goal.size() == 0) {
 			solver.solve(goal, vs);
 			return true;
 		}
 
-		currentGoal = goal.pop();
-		if (processBuiltinTerm(currentGoal, vs))
-			return true;
+		currentGoal = goal.remove();
+//System.out.println("currentGoal = " + new StringGenerator(currentGoal));
+		if (processBuiltinTerm(currentGoal, vs)) {
+			return bind(new Goal(goal), new VariableStack(vs), solver) || result;
+		}
+
+		if (containsComparison(currentGoal)) {
+			if (evaluateExpression(currentGoal, vs))
+				return bind(new Goal(goal), new VariableStack(vs), solver) || result;
+			else
+				return result;
+		}
 
 		List<Knowledge> knowledges;
 		Term newTerm;
@@ -605,17 +742,20 @@ System.out.println("matchMat(" + new StringGenerator(target) + ", " + StringGene
 			orTermRhs = source;
 
 		do {
+			List<Term> subGoals = new ArrayList<Term>();
 			if (orTermRhs != null) {
 				source = source.getTerm1();
 				orTermRhs = source.getTerm2();
 			}
 
 			while (source.getType() == Term.Type.ANDTERMS) {
-				newGoal.push(source.getTerm1());
+				subGoals.add(source.getTerm1());
 				source = source.getTerm2();
 			}
 			assert (source.getType() == Term.Type.TERM);
-			newGoal.push(source);
+			subGoals.add(source);
+
+			newGoal.addAll(0, subGoals);
 
 			result = bind(newGoal, vs, solver) || result;
 		} while (orTermRhs != null);

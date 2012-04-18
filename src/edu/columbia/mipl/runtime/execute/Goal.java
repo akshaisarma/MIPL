@@ -12,13 +12,13 @@ import java.util.*;
 
 import edu.columbia.mipl.runtime.*;
 
-public class Goal extends Stack<Term> {
+public class Goal extends LinkedList<Term> {
 	Map<String, Term> initialVariableMap;
 	Term initialGoal;
 
 	Goal(Term initialGoal) {
 		this.initialGoal = initialGoal;
-		push(initialGoal);
+		add(initialGoal);
 	}
 
 	Goal(Goal clone) {
