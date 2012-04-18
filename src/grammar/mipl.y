@@ -105,7 +105,7 @@ term
 	| REGEX '(' '*' ')'		{ $$ = new Term(Term.Type.REGEXQUERYALL, (String) $1); }
 	| NOT term			{ $$ = new Term(Term.Type.NOTTERM, (Term) $2); }
 	| term_expr			{ $$ = ((Expression) $1).getTerm(); }
-	| VARIABLE IS term_expr		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), ((Expression) $3).getTerm()); }
+	| VARIABLE IS term_expr		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), (Expression) $3); }
 	| term_expr '<' term_expr	{ $$ = new Term(Term.Type.LT, (Expression) $1, (Expression) $3); }
 	| term_expr '>' term_expr	{ $$ = new Term(Term.Type.GT, (Expression) $1, (Expression) $3); }
 	| term_expr LE_OP term_expr	{ $$ = new Term(Term.Type.LE, (Expression) $1, (Expression) $3); }

@@ -229,6 +229,12 @@ public class Term extends Traversable {
 		arguments = args;
 	}
 
+	public int getArgumentsSize() {
+		if (arguments == null)
+			return 0;
+		return arguments.size();
+	}
+
 	public PrimitiveMatrix getMatrix() {
 		return matrix;
 	}
