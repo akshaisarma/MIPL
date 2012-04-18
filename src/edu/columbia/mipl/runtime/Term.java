@@ -225,6 +225,10 @@ public class Term extends Traversable {
 		return arguments;
 	}
 
+	public void setArguments(List<Term> args) {
+		arguments = args;
+	}
+
 	public PrimitiveMatrix getMatrix() {
 		return matrix;
 	}

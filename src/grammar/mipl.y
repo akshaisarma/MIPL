@@ -105,7 +105,7 @@ term
 	| REGEX '(' '*' ')'		{ $$ = new Term(Term.Type.REGEXQUERYALL, (String) $1); }
 	| NOT term			{ $$ = new Term(Term.Type.NOTTERM, (Term) $2); }
 	| term_expr			{ $$ = ((Expression) $1).getTerm(); }
-	| VARIABLE IS term_expr		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), ((Expression) $3).getTerm()); } /* TODO: Should check VariableMatcher for the same command */
+	| VARIABLE IS term_expr		{ $$ = new Term(Term.Type.IS, new Term(Term.Type.VARIABLE, (String) $1), ((Expression) $3).getTerm()); }
 	| term_expr '<' term_expr	{ $$ = new Term(Term.Type.LT, (Expression) $1, (Expression) $3); }
 	| term_expr '>' term_expr	{ $$ = new Term(Term.Type.GT, (Expression) $1, (Expression) $3); }
 	| term_expr LE_OP term_expr	{ $$ = new Term(Term.Type.LE, (Expression) $1, (Expression) $3); }
@@ -127,7 +127,7 @@ term_fact
 	;
 
 term_term
-	: VARIABLE			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); } /* TODO: Should check VariableMatcher for the same command */
+	: VARIABLE			{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.VARIABLE, (String) $1)); }
 	| numerical_value	{ $$ = new Expression(Expression.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
 	| '(' term_expr ')'	{ $$ = $2; }
 	;
@@ -135,7 +135,7 @@ term_term
 term_args_cand
 	: IDENTIFIER			{ $$ = new Term(Term.Type.TERM, (String) $1, new ArrayList<Term>()); }
 	| IDENTIFIER '(' term_args ')'	{ $$ = new Term(Term.Type.TERM, (String) $1, (List<Term>) $3); }
-	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); } /* TODO: Should check VariableMatcher for the same command */
+	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); }
 	| '_'				{ $$ = new Term(Term.Type.VARIABLE, "_"); }
 	| numerical_value	{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
 	| STRING_LITERAL	{ $$ = new Term(Term.Type.STRING, (String) $1); }

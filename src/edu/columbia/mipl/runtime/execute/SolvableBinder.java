@@ -9,6 +9,7 @@
 package edu.columbia.mipl.runtime.execute;
 
 import java.util.*;
+import java.util.regex.*;
 
 import edu.columbia.mipl.datastr.*;
 import edu.columbia.mipl.runtime.*;
@@ -164,8 +165,14 @@ class VariableGrouper implements Traverser {
 class StringGenerator implements Traverser {
 	Stack<String> stack;
 	String result = null;
+	VariableStack vs;
 
 	public StringGenerator(Term t) {
+		this(t, null);
+	}
+
+	public StringGenerator(Term t, VariableStack vs) {
+		this.vs = vs;
 		stack = new Stack<String>();
 		t.traverse(this);
 	}
@@ -177,6 +184,19 @@ class StringGenerator implements Traverser {
 	public String toString() {
 		if (result == null)
 			result = stack.pop();
+
+		return result;
+	}
+
+	public static String matrixToString(PrimitiveMatrix matrix, int row) {
+		int i;
+		String result = "(";
+		for (i = 0; i < matrix.getCol(); i++) {
+			if (i > 0)
+				result += ", ";
+			result += matrix.getValue(row, i);
+		}
+		result += ")";
 
 		return result;
 	}
@@ -193,22 +213,19 @@ class StringGenerator implements Traverser {
 					break;
 				case STRING:
 				case VARIABLE:
-					stack.push(target.getName());
+					if (vs != null && vs.get(target) != null)
+						stack.push(new StringGenerator(vs.get(target), vs).toString());
+					else
+						stack.push(target.getName());
 					break;
 				case MATRIX:
 					PrimitiveMatrix matrix = target.getMatrix();
 					if (matrix.getRow() != 1)
 						new Exception("Multirow matrix query!").printStackTrace();
-					String result = target.getName() + "(";
-					for (i = 0; i < matrix.getCol(); i++) {
-						if (i > 0)
-							result += ", ";
-						result += matrix.getValue(0, i);
-					}
-					result += ")";
-					stack.push(result);
+					stack.push(StringGenerator.matrixToString(matrix, 0));
 					break;
 				case TERM:
+				case REGEXTERM:
 					line = target.getName();
 					i = target.size();
 					if (i > 0)
@@ -222,6 +239,9 @@ class StringGenerator implements Traverser {
 						line += ")";
 					stack.push(line);
 					break;
+				case QUERYALL:
+					stack.push(target.getName() + "(*)");
+					break;
 				default:
 					new Exception("Not implemented!" + t).printStackTrace();
 			}
@@ -229,6 +249,7 @@ class StringGenerator implements Traverser {
 		}
 		else
 			new Exception("Not implemented!" + t).printStackTrace();
+
 		return false;
 	}
 
@@ -248,14 +269,12 @@ public class SolvableBinder extends Binder implements Solvable {
 		goal.setInitialVariableMap(grouper.getVariableMap());
 	}
 
-	boolean bind() {
-		System.out.println(" ----- Query '" + new StringGenerator(goal.getInitialGoal()) + "?':");
-		boolean result = bind(goal, vs, this);
-		return result;
-	}
-
 	boolean match(Term target, Term source, VariableStack vs) {
+//System.out.println("match(" + new StringGenerator(target) + ", " + new StringGenerator(source) + ")");
 		if (target.getType() != Term.Type.VARIABLE &&
+				target.getType() != Term.Type.QUERYALL &&
+				target.getType() != Term.Type.REGEXQUERYALL &&
+				target.getType() != Term.Type.REGEXTERM &&
 				source.getType() != Term.Type.VARIABLE &&
 				source.getType() != Term.Type.MATRIX &&
 				target.getType() != source.getType()) {
@@ -291,15 +310,31 @@ public class SolvableBinder extends Binder implements Solvable {
 			return match(vs.get(source), target, vs);
 		}
 
-		int size = target.getArguments().size();
-		int i;
+		if (target.getType() == Term.Type.REGEXTERM || target.getType() == Term.Type.REGEXQUERYALL
+				|| target.getType() == Term.Type.STRING) {
+			Pattern p = Pattern.compile(target.getName());
+			Matcher m = p.matcher(source.getName());
+			if (!m.matches())
+				return false;
 
-		if (!target.getName().equals(source.getName())) {
+			if (target.getType() == Term.Type.STRING)
+				return true;
+		}
+		else if (!target.getName().equals(source.getName())) {
 			return false;
 		}
 
 		if (source.getType() == Term.Type.TERM) {
-			if (size != source.getArguments().size()) {
+			int size = 0;
+			if (target.getArguments() != null)
+				size = target.getArguments().size();
+			int srcSize = 0;
+			if (source.getArguments() != null)
+				srcSize = source.getArguments().size();
+
+			int i;
+
+			if (size != srcSize) {
 				return false;
 			}
 
@@ -314,13 +349,14 @@ public class SolvableBinder extends Binder implements Solvable {
 		/* NUMBER, STRING, REGEX */
 		else {
 			//TODO
-			new Exception("Not Implemented").printStackTrace();
+			new Exception("Not Implemented :" + source.getType()).printStackTrace();
 		}
 
 		return true;
 	}
 
 	boolean matchMatrix(Term target, PrimitiveMatrix<Double> matrix, int row, VariableStack vs) {
+//System.out.println("matchMat(" + new StringGenerator(target) + ", " + StringGenerator.matrixToString(matrix, row) + ")");
 		int i = 0;
 		if (target.getType() == Term.Type.MATRIX) {
 			PrimitiveMatrix<Double> tm = target.getMatrix();
@@ -354,6 +390,88 @@ public class SolvableBinder extends Binder implements Solvable {
 		return false;
 	}
 
+	boolean bind() {
+		System.out.println(" ----- Query '" + new StringGenerator(goal.getInitialGoal()) + "?':");
+		boolean result;
+		if (goal.getInitialGoal().getType() == Term.Type.QUERYALL ||
+				goal.getInitialGoal().getType() == Term.Type.REGEXQUERYALL)
+			result = bindAll(goal, vs, this);
+		else
+			result = bind(goal, vs, this);
+
+		return result;
+	}
+
+	Map<String, Term> createVariableMapForQueryAll(Term target, int argc) {
+		Map<String, Term> map = new HashMap<String, Term>();
+		List<Term> list = new ArrayList<Term>();
+		while (argc-- > 0) {
+			Term arg = new Term(Term.Type.VARIABLE, "X" + argc);
+			map.put("X" + argc, arg);
+			list.add(arg);
+		}
+		target.setArguments(list);
+		return map;
+	}
+
+	boolean bindAll(Goal goal, VariableStack vs, Solvable solver) {
+		Term currentGoal;
+
+		currentGoal = goal.pop();
+
+		List<Knowledge> knowledges;
+		Term newTerm;
+		Rule rule;
+
+		/* use getRegex() for REGEXTERM */
+		if (currentGoal.getType() == Term.Type.REGEXQUERYALL)
+			knowledges = KnowledgeTableFactory.getKnowledgeTable().getRegex(currentGoal.getName());
+		else
+			knowledges = KnowledgeTableFactory.getKnowledgeTable().get(currentGoal.getName());
+		if (knowledges == null)
+			return false;
+
+		for (Knowledge k : knowledges) {
+			Knowledge knowledge = KnowledgeDuplicator.duplicate(k);
+			VariableStack newVs = new VariableStack(vs);
+
+			if (knowledge instanceof Job)
+				continue;
+
+			if (knowledge.getTerm().getType() == Term.Type.MATRIX) {
+				PrimitiveMatrix<Double> matrix = knowledge.getTerm().getMatrix();
+				if (knowledge instanceof Fact) {
+					matrix.getData().printMatrix();
+				}
+				else if (knowledge instanceof Rule) {
+					int i;
+					for (i = 0; i < matrix.getRow(); i++) {
+						VariableStack rowVs = new VariableStack(newVs);
+						bindRule((Rule) knowledge, goal, rowVs, solver);
+					}
+				}
+				continue;
+			}
+
+			int argc = 0;
+			if (knowledge.getTerm().getArguments() != null)
+				argc = knowledge.getTerm().getArguments().size();
+			goal.setInitialVariableMap(createVariableMapForQueryAll(currentGoal, argc));
+
+			if (!match(currentGoal, knowledge.getTerm(), newVs))
+				continue;
+
+			if (knowledge instanceof Fact) {
+				bind(new Goal(goal), newVs, solver);
+				continue;
+			}
+
+			bindRule((Rule) knowledge, goal, newVs, solver);
+		}
+
+		return true;
+	}
+
 	boolean bind(Goal goal, VariableStack vs, Solvable solver) {
 		boolean result = false;
 		Term currentGoal;
@@ -370,7 +488,10 @@ public class SolvableBinder extends Binder implements Solvable {
 		Rule rule;
 
 		/* use getRegex() for REGEXTERM */
-		knowledges = KnowledgeTableFactory.getKnowledgeTable().get(currentGoal.getName());
+		if (currentGoal.getType() == Term.Type.REGEXTERM)
+			knowledges = KnowledgeTableFactory.getKnowledgeTable().getRegex(currentGoal.getName());
+		else
+			knowledges = KnowledgeTableFactory.getKnowledgeTable().get(currentGoal.getName());
 		if (knowledges == null)
 			return false;
 
@@ -469,7 +590,7 @@ public class SolvableBinder extends Binder implements Solvable {
 			else if (valueTerm == null)
 				System.out.println(variable + " = " + "(undecided)");
 			else
-				System.out.println(variable + " = " + new StringGenerator(valueTerm));
+				System.out.println(variable + " = " + new StringGenerator(valueTerm, vs));
 		}
 	}
 }
