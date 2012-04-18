@@ -26,6 +26,12 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class Configuration extends DefaultHandler {
+	public static final int MODE_LOCAL = 0;
+	public static final int MODE_REMOTE = 1;
+	
+	public static final int GEN_JAVASRC = 0;
+	public static final int GEN_BYTECODE = 1;
+	
 	private static Configuration instance = null;
 	private boolean isXMLAsString;
 	private boolean isXMLAsFile;
@@ -50,7 +56,12 @@ public class Configuration extends DefaultHandler {
 	private String theClass;
 	private HashMap<String, String> hash = new HashMap<String, String>();
 	private java.util.List<String> dependencies = null;
+	
+	private int mode = MODE_LOCAL;
+	private java.util.List<String> servers = new ArrayList<String> ();
 
+	private int gen = GEN_JAVASRC;
+	
 	Configuration() {
 		isXMLAsString = false;
 		isXMLAsFile = false;
@@ -156,5 +167,29 @@ public class Configuration extends DefaultHandler {
 	 */
 	public Map<String, String> getMap() {
 		return hash;
+	}
+	
+	public int getMode() {
+		return mode;
+	}
+	
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
+	
+	public java.util.List<String> getServers() {
+		return servers;
+	}
+	
+	public void addServer(String server) {
+		servers.add(server);
+	}
+	
+	public int getGen() {
+		return gen;
+	}
+	
+	public void setGen(int gen) {
+		this.gen = gen;
 	}
 }
