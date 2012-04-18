@@ -72,12 +72,18 @@ public class CodeGenerator extends RuntimeTraverser {
 			case EXPRESSION:
 				writer.createTerm(Term.Type.EXPRESSION, term.getExpr1());
 				break;
+			default:
+				new Exception("Not Implemented :" + term.getType()).printStackTrace();
 		}
 
 		return true;
 	}
 
 	public boolean reachExpression(Expression expr) {
+if (expr == null) new Exception("expr null").printStackTrace();
+System.out.println("1expr :" + expr);
+System.out.println("expr type:" + expr.getType());
+System.out.println("2expr :" + expr);
 		switch (expr.getType()) {
 			case TERM:
 				writer.createExpression(Expression.Type.TERM, expr.getTerm());
@@ -89,6 +95,8 @@ public class CodeGenerator extends RuntimeTraverser {
 				writer.createExpression(expr.getType(), expr.getExpr1(),
 											expr.getExpr2());
 				break;
+			default:
+				new Exception("Not Implemented :" + expr.getType()).printStackTrace();
 		}
 
 		return true;
