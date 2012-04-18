@@ -30,7 +30,7 @@ public class TableMatrixLoader extends MatrixLoader {
 		return "Table";
 	}
 
-	public PrimitiveMatrix loadMatrix(String file) {
+	public PrimitiveArray loadMatrix(String file) {
 		try {
 			FileInputStream tableMatrix = new FileInputStream(file);
 			Scanner matrixScan = new Scanner(tableMatrix);
@@ -52,15 +52,15 @@ public class TableMatrixLoader extends MatrixLoader {
 			 */
 			Scanner stringScanner = new Scanner(line);
 			PrimitiveArray loadedMatrix = null;
-			if (stringScanner.hasNextInt())
-				loadedMatrix = (PrimitiveIntArray) copyToArray(matrixScan, line, Integer.class);
-			else if (stringScanner.hasNextDouble())
+//			if (stringScanner.hasNextInt())
+//				loadedMatrix = (PrimitiveIntArray) copyToArray(matrixScan, line, Integer.class);
+//			else if (stringScanner.hasNextDouble())
 				loadedMatrix = (PrimitiveDoubleArray) copyToArray(matrixScan, line, Double.class);
-			else
+//			else
 				//Add new types here.
 
 			tableMatrix.close();
-			return new PrimitiveMatrix(loadedMatrix);
+			return loadedMatrix;
 		}
 		catch (FileNotFoundException e) {
 			System.out.println("Matrix file not found!");

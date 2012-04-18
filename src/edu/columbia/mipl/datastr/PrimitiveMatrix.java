@@ -143,9 +143,9 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 
 	void loadMatrix() {
 		if (status == Status.PM_STATUS_URI_LOCAL) {
-			// matrixLoader = MatrixLoaderFactory.getInstance().getMatrixLoader(MatrixType);
-			// data = matrixLoader.loadMatrix(uri);
-			// status = Status.PM_STATUS_LOADED_FULL
+			status = Status.PM_STATUS_LOADED_FULL;
+			MatrixLoader matrixLoader = MatrixLoaderFactory.getMatrixLoader("table");
+			data = matrixLoader.loadMatrix(uri);
 			// or
 			// sparseList = matrixLoader.loadMatrix(uri);
 			// status = Status.PM_STATUS_LOADED_SPARSE

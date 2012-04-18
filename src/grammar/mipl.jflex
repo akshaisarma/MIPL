@@ -109,6 +109,8 @@ LARROW_OP = <- |
 "true" { return ParserTokens.TRUE; }
 "false" { return ParserTokens.FALSE; }
 
+"include" { return ParserTokens.INCLUDE; }
+
 {STRING_LITERAL} { yyparser.yylval = getTrimmedString(yytext()); return ParserTokens.STRING_LITERAL; }
 
 \#.*\n { /* Ignore Comments */ }

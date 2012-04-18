@@ -27,7 +27,7 @@ import edu.columbia.mipl.runtime.traverse.*;
 %token IF ELSE DO WHILE
 
 %token REGEX VARIABLE NOT LARROW_OP IS JOB
-%token NUMBER TRUE FALSE
+%token NUMBER TRUE FALSE INCLUDE
 
 %start program
 
@@ -46,6 +46,7 @@ command
 	| query				/* Default Action $$ = $1 */
 	| rule				/* Default Action $$ = $1 */
 	| job				/* Default Action $$ = $1 */
+	| INCLUDE STRING_LITERAL	{ new Parser((String) $2, program, false); }
 	;
 
 fact
@@ -354,6 +355,10 @@ public Parser(String file) {
 }
 
 public Parser(String file, Program program) {
+	this(file, program, true);
+}
+
+public Parser(String file, Program program, boolean finish) {
 	FileReader r;
 	try {
 		r = new FileReader(file);
@@ -371,7 +376,8 @@ public Parser(String file, Program program) {
 
 	yyparse();
 
-	program.finish();
+	if (finish)
+		program.finish();
 }
 
 public Parser(Reader r, Program program) {

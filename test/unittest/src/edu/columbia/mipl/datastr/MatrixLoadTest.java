@@ -23,7 +23,7 @@ public class MatrixLoadTest extends TestCase {
 		boolean result = true;
 		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, data3x3_1);
 		MatrixLoaderFactory.getMatrixLoader("csv").loadMatrix(TEST_DIR + "test_matrix.csv");
-		final PrimitiveArray array = MatrixLoaderFactory.getMatrixLoader("csv").loadMatrix(TEST_DIR + "test_matrix.csv").getData();
+		final PrimitiveArray array = MatrixLoaderFactory.getMatrixLoader("csv").loadMatrix(TEST_DIR + "test_matrix.csv");
 
 		assert (array instanceof PrimitiveDoubleArray);
 

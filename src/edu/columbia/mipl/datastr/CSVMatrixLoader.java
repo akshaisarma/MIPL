@@ -30,7 +30,7 @@ public class CSVMatrixLoader extends MatrixLoader {
 		return "CSV";
 	}
 
-	public PrimitiveMatrix loadMatrix(String file) {
+	public PrimitiveArray loadMatrix(String file) {
 		try {
 			FileInputStream tableMatrix = new FileInputStream(file);
 			Scanner matrixScan = new Scanner(tableMatrix);
@@ -86,7 +86,7 @@ public class CSVMatrixLoader extends MatrixLoader {
 				// Add new types here
 
 			tableMatrix.close();
-			return new PrimitiveMatrix(loadedMatrix);
+			return loadedMatrix;
 		}
 		catch (FileNotFoundException e) {
 			System.out.println("Matrix file not found!");
@@ -111,7 +111,7 @@ public class CSVMatrixLoader extends MatrixLoader {
 		line = line.replaceAll("\"?[nN]o\"?", "0");
 		return line;
 	}
-
+	
 	public void saveMatrix(String file, PrimitiveMatrix matrix) {
 		saveMatrix(file, matrix.getData());
 	}
