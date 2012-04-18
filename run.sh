@@ -1,5 +1,8 @@
 #!/bin/bash
 
+INPUT=$1
+[ $# -lt 1 ] && INPUT=test/input/multi_jobs.mipl
+
 rm -rf temp
 
 echo "1. build the project"
@@ -15,7 +18,7 @@ echo "2. Compile the sample program into java source with MIPL compiler"
 #java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/while.mipl
 
 # NOT YET IMPLEMENTED
-java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/multi_jobs.mipl
+java -cp build edu.columbia.mipl.Main -output MiplProgram $INPUT
 
 echo "3. compile the java source"
 javac -cp build build/MiplProgram.java
