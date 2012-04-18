@@ -7,7 +7,9 @@ echo "1. build the project"
 
 echo "2. Compile the sample program into java source with MIPL compiler"
 #java -cp build edu.columbia.mipl.Main test/input/hello.mipl
-java -cp build edu.columbia.mipl.Main test/input/classification.mipl
+java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/hanoi.mipl 
+#java -cp build edu.columbia.mipl.Main test/input/regex.mipl
+#java -cp build edu.columbia.mipl.Main test/input/classification.mipl
 
 echo "3. compile the java source"
 javac -cp build build/MiplProgram.java
