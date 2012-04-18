@@ -58,7 +58,7 @@ public class Configuration extends DefaultHandler {
 	private java.util.List<String> dependencies = null;
 	
 	private int mode = MODE_LOCAL;
-	private java.util.List<String> servers = new ArrayList<String> ();
+	private java.util.List<String> servers = new ArrayList<String>();
 
 	private int gen = GEN_JAVASRC;
 	
