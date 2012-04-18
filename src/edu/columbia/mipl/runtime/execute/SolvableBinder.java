@@ -14,6 +14,117 @@ import edu.columbia.mipl.datastr.*;
 import edu.columbia.mipl.runtime.*;
 import edu.columbia.mipl.runtime.traverse.*;
 
+class KnowledgeDuplicator implements Traverser {
+	Knowledge result;
+	Traversable last;
+	Stack<Traversable> stack;
+	Map<Traversable, Traversable> cache;
+
+	KnowledgeDuplicator() {
+		stack = new Stack<Traversable>();
+		cache = new HashMap<Traversable, Traversable>();
+	}
+
+	public Method getMethod() {
+		return Method.POST;
+	}
+
+	public boolean reach(Traversable target) {
+		int i;
+		Traversable result = cache.get(target);
+		last = target;
+		if (result != null) {
+			if (target instanceof Term && ((Term) target).getType() == Term.Type.EXPRESSION)
+				stack.pop();
+			if (target instanceof Term && ((Term) target).getType() == Term.Type.TERM)
+				for (i = ((Term) target).getArguments().size(); i > 0; i--)
+					stack.pop();
+			if (target instanceof Term && ((Term) target).getType() == Term.Type.ANDTERMS) {
+				stack.pop();
+				stack.pop();
+			}
+			if (target instanceof Fact && ((Fact) target).getType() == Fact.Type.FACT)
+				stack.pop();
+			if (target instanceof Rule) {
+				stack.pop();
+				stack.pop();
+			}
+			stack.push(result);
+			return true;
+		}
+
+		if (target instanceof Term) {
+			Term t = (Term) target;
+			Term.Type type = t.getType();
+			switch (type) {
+				case VARIABLE:
+					result = new Term(type, t.getName());
+					break;
+				case NUMBER: 
+					result = new Term(type, t.getValue());
+					break;
+				case STRING: 
+					result = new Term(type, t.getName());
+					break;
+				case EXPRESSION: 
+					result = new Term(type, (Expression) stack.pop());
+					break;
+				case MATRIX: 
+					result = new Term(type, t.getName(), t.getMatrix());
+					break;
+				case ANDTERMS: 
+					Term t1 = (Term) stack.pop();
+					result = new Term(type, t1, (Term) stack.pop());
+					break;
+				case TERM: 
+					i = t.getArguments().size();
+					List<Term> args = new ArrayList<Term>();
+					while (i-- > 0) {
+						args.add((Term) stack.pop());
+					}
+					result = new Term(type, t.getName(), args);
+					break;
+				default:
+					new Exception("Not Implemented!" + type).printStackTrace();
+			}
+		}
+		else if (target instanceof Expression) {
+			Expression e = (Expression) target;
+		}
+		else if (target instanceof Fact) {
+			Fact f = (Fact) target;
+			Fact.Type type = f.getType();
+			switch (type) {
+				case FACT:
+					result = new Fact((Term) stack.pop());
+					break;
+				case MATRIXASFACTS:
+					new Exception("Not reach here!").printStackTrace();
+					break;
+			}
+		}
+		else if (target instanceof Rule) {
+			Term t = (Term) stack.pop();
+			result = new Rule(t, (Term) stack.pop());
+		}
+
+		cache.put(target, result);
+		stack.push(result);
+
+		return true;
+	}
+
+	public static Knowledge duplicate(Knowledge k) {
+		KnowledgeDuplicator duplicator = new KnowledgeDuplicator();
+		k.traverse(duplicator);
+		return duplicator.result;
+	}
+
+	public void finish() {
+		result = (Knowledge) last;
+	}
+}
+
 class VariableGrouper implements Traverser {
 	VariableStack vs;
 	Map<String, Term> map;
@@ -52,6 +163,7 @@ class VariableGrouper implements Traverser {
 
 class StringGenerator implements Traverser {
 	Stack<String> stack;
+	String result = null;
 
 	public StringGenerator(Term t) {
 		stack = new Stack<String>();
@@ -63,7 +175,10 @@ class StringGenerator implements Traverser {
 	}
 
 	public String toString() {
-		return stack.pop();
+		if (result == null)
+			result = stack.pop();
+
+		return result;
 	}
 
 	public boolean reach(Traversable t) {
@@ -80,6 +195,19 @@ class StringGenerator implements Traverser {
 				case VARIABLE:
 					stack.push(target.getName());
 					break;
+				case MATRIX:
+					PrimitiveMatrix matrix = target.getMatrix();
+					if (matrix.getRow() != 1)
+						new Exception("Multirow matrix query!").printStackTrace();
+					String result = target.getName() + "(";
+					for (i = 0; i < matrix.getCol(); i++) {
+						if (i > 0)
+							result += ", ";
+						result += matrix.getValue(0, i);
+					}
+					result += ")";
+					stack.push(result);
+					break;
 				case TERM:
 					line = target.getName();
 					i = target.size();
@@ -94,9 +222,13 @@ class StringGenerator implements Traverser {
 						line += ")";
 					stack.push(line);
 					break;
+				default:
+					new Exception("Not implemented!" + t).printStackTrace();
 			}
 			return true;
 		}
+		else
+			new Exception("Not implemented!" + t).printStackTrace();
 		return false;
 	}
 
@@ -126,8 +258,9 @@ public class SolvableBinder extends Binder implements Solvable {
 		if (target.getType() != Term.Type.VARIABLE &&
 				source.getType() != Term.Type.VARIABLE &&
 				source.getType() != Term.Type.MATRIX &&
-				target.getType() != source.getType())
+				target.getType() != source.getType()) {
 			return false;
+		}
 
 		if (target.getType() == Term.Type.VARIABLE &&
 				source.getType() == Term.Type.VARIABLE) {
@@ -161,23 +294,27 @@ public class SolvableBinder extends Binder implements Solvable {
 		int size = target.getArguments().size();
 		int i;
 
-		if (!target.getName().equals(source.getName()))
+		if (!target.getName().equals(source.getName())) {
 			return false;
+		}
 
 		if (source.getType() == Term.Type.TERM) {
-			if (size != source.getArguments().size())
+			if (size != source.getArguments().size()) {
 				return false;
+			}
 
 			List<Term> tgtArgs = target.getArguments();
 			List<Term> srcArgs = source.getArguments();
 			for (i = 0; i < size; i++) {
-				if (!match(tgtArgs.get(i), srcArgs.get(i), vs))
+				if (!match(tgtArgs.get(i), srcArgs.get(i), vs)) {
 					return false;
+				}
 			}
 		}
-		/* NUMBER, MATRIX, STRING, REGEX */
-		else { /* source.getType == Term.Type.MATRIX */
+		/* NUMBER, STRING, REGEX */
+		else {
 			//TODO
+			new Exception("Not Implemented").printStackTrace();
 		}
 
 		return true;
@@ -187,11 +324,13 @@ public class SolvableBinder extends Binder implements Solvable {
 		int i = 0;
 		if (target.getType() == Term.Type.MATRIX) {
 			PrimitiveMatrix<Double> tm = target.getMatrix();
-			if (tm.getCol() != matrix.getCol())
+			if (tm.getCol() != matrix.getCol()) {
 				return false;
+			}
 			for (i = 0; i < tm.getCol(); i++) {
-				if (tm.getValue(0, i) != matrix.getValue(row, i))
+				if (Double.compare(tm.getValue(0, i), matrix.getValue(row, i)) != 0) {
 					return false;
+				}
 			}
 			return true;
 		}
@@ -201,7 +340,7 @@ public class SolvableBinder extends Binder implements Solvable {
 				return false;
 			for (Term arg : arguments) {
 				if (arg.getType() == Term.Type.NUMBER) {
-					if (matrix.getValue(row, i) != arg.getValue())
+					if (Double.compare(matrix.getValue(row, i), arg.getValue()) != 0)
 						return false;
 				}
 				else if (arg.getType() == Term.Type.VARIABLE)
@@ -230,11 +369,13 @@ public class SolvableBinder extends Binder implements Solvable {
 		Term newTerm;
 		Rule rule;
 
+		/* use getRegex() for REGEXTERM */
 		knowledges = KnowledgeTableFactory.getKnowledgeTable().get(currentGoal.getName());
 		if (knowledges == null)
 			return false;
 
-		for (Knowledge knowledge : knowledges) {
+		for (Knowledge k : knowledges) {
+			Knowledge knowledge = KnowledgeDuplicator.duplicate(k);
 			VariableStack newVs = new VariableStack(vs);
 			knowledge.traverse(new VariableGrouper(newVs));
 
@@ -247,8 +388,23 @@ public class SolvableBinder extends Binder implements Solvable {
 				for (i = 0; i < matrix.getRow(); i++) {
 					VariableStack rowVs = new VariableStack(newVs);
 					if (matchMatrix(currentGoal, matrix, i, rowVs)) {
-						result = bind(new Goal(goal), rowVs, solver) || result;
+						if (knowledge instanceof Fact)
+							result = bind(new Goal(goal), rowVs, solver) || result;
+						else if (knowledge instanceof Rule)
+							result = bindRule((Rule) knowledge, goal, rowVs, solver) || result;
 					}
+				}
+				continue;
+			}
+
+			/* goal == MATRIX && knowledge = Term */
+			if (currentGoal.getType() == Term.Type.MATRIX) {
+				VariableStack rowVs = new VariableStack(newVs);
+				if (matchMatrix(knowledge.getTerm(), currentGoal.getMatrix(), 0, rowVs)) {
+					if (knowledge instanceof Fact)
+						result = bind(new Goal(goal), rowVs, solver) || result;
+					else if (knowledge instanceof Rule)
+						result = bindRule((Rule) knowledge, goal, rowVs, solver) || result;
 				}
 				continue;
 			}
@@ -261,29 +417,37 @@ public class SolvableBinder extends Binder implements Solvable {
 				continue;
 			}
 
-			rule = (Rule) knowledge;
-			Term source = rule.getSource();
-			Term orTermRhs = null;
-
-			if (source.getType() == Term.Type.ORTERMS)
-				orTermRhs = source;
-
-			do {
-				if (orTermRhs != null) {
-					source = source.getTerm1();
-					orTermRhs = source.getTerm2();
-				}
-
-				while (source.getType() == Term.Type.ANDTERMS) {
-					goal.push(source.getTerm1());
-					source = source.getTerm2();
-				}
-				assert (source.getType() == Term.Type.TERM);
-				goal.push(source);
-
-				result = bind(new Goal(goal), newVs, solver) || result;
-			} while (orTermRhs != null);
+			result = bindRule((Rule) knowledge, goal, newVs, solver) || result;
 		}
+
+		return result;
+	}
+
+	private boolean bindRule(Rule rule, Goal goal, VariableStack vs, Solvable solver) {
+		boolean result = false;
+
+		Term source = rule.getSource();
+		Term orTermRhs = null;
+		Goal newGoal = new Goal(goal);
+
+		if (source.getType() == Term.Type.ORTERMS)
+			orTermRhs = source;
+
+		do {
+			if (orTermRhs != null) {
+				source = source.getTerm1();
+				orTermRhs = source.getTerm2();
+			}
+
+			while (source.getType() == Term.Type.ANDTERMS) {
+				newGoal.push(source.getTerm1());
+				source = source.getTerm2();
+			}
+			assert (source.getType() == Term.Type.TERM);
+			newGoal.push(source);
+
+			result = bind(newGoal, vs, solver) || result;
+		} while (orTermRhs != null);
 
 		return result;
 	}

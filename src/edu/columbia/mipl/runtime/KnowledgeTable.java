@@ -9,6 +9,7 @@
 package edu.columbia.mipl.runtime;
 
 import java.util.*;
+import java.util.regex.*;
 
 import edu.columbia.mipl.datastr.*;
 
@@ -74,5 +75,17 @@ public class KnowledgeTable extends HashMap<String, List<Knowledge>> {
 		}
 
 		return false;
+	}
+
+	public List<Knowledge> getRegex(String regex) {
+		Pattern p = Pattern.compile(regex);
+		List<Knowledge> list = new ArrayList<Knowledge>();
+		for (String key : keySet()) {
+			Matcher m = p.matcher(key);
+			if (m.matches())
+				list.addAll(get(key));
+		}
+
+		return list;
 	}
 }
