@@ -3,6 +3,7 @@
  *
  * File: Main.java
  * Author: YoungHoon Jung <yj2244@columbia.edu>
+ * Author: Younghoon Jeon <yj2231@columbia.edu>
  * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
  * Description: Main
  */
@@ -11,6 +12,7 @@ package edu.columbia.mipl;
 import java.io.*;
 import java.util.*;
 
+import edu.columbia.mipl.conf.*;
 import edu.columbia.mipl.syntax.*;
 import edu.columbia.mipl.codegen.*;
 import edu.columbia.mipl.runtime.*;
@@ -21,10 +23,12 @@ public class Main {
 	public static void main(String[] args) {
 		//Parser parser = new Parser(new Program(new SemanticChecker(), new ProgramExecutor())); // Interactive Mode
 		//Parser parser = new Parser("test/input/multireturn.mipl", new Program(new SemanticChecker(), new ProgramExecutor())); // Interpreter Mode
-		//Parser parser = new Parser("test/input/multireturn.mipl", new SemanticChecker()); // CheckingOnly mode		
+		//Parser parser = new Parser("test/input/multireturn.mipl", new SemanticChecker()); // CheckingOnly mode
+		
+		Configuration conf = Configuration.getInstance();
 				
 		Map<String, String> optMap = new HashMap<String, String>();
-		int index = getOpt(args, "help;h version;v syntax;s interactive;i config;c:", optMap);
+		int index = getOpt(args, "help;h version;v syntax;s interactive;i config;c: server;s: gen;g: output;o:", optMap);
 		if (index < 0) {
 			return;
 		}
@@ -44,29 +48,58 @@ public class Main {
 		// read configuration file
 		if (optMap.containsKey("config")) {			
 		}
+		
+		if (optMap.containsKey("server")) {
+			conf.addServer(optMap.get("server"));
+		}
 
 		if (optMap.containsKey("interactive")) {
 			// interactive mode
+			Parser parser = new Parser(new Program(new SemanticChecker(), new ProgramExecutor()));
 		}
-		else {
-			// compile mode
+		else {					
 			if (index >= args.length) {
 				showUsage();
 				return;
 			}
 			
-			Parser parser = new Parser(args[index]);
+			String srcName = args[index];
+			
+			Parser parser = new Parser(srcName);
 			if (parser.getNumError() != 0) {
+				return;
+			}
+			
+			if (parser.getProgram().traverse(new SemanticChecker())) {
 				return;
 			}
 			
 			// check only
 			if (optMap.containsKey("syntax")) {
+				// return here without doing something
 				return;
 			}
-			
-			parser.getProgram().traverse(new CodeGenerator("build", "MiplProgram"));
-		}		
+		
+			if (optMap.containsKey("output")) {
+				// interpreter mode
+				parser.getProgram().traverse(new ProgramExecutor());
+			}
+			else {				
+				// compile mode				
+				String outName = optMap.get("output");
+				
+				// gen mode
+				if (optMap.containsKey("gen")) {
+					String gen = optMap.get("gen");
+					if (gen.equals("javasrc"))
+						conf.setGen(Configuration.GEN_JAVASRC);
+					else if (gen.equals("bytecode"))
+						conf.setGen(Configuration.GEN_BYTECODE);
+				}
+				
+				parser.getProgram().traverse(new CodeGenerator("build", outName));
+			}
+		}
 
 		/*
 		// Compiling Mode
@@ -140,8 +173,5 @@ public class Main {
 	
 	public static void showVersion() {
 		System.err.println("Usage:");
-	}
-	
-	public static void repl() {
 	}
 }

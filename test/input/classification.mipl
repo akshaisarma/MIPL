@@ -6,31 +6,41 @@
 # Description: A MIPL program that shows the example of the classification
 #
 
-job classify(A, M, Ca, Cb) {
+job classify(A, M, Ca, Cb, Cc) {
     B = A - urow(M).
 
     B = B./abs(B).
 
     Ba = B * Ca.
     Bb = B * Cb.
+    Bc = B * Cc.
+
     R = (Ba - 1)/2 + (Ba + 1)/2 .* Bb.
+    R = R/2 + Bc.
 
     @R.
 }
 
 ca(1).
 ca(0).
+ca(0).
+
 cb(0).
 cb(1).
+cb(0).
 
-# Temp, Rain(1 = Rain, 0 = No Rain)
-a(60, 1).
-a(60, 0).
-a(-40, 1).
-a(40, 0).
+cc(0).
+cc(0).
+cc(1).
 
-m(50, 0.5).
+# Temp, Rain(1 = No Rain, 0 = Rain), Girl Friend(1 = is comming, 0 = is not comming)
+a(60, 1, 0).
+a(60, 1, 1).
+a(-40, 0, 0).
+a(40, 1, 1).
 
-[result] <- classify(a, m, ca, cb).
+m(50, 0.5, 0.5).
+
+[result] <- classify(a, m, ca, cb, cc).
 
 result(X)?
