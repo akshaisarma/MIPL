@@ -1,0 +1,21 @@
+# MIPL: Mining Integrated Programming Language
+#
+# File: simple_matrix_op.mipl
+# Author: YoungHoon Jung <yj2244@columbia.edu>
+# Reviewer: Younghoon Jeon <yj2231@columbia.edu>
+# Description: A simple MIPL program that uses built in jobs and a simple 
+#				user-defined program
+
+dataset(0, 1, 2).
+dataset(0, 1, 5).
+
+dataset(X, Y, Z)?
+
+[x] <- load("haha.txt").
+[y] <- load("haha2.txt").
+[z] <- basic_op(x, y).
+[] <- save(z, "result.txt").
+
+job basic_op(X, Y) {
+	@X+Y.
+}

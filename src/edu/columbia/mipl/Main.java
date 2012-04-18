@@ -70,10 +70,10 @@ public class Main {
 				return;
 			}
 			
-//			if (parser.getProgram().traverse(new SemanticChecker())) {
-//				System.out.println("SemanticChecker Error");
-//				return;
-//			}
+			if (!parser.getProgram().traverse(new SemanticChecker())) {
+				System.out.println("SemanticChecker Error");
+				return;
+			}
 			
 			// check only
 			if (optMap.containsKey("syntax")) {
