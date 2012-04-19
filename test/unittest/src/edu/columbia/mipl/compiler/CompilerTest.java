@@ -46,6 +46,7 @@ public class CompilerTest extends TestCase {
 			if (inputFiles[i].startsWith("."))
 				continue;
 			System.out.println(inputFiles[i]);
+			/*
 			Process mainOfMIPL = runtime.exec(miplMainCommand + testInputPath + "/" + inputFiles[i]);
 			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
 			while ((output = outputEater.readLine()) != null)
