@@ -4,7 +4,7 @@
  * File: InstructionWriter.java
  * Author A: YoungHoon Jung <yj2244@columbia.edu>
  * Author B: Akshai Sarma <as4107@columbia.edu>
- * Reviewer: Younghoon Jeon <yj2231@columbia.edu>
+ * Author C: Younghoon Jeon <yj2231@columbia.edu>
  * Description: JavaSourceWriter
  */
 package edu.columbia.mipl.codegen;
@@ -15,6 +15,7 @@ import java.util.*;
 import edu.columbia.mipl.builtin.*;
 import edu.columbia.mipl.datastr.*;
 import edu.columbia.mipl.runtime.*;
+import edu.columbia.mipl.conf.*;
 
 public class JavaSourceWriter extends InstructionWriter {
 	Set<String> declarationList;
@@ -85,15 +86,29 @@ public class JavaSourceWriter extends InstructionWriter {
 			println("import java.io.*;");
 			println("import java.util.*;");
 			println("");
+			
 			println("import edu.columbia.mipl.builtin.*;");
 			println("import edu.columbia.mipl.runtime.*;");
 			println("import edu.columbia.mipl.runtime.execute.*;");
+			println("import edu.columbia.mipl.conf.*;");
 			println("");
+			
 			println("import edu.columbia.mipl.datastr.*;");
 			println("");
+			
 			println("public class " + filename + " {");
+			
 			println("public static void main(String[] args) throws MiplRuntimeException {");
-			println("KnowledgeTable knowledgeTable = KnowledgeTableFactory.getKnowledgeTable();");
+			
+			// set configuration
+			Configuration conf = Configuration.getInstance();
+			List<String> servers = conf.getServers();
+			println("Configuration conf = Configuration.getInstance();");
+			println("conf.setMode(" + conf.getMode() + ");");
+			for (String server :servers)
+				println("conf.addServer(" + server + ");");
+			
+			println("KnowledgeTable knowledgeTable = KnowledgeTableFactory.getKnowledgeTable();");			
 			println("Program program = new Program(new ProgramExecutor());");
 		} catch (IOException ioe) {
 			ioe.printStackTrace();

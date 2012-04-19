@@ -144,11 +144,12 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 
 	void saveMatrix() {
 		if (status == Status.PM_STATUS_LOADED_FULL) {
-			status = Status.PM_STATUS_URI_LOCAL;
+		//	status = Status.PM_STATUS_URI_LOCAL;
 			MatrixLoader matrixLoader = MatrixLoaderFactory.getMatrixLoader("table");
+			uri = "/tmp/temp_matrix_" + System.currentTimeMillis();
 			matrixLoader.saveMatrix(uri, this);
 		}
-		new Exception("Not Implemented").printStackTrace();
+		//new Exception("Not Implemented").printStackTrace();
 	}
 
 	void loadMatrix() {
@@ -161,7 +162,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		else if (status == Status.PM_STATUS_URI_REMOTE) {
 		// TODO: similar to LOCAL or MatrixFactory returns a remote matrix loader;
 		}
-		new Exception("Not Implemented").printStackTrace();
+		//new Exception("Not Implemented").printStackTrace();
 	}
 
 	public void setValue(int row, int col, T value) /* throws OutOfBoundExcpetion */ {

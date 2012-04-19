@@ -20,7 +20,10 @@ public class InstructionWriterFactory {
 	static {
 		instance = new InstructionWriterFactory();
 		instance.hash = new HashMap<String, InstructionWriter>();
-		new JavaSourceWriter(); //TODO: should be read dynamically from Configuration
+		
+		// register insturction writers
+		new JavaSourceWriter(); 
+		new JvmBytecodeWriter();
 	}
 
 	public static InstructionWriter getInstructionWriter(String name) {
