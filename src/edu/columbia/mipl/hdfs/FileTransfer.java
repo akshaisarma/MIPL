@@ -19,6 +19,7 @@ public class FileTransfer {
 
 	DFSClient dfsc;
 
+	/* http://hadoop.apache.org/hdfs/docs/r0.22.0/api/index.html */
 	FileTransfer() {
 		// dfsc = new DFSClient(Configration.getProperty(Configuration.NAMENODE));
 	}
