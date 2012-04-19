@@ -28,7 +28,7 @@ public class Main {
 		Configuration conf = Configuration.getInstance();
 				
 		Map<String, String> optMap = new HashMap<String, String>();
-		int index = getOpt(args, "help;h version;v syntax;s interactive;i config;c: server;s: gen;g: output;o:", optMap);
+		int index = getOpt(args, "help;h version;v syntax;s interactive;i config;c: server;s: writer;w: output;o:", optMap);
 		if (index < 0) {
 			return;
 		}
@@ -89,14 +89,9 @@ public class Main {
 				// compile mode				
 				String outName = optMap.get("output");
 				
-				// gen mode
-				if (optMap.containsKey("gen")) {
-					String gen = optMap.get("gen");
-					if (gen.equals("javasrc"))
-						conf.setGen(Configuration.GEN_JAVASRC);
-					else if (gen.equals("bytecode"))
-						conf.setGen(Configuration.GEN_BYTECODE);
-				}
+				// set writer
+				if (optMap.containsKey("writer"))
+					conf.setWriter(optMap.get("writer"));									
 				
 				parser.getProgram().traverse(new CodeGenerator("build", outName));
 			}

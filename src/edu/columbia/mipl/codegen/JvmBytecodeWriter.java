@@ -44,7 +44,7 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	}
 
 	public String getName() {
-		return "JVM";
+		return "Bytecode";
 	}
 
 	public void createTerm(Term.Type type, Term term1, Expression expr1) {

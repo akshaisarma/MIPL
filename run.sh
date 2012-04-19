@@ -18,7 +18,7 @@ echo "2. Compile the sample program into java source with MIPL compiler"
 #java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/while.mipl
 
 # NOT YET IMPLEMENTED
-java -cp build edu.columbia.mipl.Main -output MiplProgram $INPUT
+java -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main -output MiplProgram $INPUT
 
 echo "3. compile the java source"
 javac -cp build build/MiplProgram.java

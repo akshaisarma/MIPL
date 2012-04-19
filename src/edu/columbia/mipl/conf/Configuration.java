@@ -28,12 +28,17 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class Configuration extends DefaultHandler {
 	public static final int MODE_LOCAL = 0;
-	public static final int MODE_REMOTE = 1;
+	public static final int MODE_REMOTE = 1;	
 	
-	public static final int GEN_JAVASRC = 0;
-	public static final int GEN_BYTECODE = 1;
+	// for runtime
+	private int mode = MODE_LOCAL;
+	private java.util.List<String> servers = new ArrayList<String>();
+
+	// for compiler only
+	private String writer = "JavaSrc";
 	
 	private static Configuration instance = null;
+	
 	private boolean isXMLAsString;
 	private boolean isXMLAsFile;
 	private String xmlString;
@@ -56,12 +61,7 @@ public class Configuration extends DefaultHandler {
 	private String name;
 	private String theClass;
 	private HashMap<String, String> hash = new HashMap<String, String>();
-	private java.util.List<String> dependencies = null;
-	
-	private int mode = MODE_LOCAL;
-	private java.util.List<String> servers = new ArrayList<String>();
-
-	private int gen = GEN_JAVASRC;
+	private java.util.List<String> dependencies = null;		
 	
 	Configuration() {
 		isXMLAsString = false;
@@ -186,11 +186,11 @@ public class Configuration extends DefaultHandler {
 		servers.add(server);
 	}
 	
-	public int getGen() {
-		return gen;
+	public String getWriter() {
+		return writer;
 	}
 	
-	public void setGen(int gen) {
-		this.gen = gen;
+	public void setWriter(String writer) {
+		this.writer = writer;
 	}
 }

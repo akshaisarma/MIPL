@@ -13,6 +13,7 @@ import java.util.*;
 
 import edu.columbia.mipl.runtime.*;
 import edu.columbia.mipl.runtime.traverse.*;
+import edu.columbia.mipl.conf.*;
 
 public class CodeGenerator extends RuntimeTraverser {
 	InstructionWriter writer;
@@ -22,9 +23,12 @@ public class CodeGenerator extends RuntimeTraverser {
 	}
 
 	public CodeGenerator(String path, String output) {
-		String target = "JavaSrc"; /* read this from Configuration */
+		String target = Configuration.getInstance().getWriter();
+//		String target = "JavaSrc"; /* read this from Configuration */
+		
 		writer = InstructionWriterFactory.getInstructionWriter(target);
 		assert (writer != null);
+		
 		writer.init(path, output);
 	}
 
