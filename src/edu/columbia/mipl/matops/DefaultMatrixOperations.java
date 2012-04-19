@@ -335,6 +335,14 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return new PrimitiveMatrix(rowmean(arg1.getData()));
 	}
 
+	public PrimitiveMatrix colsum(final PrimitiveMatrix arg1) {
+		return new PrimitiveMatrix(colsum(arg1.getData()));
+	}
+
+	public PrimitiveMatrix colmean(final PrimitiveMatrix arg1) {
+		return new PrimitiveMatrix(colmean(arg1.getData()));
+	}
+
 	public PrimitiveMatrix abs(final PrimitiveMatrix arg1) {
 		return new PrimitiveMatrix(abs(arg1.getData()));
 	}
@@ -851,6 +859,48 @@ public class DefaultMatrixOperations implements MatrixOperations {
 
 	public PrimitiveArray rowsum(final PrimitiveArray arg1) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(arg1.getRow(), 1);
+		double[] data1 = a1.getData();
+
+		int i, j, pos, offset = 0;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
+			double val = 0;
+			for (j = 0; j < arg1.getCol(); j++) {
+				val = val + data1[pos];
+				pos++;
+			}
+			result.setValue(i, 0, (Double) val);
+			offset += arg1.getPaddedRow();
+		}
+
+		return result;
+	}
+
+	public PrimitiveArray rowmean(final PrimitiveArray arg1) {
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
+		PrimitiveDoubleArray result = new PrimitiveDoubleArray(1, arg1.getCol());
+		double[] data1 = a1.getData();
+
+		int i, j, pos, offset = 0;
+
+		for (i = 0; i < arg1.getRow(); i++) {
+			pos = offset;
+			double val = 0;
+			for (j = 0; j < arg1.getCol(); j++) {
+				val = val + data1[pos];
+				pos++;
+			}
+			result.setValue(i, 0, (Double) val / arg1.getCol());
+			offset += arg1.getPaddedRow();
+		}
+
+		return result;
+	}
+
+	public PrimitiveArray colsum(final PrimitiveArray arg1) {
+		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(1, arg1.getCol());
 		double[] data1 = a1.getData();
 
@@ -870,7 +920,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		return result;
 	}
 
-	public PrimitiveArray rowmean(final PrimitiveArray arg1) {
+	public PrimitiveArray colmean(final PrimitiveArray arg1) {
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		PrimitiveDoubleArray result = new PrimitiveDoubleArray(1, arg1.getCol());
 		double[] data1 = a1.getData();
