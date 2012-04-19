@@ -20,7 +20,7 @@ public class PrimitiveOperations {
 		else if (mode == Configuration.MODE_REMOTE)
 			ops = new MapReduceMatrixOperations();
 //		ops = new MapReduceMatrixOperations(); //TODO: read from Configuration
-//		ops = new DefaultMatrixOperations();
+		ops = new DefaultMatrixOperations();
 	}
 
 	public static PrimitiveType assign(PrimitiveType arg1, PrimitiveType arg2) {
@@ -445,6 +445,15 @@ public class PrimitiveOperations {
 			return new PrimitiveDouble(d);
 		}
 		else
+			return null;
+	}
+
+	public static PrimitiveType rowsum(PrimitiveType arg1) {
+		if (arg1 instanceof PrimitiveMatrix) {
+			PrimitiveMatrix a = (PrimitiveMatrix) arg1;
+			return ops.rowsum(a);
+		}
+		else /* if (arg1 instanceof PrimitiveDouble) */
 			return null;
 	}
 

@@ -25,9 +25,11 @@ job rowsumJob(A) {
  @rowsum(A).
 }
 
-[a] <- load("very_large.dat").
+[a] <- load("test/matrix/very_large.dat").
 
-[s] <- addJob(a, load("very_large2.dat")).
+[b] <- load("test/matrix/very_large2.dat").
+
+[s] <- addJob(a, b).
 
 [m] <- multJob(a, s).
 
@@ -35,3 +37,5 @@ job rowsumJob(A) {
 
 r(X)?
 
+m(*)?
+r(*)?

@@ -294,19 +294,19 @@ public class MatrixOperationTest extends TestCase {
 		assertTrue(compare == result);
 	}
 
-	public void testMatrix_rowsum() {
+	public void testMatrix_colsum() {
 		double copy_data3x3_1[] = {1, -1, 1, 
 					   0, 2, -1, 
 					   2, 3, 0};
-		double result_rowsum[] = {3, 4, 0};
+		double result_colsum[] = {3, 4, 0};
 		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, copy_data3x3_1);
         final PrimitiveMatrix mat1 = new PrimitiveMatrix(mat3x3_1);
-		final PrimitiveDoubleArray r_rowsum_a = new PrimitiveDoubleArray(1, 3, result_rowsum);
-        final PrimitiveMatrix r_rowsum = new PrimitiveMatrix(r_rowsum_a);
+		final PrimitiveDoubleArray r_colsum_a = new PrimitiveDoubleArray(1, 3, result_colsum);
+        final PrimitiveMatrix r_colsum = new PrimitiveMatrix(r_colsum_a);
 
-		PrimitiveMatrix matI = matOpObj.rowsum(mat1);
+		PrimitiveMatrix matI = matOpObj.colsum(mat1);
 
-		assertTrue(r_rowsum.getData().equalsSemantically(matI.getData()));
+		assertTrue(r_colsum.getData().equalsSemantically(matI.getData()));
 	}
 
 	public void testMatrix_mean() {
@@ -322,17 +322,17 @@ public class MatrixOperationTest extends TestCase {
 		assertTrue(compare == result);
 	}
 
-	public void testMatrix_rowmean() {
+	public void testMatrix_colmean() {
 		double copy_data3x3_1[] = {1, -1, 1, 
 					   0, 2, -1, 
 					   2, 3, 0};
-		double result_rowmean[] = {1, 4.0/3, 0};
+		double result_colmean[] = {1, 4.0/3, 0};
 		final PrimitiveDoubleArray mat3x3_1 = new PrimitiveDoubleArray(3, 3, copy_data3x3_1);
         final PrimitiveMatrix mat1 = new PrimitiveMatrix(mat3x3_1);
-		final PrimitiveDoubleArray r_rowmean = new PrimitiveDoubleArray(1, 3, result_rowmean);
-        final PrimitiveMatrix mat2 = new PrimitiveMatrix(r_rowmean);
+		final PrimitiveDoubleArray r_colmean_a = new PrimitiveDoubleArray(1, 3, result_colmean);
+        final PrimitiveMatrix mat2 = new PrimitiveMatrix(r_colmean_a);
 
-		PrimitiveMatrix matI = matOpObj.rowmean(mat1);
+		PrimitiveMatrix matI = matOpObj.colmean(mat1);
 
 		assertTrue(mat2.getData().equalsSemantically(matI.getData()));
 	}

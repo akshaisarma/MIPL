@@ -512,7 +512,7 @@ public class JavaSourceWriter extends InstructionWriter {
 		// JobExpr.Type.JOBCALL
 		// Builtin jobs
 		if (!BuiltinTable.existJob(name)) {
-			new Exception("No such builtin job!").printStackTrace();
+			new Exception("No such builtin job! : " + name).printStackTrace();
 			return;
 		}
 		int i;

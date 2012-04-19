@@ -48,6 +48,8 @@ public interface MatrixOperations {
 	public double mean(final PrimitiveMatrix arg1);
 	public PrimitiveMatrix rowsum(final PrimitiveMatrix arg1);
 	public PrimitiveMatrix rowmean(final PrimitiveMatrix arg1);
+	public PrimitiveMatrix colsum(final PrimitiveMatrix arg1);
+	public PrimitiveMatrix colmean(final PrimitiveMatrix arg1);
 
 	public PrimitiveMatrix abs(final PrimitiveMatrix arg1);
 }
