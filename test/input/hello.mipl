@@ -15,10 +15,10 @@ dataset(0, 1, 5).
 
 dataset(X, Y, Z)?
 
-[x] <- load("haha.txt").
-[y] <- load("haha2.txt").
+[x] <- load("test/matrix/haha.txt").
+[y] <- load("test/matrix/haha2.txt").
 [z] <- basic_op(x, y).
-[] <- save(z, "result.txt").
+[] <- save(z, "build/result.txt").
 
 job basic_op(X, Y) {
 	@X+Y.
