@@ -106,7 +106,7 @@ public class JavaSourceWriter extends InstructionWriter {
 			println("Configuration conf = Configuration.getInstance();");
 			println("conf.setMode(" + conf.getMode() + ");");
 			for (String server :servers)
-				println("conf.addServer(" + server + ");");
+				println("conf.addServer(\"" + server + "\");");
 			
 			println("KnowledgeTable knowledgeTable = KnowledgeTableFactory.getKnowledgeTable();");			
 			println("Program program = new Program(new ProgramExecutor());");
