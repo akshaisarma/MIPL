@@ -105,11 +105,9 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	}
 	
 	public void createTerm(Term.Type type, double value) {
-	// Term.Type.NUMBER
 	}
 
 	public void createTerm(Term.Type type, Term term1, Expression expr1) {
-	// Term.Type.IS
 	}
 
 	public void createTerm(Term.Type type, Expression expr1, Expression expr2) {
@@ -132,7 +130,6 @@ public class JvmBytecodeWriter extends InstructionWriter {
 
 	public void createTerm(Term.Type type, String name,
 										PrimitiveMatrix<Double> matrix) {
-	// Term.Type.MATRIX
 	}
 
 	public void createTerm(Term.Type type, Term term1, Term term2) {
@@ -149,21 +146,47 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	}
 
 	public void createTerm(Term.Type type, String name, List<Term> arguments) {
-		int t1 = nextVar++;
-		if (arguments.size() > 0) {						
+	}
+
+	public void createTerm(Term.Type type, String name) {
+	}
+
+	public void createTerm(Term.Type type, Expression expr1) {
+	}
+
+	public void createExpression(Expression.Type type, Term term1) {
+	}
+
+	public void createExpression(Expression.Type type, Expression expr1,
+									Expression expr2) {
+		switch (type) {
+			case MINUS:
+				break;
+			case PLUS:
+				break;
+			case MULTI:
+				break;
+			case DIVIDE:
+				break;
+		}
+	}
+	
+	public int genTerm(Term.Type type, String name, List<Term> arguments) {
+		int listArgVar = nextVar++;
+		if (arguments.size() > 0) {		
 			il.append(_factory.createNew("java.util.ArrayList"));
 			il.append(InstructionConstants.DUP);
 			il.append(_factory.createInvoke("java.util.ArrayList", "<init>", Type.VOID, Type.NO_ARGS, Constants.INVOKESPECIAL));			
-			il.append(_factory.createStore(Type.OBJECT, t1));
+			il.append(_factory.createStore(Type.OBJECT, listArgVar));
 			
-			for (int i = 0; i < arguments.size(); i++) {
-		    	il.append(_factory.createLoad(Type.OBJECT, t1));		    	
-		    	il.append(_factory.createLoad(Type.OBJECT, stack.pop()));
+			for (Term term : arguments) {			
+				il.append(_factory.createLoad(Type.OBJECT, listArgVar));				
+		    	il.append(_factory.createLoad(Type.OBJECT, genTerm(term)));
 		        il.append(_factory.createInvoke("java.util.List", "add", Type.BOOLEAN, new Type[] {Type.OBJECT}, Constants.INVOKEINTERFACE));
 		        il.append(InstructionConstants.POP);
-		    }
-		}						
-	    
+			}
+		}
+		
 		il.append(_factory.createNew("edu.columbia.mipl.runtime.Term"));
 	    il.append(InstructionConstants.DUP);
 		
@@ -180,20 +203,23 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	    
 	    il.append(new PUSH(_cp, name));
 	    if (arguments.size() > 0)
-	    	il.append(_factory.createLoad(Type.OBJECT, t1));
+	    	il.append(_factory.createLoad(Type.OBJECT, listArgVar));
 	    else
 	    	il.append(InstructionConstants.ACONST_NULL);
-	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Type.STRING, new ObjectType("java.util.List")}, Constants.INVOKESPECIAL));	    	    	    
-	    il.append(_factory.createStore(Type.OBJECT, stack.push(nextVar++)));	    		
+	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Type.STRING, new ObjectType("java.util.List")}, Constants.INVOKESPECIAL));
+	    
+	    int target = nextVar++; 
+	    il.append(_factory.createStore(Type.OBJECT, target));
+		
+		return target;
 	}
-
-	public void createTerm(Term.Type type, String name) {
+	
+	public int genTerm(Term.Type type, String name) {
 		il.append(_factory.createNew("edu.columbia.mipl.runtime.Term"));
 	    il.append(InstructionConstants.DUP);
 		
 	    switch (type) {
-		case VARIABLE:
-//			declarationList.add(name);			
+		case VARIABLE:		
 		    il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "VARIABLE", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));		    
 			break;
 		case QUERYALL:
@@ -212,42 +238,43 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	    
 	    il.append(new PUSH(_cp, name));
 	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Type.STRING}, Constants.INVOKESPECIAL));
-	    il.append(_factory.createStore(Type.OBJECT, stack.push(nextVar++)));
+	    
+	    int target = nextVar++;
+	    il.append(_factory.createStore(Type.OBJECT, target));
+	    
+	    return target;
 	}
 
-	public void createTerm(Term.Type type, Expression expr1) {
-	// Term.Type.EXPRESSION
-
-	}
-
-	public void createExpression(Expression.Type type, Term term1) {
-	// Term.Type.Term
-
-	}
-
-	public void createExpression(Expression.Type type, Expression expr1,
-									Expression expr2) {
+	public int genTerm(Term term) {
+		Term.Type type = term.getType(); 
 		switch (type) {
-			case MINUS:
-				break;
-			case PLUS:
-				break;
-			case MULTI:
-				break;
-			case DIVIDE:
-				break;
+			case REGEXTERM:
+			case TERM:
+				return genTerm(type, term.getName(), term.getArguments());				
+			case VARIABLE:
+			case QUERYALL:
+			case REGEXQUERYALL:
+			case STRING:
+				return genTerm(type, term.getName());				
+			default:
+				assert (false);
 		}
+		
+		return -1;
 	}
-
 	public void createFact(Fact.Type type, Term term) {
 		// Fact.Type.FACT
+		int curVar = nextVar;
+		
+		int t = genTerm(term);
+								
 		il.append(_factory.createLoad(Type.OBJECT, varProgram));
 		il.append(_factory.createNew("edu.columbia.mipl.runtime.Fact"));
 	    il.append(InstructionConstants.DUP);	    
-	    il.append(_factory.createLoad(Type.OBJECT, stack.pop()));
+	    il.append(_factory.createLoad(Type.OBJECT, t));
 	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Fact", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term")}, Constants.INVOKESPECIAL));
 	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Program", "add", Type.BOOLEAN, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Command")}, Constants.INVOKEVIRTUAL));
-	    il.append(InstructionConstants.POP);
+	    il.append(InstructionConstants.POP);	    
 
 //		resetDeclarationList();		
 	}
@@ -259,28 +286,33 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	}
 
 	public void createRule(Term term, Term source) {
+		int curVar = nextVar;
+		
+		int t = genTerm(term);
+		int s = genTerm(source);
+		
 		il.append(_factory.createLoad(Type.OBJECT, varProgram));
 		il.append(_factory.createNew("edu.columbia.mipl.runtime.Rule"));
 	    il.append(InstructionConstants.DUP);
-	    il.append(_factory.createLoad(Type.OBJECT, stack.pop()));
-	    il.append(_factory.createLoad(Type.OBJECT, stack.pop()));
+	    il.append(_factory.createLoad(Type.OBJECT, t));
+	    il.append(_factory.createLoad(Type.OBJECT, s));
 	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Rule", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term"), new ObjectType("edu.columbia.mipl.runtime.Term")}, Constants.INVOKESPECIAL));
 	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Program", "add", Type.BOOLEAN, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Command")}, Constants.INVOKEVIRTUAL));
-	    il.append(InstructionConstants.POP);
-
-//		resetDeclarationList();
+	    il.append(InstructionConstants.POP);	    
 	}
 
-	public void createQuery(Term term) {
+	public void createQuery(Term term) {		
+		int curVar = nextVar;
+		
+		int t = genTerm(term);
+								
 		il.append(_factory.createLoad(Type.OBJECT, varProgram));
 		il.append(_factory.createNew("edu.columbia.mipl.runtime.Query"));
 	    il.append(InstructionConstants.DUP);	    
-	    il.append(_factory.createLoad(Type.OBJECT, stack.pop()));
+	    il.append(_factory.createLoad(Type.OBJECT, t));
 	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Query", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term")}, Constants.INVOKESPECIAL));
 	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Program", "add", Type.BOOLEAN, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Command")}, Constants.INVOKEVIRTUAL));
 	    il.append(InstructionConstants.POP);
-
-//		resetDeclarationList();		
 	}
 
 	public void createJob(String name, List<Term> args, List<JobStmt> stmts) {
@@ -300,12 +332,9 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	}
 
 	public void createJobStmt(JobStmt.Type type, List<JobStmt> stmts) {
-	// JobStmt.Type.COMPOUND
-
 	}
 
 	public void createJobStmt(JobStmt.Type type, JobExpr expr) {
-	// Maybe should use helper functions for this as tasks are really different
 		switch (type) {
 			case RETURN:
 				break;
@@ -372,26 +401,18 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	}
 
 	public void createJobExpr(JobExpr.Type type, JobExpr expr1) {
-	// JobExpr.Type.NEGATE
-
 	}
 
 	public void createJobExpr(JobExpr.Type type, Term term,
 										List<ArrayIndex> indices1,
 										List<ArrayIndex> indices2) {
-	// JobExpr.Type.ARRAY
-
 	}
 
 	public void createJobExpr(JobExpr.Type type, String name,
 										List<JobExpr> exprs) {
-	// JobExpr.Type.JOBCALL
-
 	}
 
 	public void createJobExpr(JobExpr.Type type, Term term) {
-	// JobExpr.Type.TERM
-
 	}
 
 // ObjectType i_stream = new ObjectType("java.io.InputStream");
