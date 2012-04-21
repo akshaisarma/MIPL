@@ -278,14 +278,13 @@ public class JavaSourceWriter extends InstructionWriter {
 		if (names != null)
 			namesSize = names.size();
 
-
 		String stringArgs = "";
 		for (i = 0; i < terms.size(); i++) {
 			stack.pop(); // throw away
 			if (i != 0)
 				stringArgs += ", ";
 			if (terms.get(i).getType() == Term.Type.TERM) {
-				// check if this is a complex term, and then throw an exception
+				// SemanticChecker: check if this is a complex term, and then throw an exception
 				// which means .getArguments().size() != 0
 				stringArgs += "knowledgeTable.getFactMatrix(\"" + terms.get(i).getName() + "\")";
 			}
@@ -294,7 +293,7 @@ public class JavaSourceWriter extends InstructionWriter {
 			else if (terms.get(i).getType() == Term.Type.STRING)
 				stringArgs += "new PrimitiveString(\"" + terms.get(i).getName() + "\")";
 			else
-				; // exception
+				new Exception("Not Implemented!").printStackTrace();
 		}
 
 		String rvName = "returnVal" + (idxName++);
@@ -512,6 +511,7 @@ public class JavaSourceWriter extends InstructionWriter {
 		// JobExpr.Type.JOBCALL
 		// Builtin jobs
 		if (!BuiltinTable.existJob(name)) {
+			// TODO: support nested job call
 			new Exception("No such builtin job! : " + name).printStackTrace();
 			return;
 		}
@@ -537,19 +537,19 @@ public class JavaSourceWriter extends InstructionWriter {
 				// Builtin matrix
 				if (!BuiltinTable.existMatrix(term.getName())) {
 					new Exception("No such builtin matrix!").printStackTrace();
-					stack.push("new Double(0.0)");
+					stack.push("new PrimitiveDouble(0.0)");
 				}
 				stack.push("BuiltinTable.matrix(\"" + term.getName() + "\")");
 			}
 			else {
 				// Nested Job Call
 				new Exception("Nested Job Call" + term.getName() + " is not implemented!").printStackTrace();
-				stack.push("new Double(0.0)");
+				stack.push("new PrimitiveDouble(0.0)");
 			}
 		}
 		else {
 			new Exception("This Job expr is not implemented!").printStackTrace();
-			stack.push("new Double(0.0)");
+			stack.push("new PrimitiveDouble(0.0)");
 		}
 	}
 

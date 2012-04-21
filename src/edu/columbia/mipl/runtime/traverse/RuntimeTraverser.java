@@ -18,8 +18,6 @@ public abstract class RuntimeTraverser implements Traverser {
 			return reachTerm((Term) t);
 		}
 		else if (t instanceof Expression) {
-if (t == null)
-	new Exception("T null").printStackTrace();
 			return reachExpression((Expression) t);
 		}
 		else if (t instanceof Fact) {

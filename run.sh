@@ -23,6 +23,10 @@ echo "2. Compile the sample program into java source with MIPL compiler"
 # NOT YET IMPLEMENTED
 java -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main -output MiplProgram $INPUT
 
+# Interpreter mode
+#java -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main test/input/hello.mipl
+#java -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main test/input/while.mipl
+
 echo "3. compile the java source"
 [ -e build/MiplProgram.java ] && javac -cp build build/MiplProgram.java
 
