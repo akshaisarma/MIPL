@@ -140,8 +140,59 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		return target;
 	}
 	
-	public int genTerm(Term.Type type, Term term1, Expression expr1) { assert (false); return -1; }
-	public int genTerm(Term.Type type, Expression expr1, Expression expr2) { assert (false); return -1; }
+	public int genTerm(Term.Type type, Term term1, Expression expr1) {
+		int target = nextVar++;
+		
+		int t1 = genTerm(term1);
+		int e1 = genExpression(expr1);
+		
+	    il.append(_factory.createNew("edu.columbia.mipl.runtime.Term"));
+	    il.append(InstructionConstants.DUP);
+	    il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "IS", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));
+	    il.append(_factory.createLoad(Type.OBJECT, t1));
+	    il.append(_factory.createLoad(Type.OBJECT, e1));	    
+	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), new ObjectType("edu.columbia.mipl.runtime.Term"), new ObjectType("edu.columbia.mipl.runtime.Expression")}, Constants.INVOKESPECIAL));
+	    il.append(_factory.createStore(Type.OBJECT, target));
+	    
+	    return target;
+	}
+	
+	public int genTerm(Term.Type type, Expression expr1, Expression expr2) {
+		int target = nextVar++;
+		
+		int e1 = genExpression(expr1);
+		int e2 = genExpression(expr2);
+		
+		switch (type) {
+			case EQ:
+				assert (false);
+				break;
+			case LT:
+				assert (false);
+				break;
+			case LE:
+				assert (false);
+				break;
+			case GT:
+				il.append(_factory.createNew("edu.columbia.mipl.runtime.Term"));
+			    il.append(InstructionConstants.DUP);
+			    il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "GT", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));
+			    il.append(_factory.createLoad(Type.OBJECT, e1));
+			    il.append(_factory.createLoad(Type.OBJECT, e2));			    			   
+			    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), new ObjectType("edu.columbia.mipl.runtime.Expression"), new ObjectType("edu.columbia.mipl.runtime.Expression")}, Constants.INVOKESPECIAL));
+				break;
+			case GE:
+				assert (false);
+				break;
+			case NE:
+				assert (false);
+				break;
+		}
+		
+		il.append(_factory.createStore(Type.OBJECT, target));
+		
+		return target;
+	}
 	
 	public int genTerm(Term.Type type, String name, PrimitiveMatrix<Double> matrix) {
 		int arrayVar = nextVar++;
@@ -197,7 +248,7 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		}
 		il.append(_factory.createLoad(Type.OBJECT, t1));
 		il.append(_factory.createLoad(Type.OBJECT, t2));
-		il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Type.STRING}, Constants.INVOKESPECIAL));
+		il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), new ObjectType("edu.columbia.mipl.runtime.Term"), new ObjectType("edu.columbia.mipl.runtime.Term")}, Constants.INVOKESPECIAL));
 		il.append(_factory.createStore(Type.OBJECT, target));
 		
 		return target;
@@ -279,9 +330,7 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	    return target;
 	}
 	
-	public int genTerm(Term.Type type, Expression expr1) { assert (false); return -1; }
-	public void genExpression(Expression.Type type, Term term1) { assert (false); }
-	public void genExpression(Expression.Type type, Expression expr1, Expression expr2) { assert (false); }
+	public int genTerm(Term.Type type, Expression expr1) { assert (false); return -1; }		
 
 	public int genTerm(Term term) {
 		Term.Type type = term.getType(); 
@@ -320,6 +369,68 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		
 		return -1;
 	}
+	
+	public int genExpression(Expression.Type type, Term term1) {
+		int target = nextVar++;
+		int t1 = genTerm(term1);
+
+		il.append(_factory.createNew("edu.columbia.mipl.runtime.Expression"));
+	    il.append(InstructionConstants.DUP);
+	    il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Expression$Type", "TERM", new ObjectType("edu.columbia.mipl.runtime.Expression$Type"), Constants.GETSTATIC));
+	    il.append(_factory.createLoad(Type.OBJECT, t1));
+	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Expression", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Expression$Type"), new ObjectType("edu.columbia.mipl.runtime.Term")}, Constants.INVOKESPECIAL));
+	    il.append(_factory.createStore(Type.OBJECT, target));
+		
+		return target;
+	}
+	
+	public int genExpression(Expression.Type type, Expression expr1, Expression expr2) {
+		int target = nextVar++;
+		int e1 = genExpression(expr1);
+		int e2 = genExpression(expr2);
+
+		il.append(_factory.createNew("edu.columbia.mipl.runtime.Expression"));
+	    il.append(InstructionConstants.DUP);	    	    	    
+	    
+		switch (type) {
+			case MINUS:
+				il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Expression$Type", "MINUS", new ObjectType("edu.columbia.mipl.runtime.Expression$Type"), Constants.GETSTATIC));
+				break;
+			case PLUS:
+				il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Expression$Type", "PLUS", new ObjectType("edu.columbia.mipl.runtime.Expression$Type"), Constants.GETSTATIC));
+				break;
+			case MULTI:
+				il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Expression$Type", "MULTI", new ObjectType("edu.columbia.mipl.runtime.Expression$Type"), Constants.GETSTATIC));
+				break;
+			case DIVIDE:
+				il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Expression$Type", "DIVIDE", new ObjectType("edu.columbia.mipl.runtime.Expression$Type"), Constants.GETSTATIC));
+				break;
+		}
+		
+		il.append(_factory.createLoad(Type.OBJECT, e1));
+		il.append(_factory.createLoad(Type.OBJECT, e2));
+		il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Expression", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Expression$Type"), new ObjectType("edu.columbia.mipl.runtime.Expression"), new ObjectType("edu.columbia.mipl.runtime.Expression")}, Constants.INVOKESPECIAL));
+		il.append(_factory.createStore(Type.OBJECT, target));
+		
+		return target;
+	}
+	
+	public int genExpression(Expression expr) {
+		switch (expr.getType()) {
+			case TERM:
+				return genExpression(Expression.Type.TERM, expr.getTerm());				
+			case MINUS:
+			case PLUS:
+			case MULTI:
+			case DIVIDE:
+				return genExpression(expr.getType(), expr.getExpr1(), expr.getExpr2());				
+			default:
+				assert (false);
+		}
+		
+		return -1;
+	}
+	
 	public void createFact(Fact.Type type, Term term) {
 		// Fact.Type.FACT		
 		int curVar = nextVar;
