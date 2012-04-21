@@ -453,7 +453,7 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		// TODO : complete other task referring to JavaSourceWriter		
 		int curVar = nextVar;
 		
-		int jobRetVar = nextVar++; 
+		int jobRetVar = nextVar++;			
 		
 		int namesSize = 0;
 		if (names != null)
@@ -463,6 +463,11 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		if (BuiltinTable.existJob(name))
 			builtin = true;
 		
+		// TODO : check what happens if terms is null
+		Type[] typeDesc = null;
+		if (!builtin)
+			typeDesc = new Type[terms.size()];
+		
 		if (builtin) {
 			il.append(new PUSH(_cp, name));
 			il.append(new PUSH(_cp, terms.size()));
@@ -471,6 +476,9 @@ public class JvmBytecodeWriter extends InstructionWriter {
 				
 		for (int i = 0; i < terms.size(); i++) {
 			Term term = terms.get(i);
+			
+			if (!builtin)
+				typeDesc[i] = new ObjectType("edu.columbia.mipl.datastr.PrimitiveType");
 			
 			if (builtin) {
 				il.append(InstructionConstants.DUP);
@@ -491,6 +499,7 @@ public class JvmBytecodeWriter extends InstructionWriter {
 			}
 			else if (term.getType() == Term.Type.STRING) {
 				// TODO
+				assert (false);
 			}
 			else {
 				assert (false);
@@ -503,7 +512,7 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		if (builtin)
 			il.append(_factory.createInvoke("edu.columbia.mipl.builtin.BuiltinTable", "job", new ObjectType("java.util.List"), new Type[] {Type.STRING, new ArrayType(new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), 1)}, Constants.INVOKESTATIC));
 		else
-			il.append(_factory.createInvoke("MiplProgram", name, new ObjectType("java.util.List"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
+			il.append(_factory.createInvoke("MiplProgram", name, new ObjectType("java.util.List"), typeDesc, Constants.INVOKESTATIC));
 	    il.append(_factory.createStore(Type.OBJECT, jobRetVar));
 	    
 	    BranchInstruction if1 = null;
@@ -700,7 +709,7 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		return -1;
 	}
 	
-	public void genJobStmt(JobStmt.Type type, JobExpr expr, JobStmt stmt1, JobStmt stmt2) { assert (false); }
+	public void genJobStmt(JobStmt.Type type, JobExpr expr, JobStmt stmt1, JobStmt stmt2) { assert (false); }	
 	public void genJobStmt(JobStmt.Type type, List<JobStmt> stmts) { assert (false); }
 	
 	public void genJobStmt(JobStmt.Type type, JobExpr expr) {		
@@ -820,7 +829,43 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	
 	public int genJobExpr(JobExpr.Type type, JobExpr expr1) { assert (false); return -1; }
 	public int genJobExpr(JobExpr.Type type, Term term, List<ArrayIndex> indices1, List<ArrayIndex> indices2) { assert (false); return -1; }
-	public int genJobExpr(JobExpr.Type type, String name, List<JobExpr> exprs) { assert (false); return -1; }
+	
+	public int genJobExpr(JobExpr.Type type, String name, List<JobExpr> exprs) {
+		// TODO : raise exceptions
+		int target = nextVar++;						
+		
+		if (!BuiltinTable.existJob(name)) {
+			assert (false);			
+		}
+		
+		List<Integer> varExprs = new ArrayList<Integer>();
+		for (JobExpr expr : exprs) {
+			varExprs.add(genJobExpr(expr));
+		}
+		
+		il.append(new PUSH(_cp, name));
+		
+		// TODO : what happens if the size of variable arg is 0? also check it in creating fact by job calling
+	    il.append(new PUSH(_cp, varExprs.size()));
+	    il.append(_factory.createNewArray(new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), (short) 1));
+	    
+	    for (int i = 0; i < varExprs.size(); i++) {
+	    	il.append(InstructionConstants.DUP);
+		    il.append(new PUSH(_cp, i));
+		    il.append(_factory.createLoad(Type.OBJECT, varExprs.get(i)));
+		    il.append(InstructionConstants.AASTORE);
+	    }	    
+
+	    // TODO : check the size of args sould be specified in Type[] (also check it in creating fact by job calling)
+	    il.append(_factory.createInvoke("edu.columbia.mipl.builtin.BuiltinTable", "job", new ObjectType("java.util.List"), new Type[] {Type.STRING, new ArrayType(new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), 1)}, Constants.INVOKESTATIC));
+	    il.append(new PUSH(_cp, 0));
+	    il.append(_factory.createInvoke("java.util.List", "get", Type.OBJECT, new Type[] {Type.INT}, Constants.INVOKEINTERFACE));
+	    il.append(_factory.createCheckCast(new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")));
+	    
+	    il.append(_factory.createStore(Type.OBJECT, target));
+		
+		return target;
+	}
 	
 	public int genJobExpr(JobExpr.Type type, Term term) {
 		// TODO : raise exceptions
