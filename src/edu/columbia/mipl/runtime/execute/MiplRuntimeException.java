@@ -11,4 +11,17 @@ package edu.columbia.mipl.runtime.execute;
 import java.util.*;
 
 public class MiplRuntimeException extends Exception {
+	String name;
+
+	MiplRuntimeException() {
+		name = "MiplRuntimeException";
+	}
+
+	MiplRuntimeException(String msg) {
+		name = msg;
+	}
+
+	String getName() {
+		return name;
+	}
 }

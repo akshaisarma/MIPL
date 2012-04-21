@@ -74,7 +74,7 @@ public class ProgramExecutor extends RuntimeTraverser {
 
 				List<String> names = fact.getNames();
 				if (names.size() != results.size())
-					throw new RuntimeException("Unmatched Variable Numbers");
+					new Exception("Unmatched Variable Numbers").printStackTrace();
 
 				int i = 0;
 				for (PrimitiveType pt : results) {

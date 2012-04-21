@@ -600,13 +600,13 @@ public class SolvableBinder extends Binder implements Solvable {
 
 			if (term.getName().equals("nl")) {
 				if (argc != 0)
-					new RuntimeException("nl cannot have arguments!");
+					new MiplRuntimeException("nl cannot have arguments!");
 				System.out.println("");
 				return true;
 			}
 			else if (term.getName().equals("write")) {
 				if (argc != 1)
-					new RuntimeException("write(X) can have only one argument!");
+					new MiplRuntimeException("write(X) can have only one argument!");
 				System.out.print(new StringGenerator(term.getArguments().get(0), vs));
 				return true;
 			}
