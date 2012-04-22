@@ -32,6 +32,7 @@ public class BuiltinTable {
 		jobTable.put("ucol", new BuiltinUCol());
 		jobTable.put("abs", new BuiltinAbs());
 		jobTable.put("rowsum", new BuiltinRowSum());
+		jobTable.put("transpose", new BuiltinTranspose());
 
 		matrixTable.put("ones", new UnboundOnes());
 	}

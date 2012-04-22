@@ -76,10 +76,12 @@ public abstract class PrimitiveArray {
 
 	public void mergeVertically(PrimitiveArray source) {
 		assert (col == source.getCol());
-		int prevRow = row;
-		increaseRow(source.getRow());
 
-		copyRange(source, 0, 0, prevRow, 0, source.getRow(), source.getCol());
+		int prevRow = row;
+		int srcRow = source.getRow();
+		increaseRow(srcRow);
+
+		copyRange(source, 0, 0, prevRow, 0, srcRow, source.getCol());
 	}
 
 	abstract public void copyRange(PrimitiveArray source, int srcRow, int srcCol,

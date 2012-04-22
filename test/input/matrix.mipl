@@ -5,14 +5,14 @@
 # Reviewer: Younghoon Jeon <yj2231@columbia.edu>
 # Description: A MIPL program that shows how to use matrix computation
 
-grade("john", 100, 80, 90, 100).
-grade("jane", 75, 60, 95, 88).
-grade("tom", 100, 100, 94, 92).
+grade(100, 80, 90, 100).
+grade(75, 60, 95, 88).
+grade(100, 100, 94, 92).
 
 weight(0.2, 0.1, 0.3, 0.4).
 
 job calculate_weighted_grade(G, W) {
- @ bind(G[0][~], G[1~][~] * transpose(W)).
+ @ G * transpose(W).
 }
 
 # facts grade and weight turn into matrix
@@ -20,6 +20,6 @@ job calculate_weighted_grade(G, W) {
 [weighted_grade] <- calculate_weighted_grade(grade, weight).
 
 weighted_grade(*)?
-# ("john", 95)
-# ("jane", 84.7)
-# ("tom", 94.2)
+# 95
+# 84.7
+# 94.2

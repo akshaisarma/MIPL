@@ -13,11 +13,11 @@ import java.util.*;
 public class MiplRuntimeException extends Exception {
 	String name;
 
-	MiplRuntimeException() {
+	public MiplRuntimeException() {
 		name = "MiplRuntimeException";
 	}
 
-	MiplRuntimeException(String msg) {
+	public MiplRuntimeException(String msg) {
 		name = msg;
 	}
 

@@ -448,6 +448,15 @@ public class PrimitiveOperations {
 			return null;
 	}
 
+	public static PrimitiveType transpose(PrimitiveType arg1) {
+		if (arg1 instanceof PrimitiveMatrix) {
+			PrimitiveMatrix a = (PrimitiveMatrix) arg1;
+			return ops.transpose(a);
+		}
+		else
+			return null;
+	}
+
 	public static PrimitiveType rowsum(PrimitiveType arg1) {
 		if (arg1 instanceof PrimitiveMatrix) {
 			PrimitiveMatrix a = (PrimitiveMatrix) arg1;

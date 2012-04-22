@@ -16,7 +16,10 @@ public class Query extends Command {
 	Term term;
 
 	public Query(Term term) {
-		assert (term.getType() == Term.Type.TERM);
+		assert (term.getType() == Term.Type.TERM ||
+			term.getType() == Term.Type.REGEXTERM ||
+			term.getType() == Term.Type.QUERYALL ||
+			term.getType() == Term.Type.REGEXQUERYALL);
 
 		this.term = term;
 

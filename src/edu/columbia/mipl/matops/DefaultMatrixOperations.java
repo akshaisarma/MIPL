@@ -645,8 +645,7 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		int col = arg1.getCol();
 		PrimitiveDoubleArray a1 = (PrimitiveDoubleArray) arg1;
 		double data[] = a1.getData();
-		double dataT[] = new double[data.length];
-		PrimitiveDoubleArray matT = new PrimitiveDoubleArray(col, row, dataT);
+		PrimitiveDoubleArray matT = new PrimitiveDoubleArray(col, row);
 		for (int i = 0; i < row; ++i) {
 			pos = offset;
 			for (int j = 0; j < col; ++j) {
