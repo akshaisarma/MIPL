@@ -30,7 +30,7 @@ public class Main {
 		Map<String, String> optMap = new HashMap<String, String>();
 		int index = getOpt(args, "help;h version;v syntax;s interactive;i config;c: server;s: writer;w: output;o:", optMap);
 		if (index < 0) {
-			return;
+			System.exit(1);
 		}
 		
 		// show usage
@@ -57,7 +57,7 @@ public class Main {
 			// interactive mode
 			Parser parser = new Parser(new Program(new SemanticChecker(), new ProgramExecutor()));
 		}
-		else {					
+		else {
 			if (index >= args.length) {
 				showUsage();
 				return;
@@ -67,12 +67,13 @@ public class Main {
 			
 			Parser parser = new Parser(srcName);
 			if (parser.getNumError() != 0) {
-				return;
+				System.out.println("Parser Error");
+				System.exit(1);
 			}
 			
 			if (!parser.getProgram().traverse(new SemanticChecker())) {
 				System.out.println("SemanticChecker Error");
-				return;
+				System.exit(1);
 			}
 			
 			// check only
