@@ -498,8 +498,10 @@ public class JvmBytecodeWriter extends InstructionWriter {
 			    il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveDouble", "<init>", Type.VOID, new Type[] {new ObjectType("java.lang.Double")}, Constants.INVOKESPECIAL));
 			}
 			else if (term.getType() == Term.Type.STRING) {
-				// TODO
-				assert (false);
+				il.append(_factory.createNew("edu.columbia.mipl.datastr.PrimitiveString"));
+			    il.append(InstructionConstants.DUP);
+			    il.append(new PUSH(_cp, term.getName()));
+			    il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveString", "<init>", Type.VOID, new Type[] {Type.STRING}, Constants.INVOKESPECIAL));
 			}
 			else {
 				assert (false);
