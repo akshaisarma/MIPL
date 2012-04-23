@@ -60,7 +60,7 @@ public class Main {
 		else {
 			if (index >= args.length) {
 				showUsage();
-				return;
+				System.exit(1);
 			}
 			
 			String srcName = args[index];

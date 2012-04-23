@@ -21,7 +21,7 @@ import edu.columbia.mipl.runtime.execute.*;
 public class InterpreterTest extends TestCase {
 
 	static String testInputPath = "test/input/";
-	static String miplMainCommand = "java -ea -esa -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main";
+	static String miplMainCommand = "java -ea -esa -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main ";
 	static Runtime runtime;
 
 	public static void main(String args[]) {
@@ -36,38 +36,26 @@ public class InterpreterTest extends TestCase {
 	public void testExecutionSuccess() throws java.io.IOException, java.lang.InterruptedException {
 		String output;
 		boolean success = true;
-		FileInputStream inputFile;
-		DataInputStream inputFileStream;
-		BufferedReader outputEater;
-		DataOutputStream inputSender;
+		DataInputStream outputEater;
 
 		String[] inputFiles = new File(testInputPath).list();
-		
+
 		for (int i = 0; i < inputFiles.length; i++) {
-			if (inputFiles[i].startsWith("."))
+			if (inputFiles[i].startsWith(".") || 
+				inputFiles[i].startsWith("pagerank.mipl") ||
+				inputFiles[i].startsWith("multi_jobs.mipl") ||
+				inputFiles[i].startsWith("simple_matrix_op.mipl") ||
+				inputFiles[i].startsWith("matrix.mipl") ||
+				inputFiles[i].startsWith("classification.mipl"))
 				continue;
-
-			inputFile = new FileInputStream(testInputPath + inputFiles[i]);
-			inputFileStream = new DataInputStream(inputFile);
-
-			Process mainOfMIPL = runtime.exec(miplMainCommand);
-			outputEater = new BufferedReader(new InputStreamReader(mainOfMIPL.getInputStream()));
-			inputSender = new DataOutputStream(mainOfMIPL.getOutputStream());
-
-			while ((output = inputFileStream.readLine()) != null) {
-				inputSender.writeBytes(output + "\n");
-				if (outputEater.ready())
-					while ((output = outputEater.readLine()) != null)
-						System.out.println(output);
-			}
-
-			inputFileStream.close();
-			inputSender.close();
+			Process mainOfMIPL = runtime.exec(miplMainCommand + testInputPath + inputFiles[i]);
+			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
 
 			while ((output = outputEater.readLine()) != null)
 				System.out.println(output);
 
 			success &= (mainOfMIPL.waitFor() == 0);
+			System.out.println(success);
 		}
 		assertTrue(success);
 	}
