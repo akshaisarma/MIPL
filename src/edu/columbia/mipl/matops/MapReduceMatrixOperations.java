@@ -9,6 +9,8 @@
  */
 package edu.columbia.mipl.matops;
 
+import java.io.File;
+
 import edu.columbia.mipl.datastr.*;
 import edu.columbia.mipl.mapreduce.MapReduceProxy;
 
@@ -29,12 +31,28 @@ public class MapReduceMatrixOperations extends ClMatrixOperations {
 		mapred.add(arg1.getURI(), arg2.getURI(), "temp");
 
 
-		return new PrimitiveMatrix("temp/part-00000", true);
+		PrimitiveMatrix matrix = new PrimitiveMatrix("temp/part-00000", true);
+		
+		matrix.moveMatrix();
+
+		cleanup();
+		
+		return matrix;
 		//mapred.add(arg1., inputPath2, outputPath)
 
 		//		mapred.
 		//		return null;
 		//return result;
+	}
+	
+	public void cleanup()
+	{
+		File folder = new File("temp");
+		if (folder.exists()) {
+			for (File c : folder.listFiles())
+				c.delete();
+			folder.delete();
+		}
 	}
 
 	/*
