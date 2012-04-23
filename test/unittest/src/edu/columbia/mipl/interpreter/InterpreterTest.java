@@ -21,7 +21,7 @@ import edu.columbia.mipl.runtime.execute.*;
 public class InterpreterTest extends TestCase {
 
 	static String testInputPath = "test/input/";
-	static String miplMainCommand = "java -ea -esa -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main -interactive";
+	static String miplMainCommand = "java -ea -esa -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main";
 	static Runtime runtime;
 
 	public static void main(String args[]) {
@@ -44,12 +44,7 @@ public class InterpreterTest extends TestCase {
 		String[] inputFiles = new File(testInputPath).list();
 		
 		for (int i = 0; i < inputFiles.length; i++) {
-			if (inputFiles[i].startsWith(".") || 
-			    inputFiles[i].startsWith("pagerank.mipl") ||
-			    inputFiles[i].startsWith("simple_matrix_op.mipl") ||
-			    inputFiles[i].startsWith("matrix.mipl") ||
-			    inputFiles[i].startsWith("classification.mipl") ||
-			    inputFiles[i].startsWith("multi_jobs.mipl"))
+			if (inputFiles[i].startsWith("."))
 				continue;
 
 			inputFile = new FileInputStream(testInputPath + inputFiles[i]);
