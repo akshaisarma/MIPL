@@ -145,11 +145,18 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 	
 	public void moveMatrix() {
 		if (status == Status.PM_STATUS_URI_LOCAL) {
-			String newuri = "/tmp/temp_matrix_" + System.currentTimeMillis();
+			String[] dir = uri.split("/");
+			String name = dir[dir.length - 1];
+			String newuri = "/tmp/";
+			String newname = "temp_matrix_" + System.currentTimeMillis();
 			File from = new File(uri);
 			File to = new File(newuri);
 			
 			boolean success = from.renameTo(new File(to, from.getName()));
+			uri = newuri + newname;
+			File change = new File(uri);
+			from = new File(newuri + name); 
+			success = from.renameTo(new File(uri));
 		}
 	}
 

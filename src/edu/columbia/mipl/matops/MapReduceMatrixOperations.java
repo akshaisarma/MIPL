@@ -45,8 +45,7 @@ public class MapReduceMatrixOperations extends ClMatrixOperations {
 		//return result;
 	}
 	
-	public void cleanup()
-	{
+	public void cleanup() {
 		File folder = new File("temp");
 		if (folder.exists()) {
 			for (File c : folder.listFiles())

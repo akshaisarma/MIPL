@@ -102,6 +102,7 @@ public class MapReduceProxy {
 			conf.set("input2", inputPath2);
 			conf.setInt("op", MapReduceProxy.MATRIX_ADD);
 			conf.setJobName("MapReduceMatrixOp");
+
 			
 			FileInputFormat.addInputPath(conf, new Path(inputPath1));
 			FileInputFormat.addInputPath(conf, new Path(inputPath2));
