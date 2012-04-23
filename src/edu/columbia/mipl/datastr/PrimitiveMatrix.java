@@ -9,6 +9,7 @@
 package edu.columbia.mipl.datastr;
 
 import java.util.*;
+import java.io.File;
 import java.lang.reflect.*;
 
 class HashIndex {
@@ -141,8 +142,18 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		}
 		return data;
 	}
+	
+	public void moveMatrix() {
+		if (status == Status.PM_STATUS_URI_LOCAL) {
+			String newuri = "/tmp/temp_matrix_" + System.currentTimeMillis();
+			File from = new File(uri);
+			File to = new File(newuri);
+			
+			boolean success = from.renameTo(new File(to, from.getName()));
+		}
+	}
 
-	void saveMatrix() {
+	public void saveMatrix() {
 		if (status == Status.PM_STATUS_LOADED_FULL) {
 		//	status = Status.PM_STATUS_URI_LOCAL;
 			MatrixLoader matrixLoader = MatrixLoaderFactory.getMatrixLoader("table");
@@ -152,7 +163,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		//new Exception("Not Implemented").printStackTrace();
 	}
 
-	void loadMatrix() {
+	public void loadMatrix() {
 		if (status == Status.PM_STATUS_URI_LOCAL) {
 			status = Status.PM_STATUS_LOADED_FULL;
 			MatrixLoader matrixLoader = MatrixLoaderFactory.getMatrixLoader("table");
