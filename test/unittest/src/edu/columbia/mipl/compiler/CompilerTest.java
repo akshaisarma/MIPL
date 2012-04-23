@@ -42,11 +42,9 @@ public class CompilerTest extends TestCase {
 		DataInputStream outputEater;
 
 		boolean success = true;
-		for (int i = 0; i < inputFiles.length ; i++) {
+		for (int i = 0; i < inputFiles.length; i++) {
 			if (inputFiles[i].startsWith(".") || inputFiles[i].startsWith("pagerank.mipl"))
 				continue;
-
-			System.out.println(inputFiles[i]);
 			
 			Process mainOfMIPL = runtime.exec(miplMainCommand + testInputPath + "/" + inputFiles[i]);
 			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
