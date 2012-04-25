@@ -1,10 +1,11 @@
 job pop(S, N) {
 	T = S.
 	I = 0.
-	while (I < N) {
+	do {
 		T += S.
 		I += 1.
 	}
+	while (I < N).
 
 	@T.
 }

@@ -1,0 +1,21 @@
+job dosome(X, Y, N) {
+	T = X.
+	if (N % 3 == 0)
+		T += Y.
+
+	@T.
+}
+
+s(1, 2, 3).
+s(2, 3, 4).
+s(3, 4, 5).
+
+m(1, 0, 0).
+m(0, 1, 0).
+m(0, 0, 1).
+
+[eff] <- dosome(s, m, 3).
+[neff] <- dosome(s, m, 4).
+
+eff(X, Y, Z)?
+neff(X, Y, Z)?
