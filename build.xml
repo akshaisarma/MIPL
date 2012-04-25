@@ -98,6 +98,7 @@
         <delete dir="${build}" />
         <delete dir="${dist}" />
 	<delete dir="${test}/unittest/build" />
+	<delete dir="${test}/regressiontest/build" />
 	<delete includes="${src}/edu/columbia/mipl/syntax/*.java">
 		<fileset dir="${src}/edu/columbia/mipl/syntax" includes="*.java" />
 	</delete>
