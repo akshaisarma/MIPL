@@ -18,8 +18,10 @@ job pagerank(G, P, U) {
 }
 
 [personal_dat] <- load('personal.dat').
+[g] <- load('g.dat').
+[init_pg] <- load('init_pg.dat').
 
-[g_pr] <- pagerank(load('g.dat'), load('init_pg.dat'), personal_dat).
+[g_pr] <- pagerank(g, init_pg, personal_dat).
 
 g_pr(X).
 # X = 0.85
