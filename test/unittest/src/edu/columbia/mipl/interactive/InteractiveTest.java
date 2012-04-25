@@ -7,7 +7,7 @@
  * Description: Tests for the interpreter mode
  */
 
-package edu.columbia.mipl.interpreter;
+package edu.columbia.mipl.interactive;
 
 import java.io.*;
 import java.util.*;
@@ -18,14 +18,14 @@ import junit.framework.TestCase;
 import edu.columbia.mipl.runtime.*;
 import edu.columbia.mipl.runtime.execute.*;
 
-public class InterpreterTest extends TestCase {
+public class InteractiveTest extends TestCase {
 
 	static String testInputPath = "test/input/";
-	static String miplMainCommand = "java -ea -esa -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main ";
+	static String miplMainCommand = "java -ea -esa -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main -interactive";
 	static Runtime runtime;
 
 	public static void main(String args[]) {
-		junit.textui.TestRunner.run(InterpreterTest.class);
+		junit.textui.TestRunner.run(InteractiveTest.class);
 	}
 
 	@Override
@@ -36,26 +36,43 @@ public class InterpreterTest extends TestCase {
 	public void testExecutionSuccess() throws java.io.IOException, java.lang.InterruptedException {
 		String output;
 		boolean success = true;
-		DataInputStream outputEater;
+		FileInputStream inputFile;
+		DataInputStream inputFileStream;
+		BufferedReader outputEater;
+		DataOutputStream inputSender;
 
 		String[] inputFiles = new File(testInputPath).list();
-
+		
 		for (int i = 0; i < inputFiles.length; i++) {
 			if (inputFiles[i].startsWith(".") || 
 				inputFiles[i].startsWith("pagerank.mipl") ||
-				inputFiles[i].startsWith("multi_jobs.mipl") ||
 				inputFiles[i].startsWith("simple_matrix_op.mipl") ||
 				inputFiles[i].startsWith("matrix.mipl") ||
-				inputFiles[i].startsWith("classification.mipl"))
-				continue;
-			Process mainOfMIPL = runtime.exec(miplMainCommand + testInputPath + inputFiles[i]);
-			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
+				inputFiles[i].startsWith("classification.mipl") ||
+				inputFiles[i].startsWith("multi_jobs.mipl"))
+					continue;
+
+			inputFile = new FileInputStream(testInputPath + inputFiles[i]);
+			inputFileStream = new DataInputStream(inputFile);
+
+			Process mainOfMIPL = runtime.exec(miplMainCommand);
+			outputEater = new BufferedReader(new InputStreamReader(mainOfMIPL.getInputStream()));
+			inputSender = new DataOutputStream(mainOfMIPL.getOutputStream());
+
+			while ((output = inputFileStream.readLine()) != null) {
+				inputSender.writeBytes(output + "\n");
+				if (outputEater.ready())
+					while ((output = outputEater.readLine()) != null)
+						System.out.println(output);
+			}
+
+			inputFileStream.close();
+			inputSender.close();
 
 			while ((output = outputEater.readLine()) != null)
 				System.out.println(output);
 
 			success &= (mainOfMIPL.waitFor() == 0);
-			System.out.println(success);
 		}
 		assertTrue(success);
 	}

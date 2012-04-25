@@ -1,0 +1,29 @@
+job dosome(X, Y, N) {
+	T = X.
+	if (N % 4 == 0)
+		T += Y.
+	else if (N % 4 == 1)
+		T -= Y.
+	else if (N % 4 == 2)
+		T *= Y.
+	else
+		T /= Y.
+
+	@T.
+}
+
+s(1, 2).
+s(3, 4).
+
+m(4, 3).
+m(2, 1).
+
+[eadd] <- dosome(s, m, 0).
+[esub] <- dosome(s, m, 1).
+[emul] <- dosome(s, m, 2).
+[ediv] <- dosome(s, m, 3).
+
+eadd(X, Y)?
+esub(X, Y)?
+emul(X, Y)?
+ediv(X, Y)?

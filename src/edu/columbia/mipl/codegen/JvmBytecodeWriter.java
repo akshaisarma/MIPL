@@ -163,33 +163,35 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		int e1 = genExpression(expr1);
 		int e2 = genExpression(expr2);
 		
+		il.append(_factory.createNew("edu.columbia.mipl.runtime.Term"));
+	    il.append(InstructionConstants.DUP);
+		
 		switch (type) {
 			case EQ:
-				assert (false);
+				il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "EQ", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));
 				break;
 			case LT:
-				assert (false);
+				il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "LT", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));
 				break;
 			case LE:
-				assert (false);
+				il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "LE", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));
 				break;
 			case GT:
-				il.append(_factory.createNew("edu.columbia.mipl.runtime.Term"));
-			    il.append(InstructionConstants.DUP);
 			    il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "GT", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));
-			    il.append(_factory.createLoad(Type.OBJECT, e1));
-			    il.append(_factory.createLoad(Type.OBJECT, e2));			    			   
-			    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), new ObjectType("edu.columbia.mipl.runtime.Expression"), new ObjectType("edu.columbia.mipl.runtime.Expression")}, Constants.INVOKESPECIAL));
 				break;
 			case GE:
-				assert (false);
+				il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "GE", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));
 				break;
 			case NE:
-				assert (false);
+				il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "NE", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));
 				break;
 		}
 		
-		il.append(_factory.createStore(Type.OBJECT, target));
+	    il.append(_factory.createLoad(Type.OBJECT, e1));
+	    il.append(_factory.createLoad(Type.OBJECT, e2));			    			   
+	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), new ObjectType("edu.columbia.mipl.runtime.Expression"), new ObjectType("edu.columbia.mipl.runtime.Expression")}, Constants.INVOKESPECIAL));
+
+	    il.append(_factory.createStore(Type.OBJECT, target));
 		
 		return target;
 	}
@@ -635,8 +637,9 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	    	il.append(_factory.createStore(Type.OBJECT, localVar));
 	    }
 	    
-	    for (JobStmt stmt : stmts)
-	    	genJobStmt(stmt);
+	    for (JobStmt stmt : stmts) {
+	    	genJobStmt(stmt);	    	
+	    }
 	    
 	    il.append(_factory.createLoad(Type.OBJECT, varReturn));
 	    il.append(_factory.createReturn(Type.OBJECT));
@@ -705,14 +708,68 @@ public class JvmBytecodeWriter extends InstructionWriter {
 			case TERM:
 				return genJobExpr(JobExpr.Type.TERM, expr.getTerm());
 		}
-		
+				
 		assert (false);
 		
 		return -1;
 	}
 	
-	public void genJobStmt(JobStmt.Type type, JobExpr expr, JobStmt stmt1, JobStmt stmt2) { assert (false); }	
-	public void genJobStmt(JobStmt.Type type, List<JobStmt> stmts) { assert (false); }
+	public void genJobStmt(JobStmt.Type type, JobExpr expr, JobStmt stmt1, JobStmt stmt2) {
+		int varCond;		
+		BranchInstruction bi1 = null, bi2 = null;
+		InstructionHandle ih1 = null, ih2 = null; 
+		
+		switch (type) {
+			case IF:
+				varCond = genJobExpr(expr);
+				il.append(_factory.createLoad(Type.OBJECT, varCond));
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveBool", "getData", Type.BOOLEAN, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
+				bi1 = _factory.createBranchInstruction(Constants.IFEQ, null);
+				il.append(bi1);
+				genJobStmt(stmt1);
+				if (stmt2 != null) {
+					bi2 = _factory.createBranchInstruction(Constants.GOTO, null);
+					il.append(bi2);
+				}
+				ih1 = il.append(new NOP());
+				bi1.setTarget(ih1);
+				if (stmt2 != null) {
+					genJobStmt(stmt2);
+					ih2 = il.append(new NOP());
+					bi2.setTarget(ih2);
+				}				
+				break;
+			case WHILE:
+				ih1 = il.append(new NOP());
+				varCond = genJobExpr(expr);
+				il.append(_factory.createLoad(Type.OBJECT, varCond));
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveBool", "getData", Type.BOOLEAN, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
+				bi1 = _factory.createBranchInstruction(Constants.IFEQ, null);
+				il.append(bi1);				
+				genJobStmt(stmt1);
+				il.append(_factory.createBranchInstruction(Constants.GOTO, ih1));
+				ih2 = il.append(new NOP());
+				bi1.setTarget(ih2);
+				break;
+			case DOWHILE:
+				ih1 = il.append(new NOP());
+				genJobStmt(stmt1);
+				varCond = genJobExpr(expr);
+				il.append(_factory.createLoad(Type.OBJECT, varCond));
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveBool", "getData", Type.BOOLEAN, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
+				bi1 = _factory.createBranchInstruction(Constants.IFEQ, null);
+				il.append(bi1);				
+				il.append(_factory.createBranchInstruction(Constants.GOTO, ih1));
+				ih2 = il.append(new NOP());
+				bi1.setTarget(ih2);
+				break;
+		}
+	}
+	
+	public void genJobStmt(JobStmt.Type type, List<JobStmt> stmts) {
+		for (JobStmt stmt : stmts)
+			genJobStmt(stmt);
+	}
 	
 	public void genJobStmt(JobStmt.Type type, JobExpr expr) {		
 		switch (type) {
@@ -765,67 +822,65 @@ public class JvmBytecodeWriter extends InstructionWriter {
 
 	public int genJobExpr(JobExpr.Type type, JobExpr expr1, JobExpr expr2) {
 		int target = nextVar++;
-		
+				
 		int e1 = genJobExpr(expr1);
 		int e2 = genJobExpr(expr2);
 		il.append(_factory.createLoad(Type.OBJECT, e1));
 		il.append(_factory.createLoad(Type.OBJECT, e2));
 		
-		String opName = null;
 		switch (type) {
 			case OR:
-				opName = "or";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "or", new ObjectType("edu.columbia.mipl.datastr.PrimitiveBool"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case AND:
-				opName = "and";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "and", new ObjectType("edu.columbia.mipl.datastr.PrimitiveBool"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case EQ:
-				opName = "eq";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "eq", new ObjectType("edu.columbia.mipl.datastr.PrimitiveBool"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case NE:
-				opName = "ne";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "ne", new ObjectType("edu.columbia.mipl.datastr.PrimitiveBool"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case LT:
-				opName = "lt";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "lt", new ObjectType("edu.columbia.mipl.datastr.PrimitiveBool"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case GT:
-				opName = "gt";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "gt", new ObjectType("edu.columbia.mipl.datastr.PrimitiveBool"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case LE:
-				opName = "le";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "le", new ObjectType("edu.columbia.mipl.datastr.PrimitiveBool"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case GE:
-				opName = "ge";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "ge", new ObjectType("edu.columbia.mipl.datastr.PrimitiveBool"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case ADD:
-				opName = "add";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "add", new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case SUB:
-				opName = "sub";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "sub", new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case MULT:
-				opName = "mult";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "mult", new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case DIV:
-				opName = "div";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "div", new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case MOD:
-				opName = "mod";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "mod", new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case MULT_CELL:
-				opName = "cellmult";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "cellmult", new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case DIV_CELL:
-				opName = "celldiv";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "celldiv", new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 			case EXP_CELL:
-				opName = "cellexp";
+				il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", "cellexp", new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
 				break;
 		}
-
-		il.append(_factory.createInvoke("edu.columbia.mipl.datastr.PrimitiveOperations", opName, new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new Type[] {new ObjectType("edu.columbia.mipl.datastr.PrimitiveType"), new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESTATIC));
-		il.append(_factory.createStore(Type.OBJECT, target));
 		
+		il.append(_factory.createStore(Type.OBJECT, target));
+				
 		return target;		
 	}
 	
