@@ -63,6 +63,37 @@
 	    <fail if="junit.failure" message="Unit test(s) failed.  See reports!"/>
     </target>
 
+    <target name="rtbuild" description="JUnit Regression Test Build">
+	    <mkdir dir="${test}/regressiontest/build" />
+	    <javac srcdir="${test}/regressiontest/src" destdir="${test}/regressiontest/build" debug="on" debuglevel="lines,vars,source">
+		    <classpath>
+			    <pathelement path="${classpath}"/>
+			    <fileset dir="${lib}">
+				    <include name="**/*.jar"/>
+			    </fileset>
+			    <pathelement location="${build}"/>
+		    </classpath>
+	    </javac>
+    </target>
+
+    <target name="regressiontest" depends="rtbuild" description="JUnit Regression Test For Single Module">
+	    <junit printsummary="true" failureproperty="junit.failure" showoutput="true">
+		    <classpath>
+			    <pathelement path="${classpath}"/>
+			    <fileset dir="${lib}">
+				    <include name="**/*.jar"/>
+			    </fileset>
+			    <pathelement location="${build}"/>
+			    <pathelement location="${test}/regressiontest/build"/>
+		    </classpath>
+		    <batchtest todir="${test}/regressiontest/build">
+			    <fileset dir="${test}/regressiontest/build"/>
+			    <formatter type="xml"/>
+		    </batchtest>
+	    </junit>
+	    <fail if="junit.failure" message="Regression test(s) failed.  See reports!"/>
+    </target>
+
     <target name="clean" description="Clean Project">
         <delete dir="${build}" />
         <delete dir="${dist}" />
