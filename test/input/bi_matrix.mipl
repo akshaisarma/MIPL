@@ -1,0 +1,14 @@
+job builtin(S) {
+	@(S + ones).
+	@(S + zeros).
+	@(S + eye).
+}
+
+s(0, 0).
+s(0, 0).
+
+[o, z, e] <- builtin(s).
+
+o(X, Y)?
+z(X, Y)?
+e(X, Y)?

@@ -35,6 +35,8 @@ public class BuiltinTable {
 		jobTable.put("transpose", new BuiltinTranspose());
 
 		matrixTable.put("ones", new UnboundOnes());
+		matrixTable.put("zeros", new UnboundZeros());
+		matrixTable.put("eye", new UnboundEye());
 	}
 
 	public static boolean existJob(String name) {

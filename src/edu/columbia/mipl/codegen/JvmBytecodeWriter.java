@@ -522,11 +522,12 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	    BranchInstruction if1 = null;
 	    if (namesSize == 0) {
 	    	// TODO
+	    	assert (false);
 	    }
 	    else {	    	
 		    il.append(_factory.createLoad(Type.OBJECT, jobRetVar));
 		    il.append(_factory.createInvoke("java.util.List", "size", Type.INT, Type.NO_ARGS, Constants.INVOKEINTERFACE));
-		    il.append(new PUSH(_cp, 1));
+		    il.append(new PUSH(_cp, namesSize));
 		    if1 = _factory.createBranchInstruction(Constants.IF_ICMPEQ, null);
 		    il.append(if1);
 		    il.append(_factory.createNew("edu.columbia.mipl.runtime.execute.UnmatchedNumberOfReturenException"));
@@ -942,7 +943,22 @@ public class JvmBytecodeWriter extends InstructionWriter {
 		    return target;
 		}
 		else if (term.getType() == Term.Type.TERM) {
-			assert (false);
+			if (term.getArguments().size() == 0) {
+				if (!BuiltinTable.existMatrix(term.getName())) {
+					assert (false);
+				}
+			
+				int target = nextVar++;
+			
+				il.append(new PUSH(_cp, term.getName()));
+				il.append(_factory.createInvoke("edu.columbia.mipl.builtin.BuiltinTable", "matrix", new ObjectType("edu.columbia.mipl.datastr.PrimitiveMatrix"), new Type[] {Type.STRING}, Constants.INVOKESTATIC));
+				il.append(_factory.createStore(Type.OBJECT, target));
+				
+				return target;
+			}
+			else {
+				assert (false);
+			}		    		    
 		}
 		else {
 			assert (false);
