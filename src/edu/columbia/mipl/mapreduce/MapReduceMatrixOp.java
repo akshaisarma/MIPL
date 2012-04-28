@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
@@ -93,7 +94,7 @@ public class MapReduceMatrixOp {
 	}
 
 	public static class MatrixReducer extends MapReduceBase
-	implements Reducer<LongWritable, WritableArray, WritableIndex, WritableArray> {
+	implements Reducer<LongWritable, WritableArray, NullWritable, WritableArray> {
 		private static String input1;
 		private static String input2;
 
@@ -101,7 +102,7 @@ public class MapReduceMatrixOp {
 
 
 		public void reduce(LongWritable key, Iterator<WritableArray> values,
-				OutputCollector<WritableIndex, WritableArray> output, Reporter reporter)
+				OutputCollector<NullWritable, WritableArray> output, Reporter reporter)
 						throws IOException {
 
 			WritableArray sumArr = null;
@@ -155,7 +156,7 @@ public class MapReduceMatrixOp {
 				}
 
 			}
-			output.collect(new WritableIndex(key.get(), key.get()), sumArr);
+			output.collect(NullWritable.get(), sumArr);
 		}
 		public void configure(JobConf job) {
 			//			System.out.println(job.get("input1"));
