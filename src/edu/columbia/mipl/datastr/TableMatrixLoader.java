@@ -63,6 +63,7 @@ public class TableMatrixLoader extends MatrixLoader {
 			return loadedMatrix;
 		}
 		catch (FileNotFoundException e) {
+			e.printStackTrace();
 			System.out.println("Matrix file not found!");
 		}
 		catch (NumberFormatException e) {

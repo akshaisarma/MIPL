@@ -20,15 +20,17 @@ import edu.columbia.mipl.runtime.execute.*;
 import edu.columbia.mipl.runtime.traverse.*;
 
 public class Main {
+	private static final String optString = "help;h version;v syntax;s interactive;i config;c: server;s: writer;w: output;o: remote;r";
+
 	public static void main(String[] args) {
 		//Parser parser = new Parser(new Program(new SemanticChecker(), new ProgramExecutor())); // Interactive Mode
 		//Parser parser = new Parser("test/input/multireturn.mipl", new Program(new SemanticChecker(), new ProgramExecutor())); // Interpreter Mode
 		//Parser parser = new Parser("test/input/multireturn.mipl", new SemanticChecker()); // CheckingOnly mode
 		
 		Configuration conf = Configuration.getInstance();
-				
+
 		Map<String, String> optMap = new HashMap<String, String>();
-		int index = getOpt(args, "help;h version;v syntax;s interactive;i config;c: server;s: writer;w: output;o:", optMap);
+		int index = getOpt(args, optString, optMap);
 		if (index < 0) {
 			System.exit(1);
 		}
@@ -53,12 +55,17 @@ public class Main {
 			conf.addServer(optMap.get("server"));
 		}
 
+		if (optMap.containsKey("remote")) {
+			conf.setMode(Configuration.MODE_REMOTE);
+		}
+
 		if (optMap.containsKey("interactive")) {
 			// interactive mode
 			Parser parser = new Parser(new Program(new SemanticChecker(), new ProgramExecutor()));
 		}
 		else {
 			if (index >= args.length) {
+System.out.println("inde x=" + index + " alen = " + args.length);
 				showUsage();
 				System.exit(1);
 			}
@@ -165,10 +172,11 @@ public class Main {
 	}
 	
 	public static void showUsage() {
-		System.err.println("Usage:");
+		System.err.println("Usage: java edu.columbia.cs.mipl.Mipl [options] input.mipl");
+		System.err.println("      [options] : " + optString);
 	}
 	
 	public static void showVersion() {
-		System.err.println("Usage:");
+		System.err.println("MIPL version 1.0.0");
 	}
 }

@@ -19,8 +19,6 @@ public class PrimitiveOperations {
 			ops = new DefaultMatrixOperations();
 		else if (mode == Configuration.MODE_REMOTE)
 			ops = new MapReduceMatrixOperations();
-//		ops = new MapReduceMatrixOperations(); //TODO: read from Configuration
-		ops = new DefaultMatrixOperations();
 	}
 
 	public static PrimitiveType assign(PrimitiveType arg1, PrimitiveType arg2) {
