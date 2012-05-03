@@ -7,7 +7,7 @@
  * Description: Tests for the interpreter mode
  */
 
-/*
+
 package edu.columbia.mipl.interpreter;
 
 import java.io.*;
@@ -61,4 +61,3 @@ public class InterpreterTest extends TestCase {
 		assertTrue(success);
 	}
 }
-*/

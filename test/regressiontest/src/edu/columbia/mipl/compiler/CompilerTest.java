@@ -7,7 +7,7 @@
  * Description: Tests from top-bottom of full compilation
  *				and execution of the test input .mipl files
  */
-
+/*
 package edu.columbia.mipl.compiler;
 
 import java.io.*;
@@ -75,3 +75,4 @@ public class CompilerTest extends TestCase {
 		assertTrue(success);
 	}
 }
+*/
