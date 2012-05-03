@@ -58,7 +58,7 @@ public class ProgramExecutor extends RuntimeTraverser {
 				List<PrimitiveType> results;
 				if (BuiltinTable.existJob(fact.getName())) {
 					try {
-						results = BuiltinTable.job(fact.getName(), (PrimitiveType[]) args.toArray());
+						results = BuiltinTable.job(fact.getName(), (PrimitiveType[]) args.toArray(new PrimitiveType[0]));
 					} catch (Exception e) {
 						e.printStackTrace();
 						return false;
@@ -68,7 +68,7 @@ public class ProgramExecutor extends RuntimeTraverser {
 					results = new JobExecutor((Job) kt.get(fact.getName()).get(0), args).getResults();
 				else {
 					// SemanticChecker: check this
-					new Exception("No such defined or builtin job!").printStackTrace();
+					new Exception("No such defined or builtin job! : " + fact.getName()).printStackTrace();
 					return false;
 				}
 
