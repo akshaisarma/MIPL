@@ -50,7 +50,11 @@ public class CompilerTest extends TestCase {
 			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
 			while ((output = outputEater.readLine()) != null)
 				System.out.println(output);
-			success &= (mainOfMIPL.waitFor() == 0);
+
+			boolean result = (mainOfMIPL.waitFor() == 0);
+			if (!result)
+				System.out.println(inputFiles[i] + " failed while running in Compiler Mode.");
+			success &= result;
 
 			Process compileTarget = runtime.exec(compiledInputCommand);
 			outputEater = new DataInputStream(compileTarget.getInputStream());
@@ -62,7 +66,11 @@ public class CompilerTest extends TestCase {
 			outputEater = new DataInputStream(runTarget.getInputStream());
 			while ((output = outputEater.readLine()) != null)
 				System.out.println(output);
-			success &= (runTarget.waitFor() == 0);
+
+			result = (runTarget.waitFor() == 0);
+			if (!result)
+				System.out.println(inputFiles[i] + " failed while running in Compiler Mode.");
+			success &= result;
 		}
 		assertTrue(success);
 	}

@@ -38,7 +38,7 @@ public class InteractiveTest extends TestCase {
 		boolean success = true;
 		FileInputStream inputFile;
 		DataInputStream inputFileStream;
-		BufferedReader outputEater;
+		BufferedReader outputEater, errorEater;
 		DataOutputStream inputSender;
 
 		String[] inputFiles = new File(testInputPath).list();
@@ -52,19 +52,22 @@ public class InteractiveTest extends TestCase {
 
 			Process mainOfMIPL = runtime.exec(miplMainCommand);
 			outputEater = new BufferedReader(new InputStreamReader(mainOfMIPL.getInputStream()));
+			errorEater = new BufferedReader(new InputStreamReader(mainOfMIPL.getErrorStream()));
 			inputSender = new DataOutputStream(mainOfMIPL.getOutputStream());
 
 			while ((output = inputFileStream.readLine()) != null) {
 				inputSender.writeBytes(output + "\n");
 				if (outputEater.ready())
 					while ((output = outputEater.readLine()) != null)
-						System.out.println(output);
+						;
 			}
 
 			inputFileStream.close();
 			inputSender.close();
 
 			while ((output = outputEater.readLine()) != null)
+				;
+			while ((output = errorEater.readLine()) != null)
 				System.out.println(output);
 
 			boolean result = (mainOfMIPL.waitFor() == 0);

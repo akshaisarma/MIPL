@@ -7,6 +7,7 @@
  * Description: Tests for the interpreter mode
  */
 
+/*
 package edu.columbia.mipl.interpreter;
 
 import java.io.*;
@@ -36,7 +37,7 @@ public class InterpreterTest extends TestCase {
 	public void testExecutionSuccess() throws java.io.IOException, java.lang.InterruptedException {
 		String output;
 		boolean success = true;
-		DataInputStream outputEater;
+		DataInputStream outputEater, errorEater;
 
 		String[] inputFiles = new File(testInputPath).list();
 
@@ -45,8 +46,11 @@ public class InterpreterTest extends TestCase {
 				continue;
 			Process mainOfMIPL = runtime.exec(miplMainCommand + testInputPath + inputFiles[i]);
 			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
+			errorEater = new DataInputStream(mainOfMIPL.getErrorStream());
 
 			while ((output = outputEater.readLine()) != null)
+				;
+			while ((output = errorEater.readLine()) != null)
 				System.out.println(output);
 
 			boolean result = (mainOfMIPL.waitFor() == 0);
@@ -57,3 +61,4 @@ public class InterpreterTest extends TestCase {
 		assertTrue(success);
 	}
 }
+*/
