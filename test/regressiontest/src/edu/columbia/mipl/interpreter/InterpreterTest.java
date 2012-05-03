@@ -41,12 +41,7 @@ public class InterpreterTest extends TestCase {
 		String[] inputFiles = new File(testInputPath).list();
 
 		for (int i = 0; i < inputFiles.length; i++) {
-			if (inputFiles[i].startsWith(".") || 
-				inputFiles[i].startsWith("pagerank.mipl") ||
-				inputFiles[i].startsWith("multi_jobs.mipl") ||
-				inputFiles[i].startsWith("simple_matrix_op.mipl") ||
-				inputFiles[i].startsWith("matrix.mipl") ||
-				inputFiles[i].startsWith("classification.mipl"))
+			if (inputFiles[i].startsWith("."))
 				continue;
 			Process mainOfMIPL = runtime.exec(miplMainCommand + testInputPath + inputFiles[i]);
 			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
@@ -54,8 +49,10 @@ public class InterpreterTest extends TestCase {
 			while ((output = outputEater.readLine()) != null)
 				System.out.println(output);
 
-			success &= (mainOfMIPL.waitFor() == 0);
-			System.out.println(success);
+			boolean result = (mainOfMIPL.waitFor() == 0);
+			if (!result)
+				System.out.println(inputFiles[i] + " failed during Interpreter Mode.");
+			success &= result;
 		}
 		assertTrue(success);
 	}

@@ -44,12 +44,7 @@ public class InteractiveTest extends TestCase {
 		String[] inputFiles = new File(testInputPath).list();
 		
 		for (int i = 0; i < inputFiles.length; i++) {
-			if (inputFiles[i].startsWith(".") || 
-				inputFiles[i].startsWith("pagerank.mipl") ||
-				inputFiles[i].startsWith("simple_matrix_op.mipl") ||
-				inputFiles[i].startsWith("matrix.mipl") ||
-				inputFiles[i].startsWith("classification.mipl") ||
-				inputFiles[i].startsWith("multi_jobs.mipl"))
+			if (inputFiles[i].startsWith("."))
 					continue;
 
 			inputFile = new FileInputStream(testInputPath + inputFiles[i]);
@@ -72,7 +67,10 @@ public class InteractiveTest extends TestCase {
 			while ((output = outputEater.readLine()) != null)
 				System.out.println(output);
 
-			success &= (mainOfMIPL.waitFor() == 0);
+			boolean result = (mainOfMIPL.waitFor() == 0);
+			if (!result)
+				System.out.println(inputFiles[i] + " failed during Interactive Mode.");
+			success &= result;
 		}
 		assertTrue(success);
 	}
