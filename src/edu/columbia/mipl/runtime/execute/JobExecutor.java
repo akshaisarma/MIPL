@@ -162,7 +162,7 @@ public class JobExecutor {
 					args.add(evaluateJobExpr(expr));
 
 				try {
-					return BuiltinTable.job(jexpr.getName(), (PrimitiveType[]) args.toArray()).get(0);
+					return BuiltinTable.job(jexpr.getName(), (PrimitiveType[]) args.toArray(new PrimitiveType[0])).get(0);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
