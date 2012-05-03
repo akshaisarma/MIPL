@@ -7,7 +7,7 @@
  * Description: Tests from top-bottom of full compilation
  *				and execution of the test input .mipl files
  */
-/*
+
 package edu.columbia.mipl.compiler;
 
 import java.io.*;
@@ -43,36 +43,41 @@ public class CompilerTest extends TestCase {
 
 		boolean success = true;
 		for (int i = 0; i < inputFiles.length; i++) {
-			if (inputFiles[i].startsWith(".") || inputFiles[i].startsWith("pagerank.mipl"))
+			if (inputFiles[i].startsWith("."))
 				continue;
 			
+			boolean result = true;
+
 			Process mainOfMIPL = runtime.exec(miplMainCommand + testInputPath + "/" + inputFiles[i]);
 			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
 			while ((output = outputEater.readLine()) != null)
-				System.out.println(output);
-
-			boolean result = (mainOfMIPL.waitFor() == 0);
+				;
+			result = (mainOfMIPL.waitFor() == 0);
 			if (!result)
-				System.out.println(inputFiles[i] + " failed while running in Compiler Mode.");
+				System.out.println(inputFiles[i] + " failed while compiling MIPL Source in Compiler Mode.");
 			success &= result;
 
 			Process compileTarget = runtime.exec(compiledInputCommand);
 			outputEater = new DataInputStream(compileTarget.getInputStream());
 			while ((output = outputEater.readLine()) != null)
-				System.out.println(output);
-			success &= (compileTarget.waitFor() == 0);
+				;
+			result = (compileTarget.waitFor() == 0);
+			if (!result)
+				System.out.println(inputFiles[i] + " failed while compiling compiled MIPL Source in Compiler Mode.");
+			success &= result;
 
 			Process runTarget = runtime.exec(runCompiledInputCommand);
 			outputEater = new DataInputStream(runTarget.getInputStream());
 			while ((output = outputEater.readLine()) != null)
-				System.out.println(output);
-
+				;
 			result = (runTarget.waitFor() == 0);
 			if (!result)
-				System.out.println(inputFiles[i] + " failed while running in Compiler Mode.");
+				System.out.println(inputFiles[i] + " failed while running compiled (compiled from compiled MIPL source) in Compiler Mode.");
 			success &= result;
+
+			if (result)
+				System.out.println(inputFiles[i] + " passed.");
 		}
 		assertTrue(success);
 	}
 }
-*/

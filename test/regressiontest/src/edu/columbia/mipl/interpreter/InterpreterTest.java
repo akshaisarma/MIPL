@@ -44,6 +44,8 @@ public class InterpreterTest extends TestCase {
 		for (int i = 0; i < inputFiles.length; i++) {
 			if (inputFiles[i].startsWith("."))
 				continue;
+
+			boolean result = true;
 			Process mainOfMIPL = runtime.exec(miplMainCommand + testInputPath + inputFiles[i]);
 			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
 			errorEater = new DataInputStream(mainOfMIPL.getErrorStream());
@@ -53,10 +55,13 @@ public class InterpreterTest extends TestCase {
 			while ((output = errorEater.readLine()) != null)
 				System.out.println(output);
 
-			boolean result = (mainOfMIPL.waitFor() == 0);
+			result = (mainOfMIPL.waitFor() == 0);
+			success &= result;
+
 			if (!result)
 				System.out.println(inputFiles[i] + " failed during Interpreter Mode.");
-			success &= result;
+			else
+				System.out.println(inputFiles[i] + " passed.");
 		}
 		assertTrue(success);
 	}

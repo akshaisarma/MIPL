@@ -47,6 +47,7 @@ public class InteractiveTest extends TestCase {
 			if (inputFiles[i].startsWith("."))
 					continue;
 
+			boolean result = true;
 			inputFile = new FileInputStream(testInputPath + inputFiles[i]);
 			inputFileStream = new DataInputStream(inputFile);
 
@@ -70,10 +71,13 @@ public class InteractiveTest extends TestCase {
 			while ((output = errorEater.readLine()) != null)
 				System.out.println(output);
 
-			boolean result = (mainOfMIPL.waitFor() == 0);
+			result = (mainOfMIPL.waitFor() == 0);
+			success &= result;
+
 			if (!result)
 				System.out.println(inputFiles[i] + " failed during Interactive Mode.");
-			success &= result;
+			else
+				System.out.println(inputFiles[i] + " passed.");
 		}
 		assertTrue(success);
 	}
