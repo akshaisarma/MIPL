@@ -191,4 +191,32 @@
 		    <arg value="${build}/mipl.grammar" />
 	    </java>
     </target>
+
+    <target name="javadoc" description="Generates JavaDoc for Plug-in APIs">
+	    <javadoc
+		    destdir="build/javadoc"
+		    author="true"
+		    version="true"
+		    use="true"
+		    windowtitle="MIPL Plugin APIs">
+
+		    <link href="http://download.oracle.com/javase/6/docs/api/"/>
+		    <link href="http://hadoop.apache.org/common/docs/current/api/"/>
+		    <link href="http://logging.apache.org/log4j/1.2/apidocs/"/>
+		    <link href="http://commons.apache.org/bcel/apidocs"/>
+		    <link href="http://junit.sourceforge.net/javadoc/"/>
+
+		    <fileset dir="src" defaultexcludes="yes">
+			    <include name="**/*.java"/>
+		    </fileset>
+
+		    <doctitle><![CDATA[<h1>MIPL Plugin APIs</h1>]]></doctitle>
+		    <bottom><![CDATA[<i>Copyright &#169; 2012 The MIPL Team. All Rights Reserved.</i>]]></bottom>
+	    </javadoc>
+	    <delete dir="/home/jung/html/javadoc" />
+	    <!--copy todir="/home/jung/html/mipl">
+		    <fileset dir="build/javadoc"/>
+	    </copy-->
+    </target>
+
 </project>
