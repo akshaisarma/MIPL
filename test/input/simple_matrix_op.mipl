@@ -6,6 +6,10 @@
 # Description: A simple MIPL program that uses built in jobs and a simple 
 #				user-defined program
 
+job basic_op(X, Y) {
+	@X+Y.
+}
+
 dataset(0, 1, 2).
 dataset(0, 1, 5).
 
@@ -15,7 +19,3 @@ dataset(X, Y, Z)?
 [y] <- load("test/matrix/haha2.txt").
 [z] <- basic_op(x, y).
 [] <- save(z, "build/result.txt").
-
-job basic_op(X, Y) {
-	@X+Y.
-}

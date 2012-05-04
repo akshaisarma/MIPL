@@ -22,7 +22,7 @@ import edu.columbia.mipl.runtime.execute.*;
 public class InterpreterTest extends TestCase {
 
 	static String testInputPath = "test/input/";
-	static String miplMainCommand = "java -ea -esa -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main ";
+	static String miplMainCommand = "java -ea -esa -cp build:./lib/bcel-5.2.jar:./lib/log4j-1.2.16.jar edu.columbia.mipl.Main ";
 	static Runtime runtime;
 
 	public static void main(String args[]) {
