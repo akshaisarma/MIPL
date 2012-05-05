@@ -63,7 +63,7 @@
 	    <fail if="junit.failure" message="Unit test(s) failed.  See reports!"/>
     </target>
 
-    <target name="rtbuild" description="JUnit Regression Test Build">
+    <target name="rtbuild" depends="mipl" description="JUnit Regression Test Build">
 	    <mkdir dir="${test}/regressiontest/build" />
 	    <javac srcdir="${test}/regressiontest/src" destdir="${test}/regressiontest/build" debug="on" debuglevel="lines,vars,source">
 		    <classpath>

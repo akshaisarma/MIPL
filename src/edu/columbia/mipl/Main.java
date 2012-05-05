@@ -74,7 +74,6 @@ public class Main {
 			
 			Parser parser = new Parser(srcName);
 			if (parser.getNumError() != 0) {
-				System.out.println("Parser Error");
 				System.exit(1);
 			}
 			
