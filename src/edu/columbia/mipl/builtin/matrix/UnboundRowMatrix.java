@@ -16,8 +16,10 @@ import edu.columbia.mipl.datastr.*;
 public class UnboundRowMatrix extends UnboundMatrix {
 
 	public UnboundRowMatrix(PrimitiveMatrix<Double> m) {
-		if (m.getRow() != 1)
+		if (m.getRow() != 1) {
+			System.out.println("Error: urow() only takes a matrix which has a single row (1xN)");
 			assert (false);
+		}
 
 		setData(m.getData());
 	}

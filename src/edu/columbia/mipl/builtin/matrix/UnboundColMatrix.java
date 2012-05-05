@@ -16,8 +16,10 @@ import edu.columbia.mipl.datastr.*;
 public class UnboundColMatrix extends UnboundMatrix {
 
 	public UnboundColMatrix(PrimitiveMatrix<Double> m) {
-		if (m.getCol() != 1)
+		if (m.getCol() != 1) {
+			System.out.println("Error: ucol() only takes a matrix which has a single column (Nx1)");
 			assert (false);
+		}
 
 		setData(m.getData());
 	}
