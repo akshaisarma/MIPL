@@ -28,7 +28,7 @@ public class PrimitiveOperations {
 				arg1 = new PrimitiveMatrix(m.getRow(), m.getCol());
 			}
 			else if (arg2 instanceof PrimitiveDouble) {
-				return new PrimitiveDouble(0.0);
+				return new PrimitiveDouble(((PrimitiveDouble) arg2).getData());
 			}
 			else
 				assert (false);
