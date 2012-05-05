@@ -70,7 +70,7 @@ jobcall_args_cand
 	| VARIABLE			{ $$ = new Term(Term.Type.VARIABLE, (String) $1); }
 	| numerical_value	{ $$ = new Term(Term.Type.NUMBER, (Double) $1); }
 	| STRING_LITERAL	{ $$ = new Term(Term.Type.STRING, (String) $1); }
-	| jobcall			/* Default Action $$ = $1 */
+//	| jobcall			/* Default Action $$ = $1 */
 	;
 
 id_list
@@ -271,7 +271,7 @@ primary_expr
 	| NUMBER				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
 	| '(' expr ')'			{ $$ = $2; }
 	;
-
+/*
 array_idx_elmt
 	: '~'					{ $$ = new ArrayIndex(0, true); }
 	| '~' NUMBER			{ $$ = new ArrayIndex(0, (long) (double) (Double) $2); }
@@ -284,10 +284,10 @@ array_idx_list
 	: array_idx_elmt			{ $$ = new ArrayList<ArrayIndex>(); ((List<ArrayIndex>) $$).add((ArrayIndex) $1); }
 	| array_idx_list ',' array_idx_elmt	{ $$ = $1; ((List<ArrayIndex>) $$).add((ArrayIndex) $3); }
 	;
-
+*/
 postfix_expr
 	: primary_expr							/* Default Action $$ = $1 */
-	| VARIABLE '[' array_idx_list ']' '[' array_idx_list ']'	{ $$ = new JobExpr(JobExpr.Type.ARRAY, new Term(Term.Type.VARIABLE, (String) $1), (List<ArrayIndex>) $3, (List<ArrayIndex>) $6); }
+//	| VARIABLE '[' array_idx_list ']' '[' array_idx_list ']'	{ $$ = new JobExpr(JobExpr.Type.ARRAY, new Term(Term.Type.VARIABLE, (String) $1), 		(List<ArrayIndex>) $3, (List<ArrayIndex>) $6); }
 	| IDENTIFIER '(' ')'						{ $$ = new JobExpr(JobExpr.Type.JOBCALL, (String) $1, (List<JobExpr>) null); }
 	| IDENTIFIER '(' nested_jobcall_args ')'				{ $$ = new JobExpr(JobExpr.Type.JOBCALL, (String) $1, (List<JobExpr>) $3); }
 	;

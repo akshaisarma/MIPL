@@ -65,7 +65,7 @@ public class Main {
 		}
 		else {
 			if (index >= args.length) {
-System.out.println("inde x=" + index + " alen = " + args.length);
+				System.out.println("index =" + index + " length = " + args.length);
 				showUsage();
 				System.exit(1);
 			}
