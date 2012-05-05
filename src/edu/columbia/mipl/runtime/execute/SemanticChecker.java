@@ -7,6 +7,7 @@
  * Description: Implements some rules (others are in Program Executor)
  *				- job usage before definition
  *				- no redefinition of built in jobs
+ * 				- invalid query types
  *				- no regexes in facts and rules
  *				- variable defined before use
  */
@@ -26,7 +27,8 @@ import edu.columbia.mipl.runtime.traverse.*;
  * Setting haveRegex will cause it to be unset at the
  * postTraverse reaching of the parent fact, query or rule
  * Parser will complain if Regexes inside Jobs so no need 
- * for it here.
+ * for it here. I needed to haveRegex because rule can be
+ * arbitrarily deep nested with or_terms unlike fact.
  */
 public class SemanticChecker extends RuntimeTraverser {
 	private HashMap<String, Knowledge> definedJobs;
@@ -87,6 +89,14 @@ public class SemanticChecker extends RuntimeTraverser {
 	}
 
 	public boolean reachQuery(Query query) {
+		Term term = query.getTerm();
+		if (term.getType() != Term.Type.TERM &&
+			term.getType() != Term.Type.REGEXTERM &&
+			term.getType() != Term.Type.QUERYALL &&
+			term.getType() != Term.Type.REGEXQUERYALL) {
+			new Exception(query.getName() + " does not have proper terms. No expressions or IS statements allowed!").printStackTrace();
+			return false;
+		}
 		haveRegex = false;
 		return true;
 	}

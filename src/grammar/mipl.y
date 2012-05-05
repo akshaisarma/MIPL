@@ -62,7 +62,7 @@ jobcall
 
 jobcall_args
 	: jobcall_args ',' jobcall_args_cand	{ $$ = $1; ((List<Term>) $$).add((Term) $3);}
-	| jobcall_args_cand						{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $1); }
+	| jobcall_args_cand							{ $$ = new ArrayList<Term>(); ((List<Term>) $$).add((Term) $1); }
 	;
 
 jobcall_args_cand
@@ -79,7 +79,7 @@ id_list
 	;
 
 query
-	: or_terms '?'			{ $$ = new Query((Term) $1); }
+	: term '?'			{ $$ = new Query((Term) $1); }
 	;
 
 rule
