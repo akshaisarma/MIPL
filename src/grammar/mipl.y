@@ -242,6 +242,7 @@ boolvalue_expr
 	: TRUE
 	| FALSE
 	| '(' bool_expr ')'		{ $$ = $2; }
+	;
 
 additive_expr
 	: multiplicative_expr				/* Default Action $$ = $1 */

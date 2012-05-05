@@ -251,6 +251,7 @@ shows that $countPositive\{\}$ includes several other commands.
 \subsection{Command}
 
 In MIPL, there are four types of commands: $fact$, $query$, $rule$, and $job$.
+TODO: mention about INCLUDE
 
 \begin{lstlisting}
 command
@@ -258,6 +259,7 @@ command
 	| query
 	| rule
 	| job
+	| INCLUDE STRING_LITERAL
 	;
 \end{lstlisting}
 \medskip
@@ -290,7 +292,6 @@ jobcall_args_cand
 	| VARIABLE
 	| NUMBER
 	| STRING_LITERAL
-	| jobcall
 	;
 \end{lstlisting}
 
@@ -308,6 +309,7 @@ with $"."$. A dynamic Fact is a Term that is wrapped in $[ ]$, and as part
 of its definition, a dynamic Fact calls a Job to process data. The semantics
 of the $jobcall$ are exactly the same as the dicussion in \ref{Job_PostFix_Expression}
 and it is not duplicated here. A $fact$ should start with a lowercase letter.
+TODO: nested jobcall above was removed from jobcall\_args\_cand
 \medskip
 
 \subsubsection{Query}
@@ -372,7 +374,7 @@ as described above.
 \begin{lstlisting}
 or_terms
 	: and_terms
-	| or_terms `;' and_terms
+	| and_terms `;' or_terms
 	;
 \end{lstlisting}
 $or_terms$ contain either $and\_terms$ or $or\_terms$ separated by $;$. 
@@ -386,7 +388,7 @@ only if the left side is False.
 \begin{lstlisting}
 and_terms
 	: term
-	| and_terms `,' term	
+	| term `,' and_terms
 	;
 \end{lstlisting}
 $and\_terms$ contain either $term$ or $and\_terms$ separated by $,$. 
@@ -406,7 +408,7 @@ term
 	| REGEX `(' `*' `)'	
 	| NOT term		
 	| term_expr		
-	| VARIABLE IS term	
+	| VARIABLE IS term_expr
 	| term_expr `<' term_expr
 	| term_expr `>' term_expr
 	| term_expr LE_OP term_expr
@@ -428,8 +430,8 @@ regular expression will be queried with the given argument lists.
 
 By adding NOT, a Term can be negated. Also, Term Expressions can also be Terms.
 In this case, Term contains the value of the computed results of Term Expressions.
-As an extension of this, Terms and hence Term Expressions can be assigned to Variables,
-by $VARIABLE\ IS\ term$.
+As an extension of this, Term Expressions can be assigned to Variables,
+by $VARIABLE\ IS\ term_expr$.
 \medskip
 
 In addition, comparison operators with Term expressions are also Term. There are six
@@ -482,7 +484,7 @@ operators `+' and `-' since Term Facts are reduced
 \begin{lstlisting}
 term_term
 	: VARIABLE
-	| NUMBER
+	| numerical_value
 	| `(' term_expr `)'
 	;
 \end{lstlisting}
@@ -504,7 +506,7 @@ term_args_cand
 	| IDENTIFIER `(' term_args `)'
 	| VARIABLE
 	| `_'
-	| NUMBER
+	| numerical_value
 	| STRING_LITERAL
 	;
 
@@ -801,6 +803,9 @@ multiplicative_expr
 	| multiplicative_expr `*' unary_expr
 	| multiplicative_expr `/' unary_expr
 	| multiplicative_expr `%' unary_expr
+	| multiplicative_expr MUL_CELL_OP unary_expr
+	| multiplicative_expr DIV_CELL_OP unary_expr
+	| multiplicative_expr EXP_CELL_OP unary_expr
 	;
 \end{lstlisting}
 
@@ -814,6 +819,7 @@ a matrix expression. As with the additive expressions, errors may be
 generated at run-time for incompatible operations. For instance, the
 multiplication of two matrices with incompatible number of rows and
 columns will result in an error.
+TODO: MUL\_CELL\_OP, DIV\_CELL\_OP, EXP\_CELL\_OP were added
 \medskip
 
 \subsubsection{Job Unary Expression}
@@ -843,7 +849,6 @@ a Job call.
 \begin{lstlisting}
 postfix_expr
 	: primary_expr
-	| VARIABLE `[' array_idx_list `]' `[' array_idx_list `]'
 	| IDENTIFIER `(' `)'
 	| IDENTIFIER `(' nested_jobcall_args `)'
 	;
@@ -861,6 +866,7 @@ subscript refers to the corresponding pressure. The VARIABLE must refer
 to a matrix type. Using array index lists, any subset of the matrix can be
 obtained. The result of this postfix expression can be a single value of
 the type of the matrix or any subset of the matrix.
+TODO: array index was removed
 
 An IDENTIFIER followed by a set of paranthesis `(' and `)' is a Job
 invocation. A Job is defined according to \ref{Job_Section}. Only a defined
@@ -887,8 +893,13 @@ expression, a primary expression has the highest precedence.
 primary_expr
 	: IDENTIFIER
 	| VARIABLE
-	| NUMBER
+	| numerical_value
 	| `(' expr `)'
+	;
+
+numerical_value
+	: NUMBER
+	| '-' numerical_value
 	;
 \end{lstlisting}
 
@@ -902,6 +913,7 @@ A VARIABLE is also a primary expression. A VARIABLE is used to denote
 data types with location values such as matrices in order to distinguish them 
 from IDENTIFIERS.
 
+TODO: NUMBER is replaced by numerical\_value.
 A NUMBER refers to a the decimal representation of a number and is also a 
 primary expression. Scientific notation is also supported, following the 
 E-notation. $10^{x}$ in scientific notation is simply written with either an
@@ -910,51 +922,6 @@ E-notation. $10^{x}$ in scientific notation is simply written with either an
 Finally, an expression enclosed with parantheses is also a primary expression 
 and the value of this expression is the same as if the parantheses did not 
 exist.
-\medskip
-
-\subsubsection{Job Array Index List}
-
-An array index list can be used to access the relevant portions of a matrix. 
-The relevant portions of a matrix are referred to using array index elements, 
-described below. The array index elements are evaluated left to right.
-
-\begin{lstlisting}
-array_idx_list
-	: array_idx_elmt
-	| array_idx_list `,' array_idx_elmt
-	;
-\end{lstlisting}
-
-Using the list of array indices, any relevant, valid portion of a matrix may
-be accessed. For instance, given a 5 x 7 matrix A, A[2$\sim$4,6$\sim$][1] produces the
-subset of the matrix A, a 5 x 1 result, consisting of its third, fourth, 
-fifth and seventh rows and its second column.
-\medskip
-
-\subsubsection{Job Array Index Element}
-
-An array index element is used to access a matrix. It consists of either 
-the character `$\sim$' representing all valid indices or any combination of placing
-a NUMBER to either side of the character. 
-
-\begin{lstlisting}
-array_idx_elmt
-	: `\~'
-	| `~' NUMBER
-	| NUMBER
-	| NUMBER `~'
-	| NUMBER `~' NUMBER
-	;
-\end{lstlisting}
-
-NUMBER here refers to any integer that denotes a valid index for the 
-matrix, referring to either its $i^{th}$ row or column. Rows and columns are 
-referred to starting at 0. If a NUMBER is not specified at either 
-the left or the right of the `$\sim$' character, it defaults to the extreme 
-of the matrix subscript. In other words, the smallest valid subscript in 
-the case of the left, which is 0, and the largest valid subscript in the 
-case of the right, which is the total number of rows or columns depending
-on, which is being accessed.
 \medskip
 
 \subsubsection{Job Argument Expression List}
