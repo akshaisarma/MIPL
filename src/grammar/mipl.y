@@ -329,8 +329,8 @@ private String getFilename() {
 }
 
 public void yyerror (String error) {
-	System.err.println ("Error: " + error);
-	System.err.println ("at " + getFilename() + " Line: " + lexer.getLine() + " Column: " + lexer.getColumn());
+	System.err.println("Error: " + error);
+	System.err.println("before " + yylval + " at " + getFilename() + " Line: " + lexer.getLine() + " Column: " + lexer.getColumn());
 
 	nError++;
 
