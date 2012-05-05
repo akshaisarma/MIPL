@@ -330,7 +330,7 @@ private String getFilename() {
 
 public void yyerror (String error) {
 	System.err.println ("Error: " + error);
-	System.err.println (getFilename() + ":" + lexer.getLine() + ":" + lexer.getColumn());
+	System.err.println ("at " + getFilename() + " Line: " + lexer.getLine() + " Column: " + lexer.getColumn());
 
 	nError++;
 
