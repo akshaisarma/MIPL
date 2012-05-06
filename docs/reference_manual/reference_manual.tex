@@ -197,8 +197,9 @@ or Table format. Matrices can also be defined from Facts, where a collection of 
 same identifier is represented as a Matrix with their contents (if they are numbers)
 becoming the rows of the matrix in the order they were defined. 
 
-The scope of all these data types is within the Job body. MIPL follows the same conventions as C or Java with regard
-to block statements and scope, which is, a reference is toward the nearest nested Variable.
+The scope of all these data types is within the Job body. MIPL is a dynamically typed language as such
+nested scope rules do not exist. Assigning a value to a Variable defined outside a block causes the value
+to be overwritten, much like Python and other dynamically typed languages.
 \medskip.
 
 \section{Syntax}
@@ -678,8 +679,8 @@ compound_stmt
 Job Compound Statement is a Job Statement, which includes
 zero or more Job Statements, surrounded by a pair of curly
 brackets. As mentioned previously, scope in compound statements
-is similar to languages like C, where the nearest nested reference 
-is taken.
+is similar to languages like Python, where redefinitions of the same
+variable lead to overwrites of the value.
 \medskip
 
 \subsubsection{Job Return Statement}
@@ -895,8 +896,8 @@ useful in data mining operations. As a result, MIPL supports these operations. G
 a cell operation computes the resulting matrix where each entry in the result 
 is computed by the scalar operation of the corresponding cells. 
 
-The cell operation for multiplication is $.*$, division is $./$ and 
-exponentiation is $.^$.
+The cell operation for multiplication is .*, division is ./ and 
+exponentiation is .\^.
 \medskip
 
 \subsubsection{Job Unary Expression}
@@ -984,10 +985,10 @@ A VARIABLE is also a primary expression. A VARIABLE is used to denote
 data types with location values such as matrices in order to distinguish them 
 from IDENTIFIERS.
 
-A numerical_value refers to a the decimal representation of a number and is also a 
+A numerical\_value refers to a the decimal representation of a number and is also a 
 primary expression. Scientific notation is also supported, following the 
 E-notation. $10^{x}$ in scientific notation is simply written with either an
-`e' or an `E' followed by x. A numerical_value serves as a wrapper for NUMBERS, in 
+`e' or an `E' followed by x. A numerical\_value serves as a wrapper for NUMBERS, in 
 order to support arbitrary insertions of the $-$ or negation operation.
 
 Finally, an expression enclosed with parantheses is also a primary expression 
@@ -1251,129 +1252,55 @@ and A.
 
 
 \section{Built-in Jobs}
-There are several Built-in Jobs, while MIPL provides an easy way
+There are several Built-in Jobs, even though MIPL provides an easy way
 to add a new Job.
 \medskip
 
-\subsection{zeros()}
-Keyword zeros(n, m) creates a n-by-m matrix of all zeros.
+\subsection{load()}
+Job load() loads a matrix and binds it to a dynamic fact.
 \begin{lstlisting}
-Y <- zeros(10, 20).
-\end{lstlisting}
-
-$Y <- zeros(10, 20).$ returns a 10-by-20 matrix of zeros.
-\medskip
-
-\subsection{ones()}
-Keyword ones(n, m) creates a n-by-m matrix of all ones.
-\begin{lstlisting}
-Y <- ones(10, 20).
-\end{lstlisting}
-
-$Y <- ones(10, 20).$ returns a 10-by-20 matrix of ones.
-Job ones() is defined as the following:
-\begin{lstlisting}
-job ones(N, M) {
-    @zeros(N, M) + 1.
-}
+[x] <- load("path/to/file").
 \end{lstlisting}
 \medskip
 
-\subsection{eye()}
-Keyword eye(n) returns the identity n-by-n matrix.
+\subsection{save()}
+Job save() saves a matrix X to a file.
 \begin{lstlisting}
-Y <- eye.
-\end{lstlisting}
-
-$Y <- eye(10).$ returns a 10-by-10 matrix with 1's on the diagonal and 0's elsewhere.
-Job eye() is defined as the following:
-\begin{lstlisting}
-job eye(N) {
-    @zeros(N, N) + eye.
-} 
+save("path/to/file", X).
 \end{lstlisting}
 \medskip
 
-\subsection{rand()}
-Keyword rand(n, m) generates a n-by-m matrix of random numbers whose elements are
-uniformly distributed in the interval (0,1).
+\subsection{transpose()}
+Job transpose() returns the transpose of a matrix.
 \begin{lstlisting}
-Y <- rand(10, 20).
-rand
-\end{lstlisting}
-
-Y <- rand(10, 20). returns a 10-by-20 matrix of random entries.
-
-Job rand() is defined as the following:
-\begin{lstlisting}
-job rand(N, M) {
-    @zeros(N, M) + rand.
-} 
+B = transpose(A).
 \end{lstlisting}
 \medskip
 
-\subsection{bind()}
-Job bind() concatenates matrices horizontally.
+\subsection{ucol()}
+Job ucol() takes a matrix of one column and makes it behave as if it has infinite
+columns, where all the columns are the same as the one column.
 \begin{lstlisting}
-C <- bind(A,B).
+B = C - ucol(A).
 \end{lstlisting}
-
-$C <- bind(A,B).$ concatenates the matrices A and B horizontally.
 \medskip
 
-\subsection{vbind()}
-Job vbind() concatenates matrices vertically.
+\subsection{urow()}
+Job urow() takes a matrix of one row and makes it behave as if it has infinite
+rows, where all the rows are the same as the one rows.
 \begin{lstlisting}
-C <- vbind(A,B).
+B = C - urow(A).
 \end{lstlisting}
-
-$C <- vbind(A,B).$ concatenates the matrices A and B vertically.
 \medskip
 
-\subsection{eig()}
-Job eig() returns a vector of the eigenvalues of matrix.
+\subsection{rowsum()}
+Job rowsum() returns a column of the sums of a row of a matrix.
 \begin{lstlisting}
-D <- eig(A).
+B <- rowsum(A).
 \end{lstlisting}
 
-$d <- eig(A)$ returns a vector of the eigenvalues of matrix A.
-\medskip
+$D <- rowsum(A).$ returns the sum of the rows of elements.
 
-\subsection{max()}
-Job max() returns the largest elements of a matrix.
-\begin{lstlisting}
-C <- max(A).
-\end{lstlisting}
-
-$D <- max(A).$ returns the largest element in A.
-\medskip
-
-\subsection{mean()}
-Job mean() returns the mean values of the elements of a matrix.
-\begin{lstlisting}
-M <- mean(A).
-\end{lstlisting}
-
-$D <- mean(A).$ returns the mean value of A.
-\medskip
-
-\subsection{min()}
-Job min() returns the smallest elements of a matrix.
-\begin{lstlisting}
-C <- min(A).
-\end{lstlisting}
-
-$D <- min(A).$ returns the smallest element in A.
-\medskip
-
-\subsection{sum()}
-Job sum() returns sums of a matrix.
-\begin{lstlisting}
-B <- sum(A).
-\end{lstlisting}
-
-$D <- sum(A).$ returns the sum of the elements.
-\medskip
 
 \subsection{abs()}
 Job abs() returns the absolute value.

@@ -37,6 +37,7 @@ public class BuiltinTable {
 		matrixTable.put("ones", new UnboundOnes());
 		matrixTable.put("zeros", new UnboundZeros());
 		matrixTable.put("eye", new UnboundEye());
+		matrixTable.put("rand", new UnboundRand());
 	}
 
 	public static boolean existJob(String name) {
