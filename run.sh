@@ -1,7 +1,5 @@
 #!/bin/bash
 
-GEN_BYTECODE=1
-
 INPUT=$*
 [ $# -lt 1 ] && INPUT=test/input/multi_jobs.mipl
 
@@ -12,24 +10,10 @@ rm -f build/MiplProgram.class
 
 i=1
 
-echo "$i. build the project"
-#ant
-
-i=`expr $i + 1`
-echo "$i. Compile the sample program into java source with MIPL compiler"
-#java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/hello.mipl
-#java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/hanoi.mipl 
-#java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/regex.mipl
-#java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/classification.mipl
-#java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/multi_return.mipl
-#java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/frq.mipl
-#java -cp build edu.columbia.mipl.Main -output MiplProgram test/input/while.mipl
+i=`expr $i`
+echo "$i. Compile the sample program"
 
 java -ea -esa -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main -output MiplProgram $INPUT
-
-# Interpreter mode
-#java -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main test/input/hello.mipl
-#java -cp build:./lib/bcel-5.2.jar edu.columbia.mipl.Main test/input/while.mipl
 
 [ -e build/MiplProgram.java ] && i=`expr $i + 1` && echo "$i. compile the java source" && javac -cp build build/MiplProgram.java
 
