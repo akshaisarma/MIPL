@@ -42,7 +42,7 @@ public class InterpreterTest extends TestCase {
 		String[] inputFiles = new File(testInputPath).list();
 
 		for (int i = 0; i < inputFiles.length; i++) {
-			if (inputFiles[i].startsWith("."))
+			if (inputFiles[i].startsWith(".") || inputFiles[i].startsWith("pagerank.mipl"))
 				continue;
 
 			boolean result = true;
