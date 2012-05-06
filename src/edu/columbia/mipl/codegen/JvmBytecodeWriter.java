@@ -520,44 +520,45 @@ public class JvmBytecodeWriter extends InstructionWriter {
 	    il.append(_factory.createStore(Type.OBJECT, jobRetVar));
 	    
 	    BranchInstruction if1 = null;
+	    	    	    	   
 	    if (namesSize == 0) {
-	    	// TODO
-	    	assert (false);
+	    	il.append(_factory.createLoad(Type.OBJECT, jobRetVar));
+	    	if1 = _factory.createBranchInstruction(Constants.IFNULL, null);
+	    	il.append(if1);
 	    }
-	    else {	    	
-		    il.append(_factory.createLoad(Type.OBJECT, jobRetVar));
+	    else {
+	    	il.append(_factory.createLoad(Type.OBJECT, jobRetVar));
 		    il.append(_factory.createInvoke("java.util.List", "size", Type.INT, Type.NO_ARGS, Constants.INVOKEINTERFACE));
 		    il.append(new PUSH(_cp, namesSize));
 		    if1 = _factory.createBranchInstruction(Constants.IF_ICMPEQ, null);
 		    il.append(if1);
-		    il.append(_factory.createNew("edu.columbia.mipl.runtime.execute.UnmatchedNumberOfReturenException"));
-		    il.append(InstructionConstants.DUP);
-		    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.execute.UnmatchedNumberOfReturenException", "<init>", Type.VOID, Type.NO_ARGS, Constants.INVOKESPECIAL));
-		    il.append(InstructionConstants.ATHROW);
-		    
-		    InstructionHandle dst1 = null;
-		    for (int i = 0; i < namesSize; i++) {
-		        InstructionHandle ih = il.append(_factory.createLoad(Type.OBJECT, 3));
-		        if (dst1 == null)
-		        	dst1 = ih;
-		        il.append(_factory.createNew("edu.columbia.mipl.runtime.Fact"));
-		        il.append(InstructionConstants.DUP);
-		        il.append(_factory.createNew("edu.columbia.mipl.runtime.Term"));
-		        il.append(InstructionConstants.DUP);
-		        il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "MATRIX", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));
-		        il.append(new PUSH(_cp, names.get(i)));
-		        il.append(_factory.createLoad(Type.OBJECT, jobRetVar));
-		        il.append(new PUSH(_cp, i));
-		        il.append(_factory.createInvoke("java.util.List", "get", Type.OBJECT, new Type[] {Type.INT}, Constants.INVOKEINTERFACE));
-		        il.append(_factory.createCheckCast(new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")));
-		        il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Type.STRING, new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESPECIAL));
-		        il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Fact", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term")}, Constants.INVOKESPECIAL));
-		        il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Program", "add", Type.BOOLEAN, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Command")}, Constants.INVOKEVIRTUAL));
-		        il.append(InstructionConstants.POP);
-		    }
-		    
-		    if1.setTarget(dst1);
+	    }	    
+
+	    il.append(_factory.createNew("edu.columbia.mipl.runtime.execute.UnmatchedNumberOfReturenException"));
+	    il.append(InstructionConstants.DUP);
+	    il.append(_factory.createInvoke("edu.columbia.mipl.runtime.execute.UnmatchedNumberOfReturenException", "<init>", Type.VOID, Type.NO_ARGS, Constants.INVOKESPECIAL));
+	    il.append(InstructionConstants.ATHROW);
+	    
+	    InstructionHandle dst1 = il.append(new NOP());
+	    for (int i = 0; i < namesSize; i++) {
+	        il.append(_factory.createLoad(Type.OBJECT, 3));
+	        il.append(_factory.createNew("edu.columbia.mipl.runtime.Fact"));
+	        il.append(InstructionConstants.DUP);
+	        il.append(_factory.createNew("edu.columbia.mipl.runtime.Term"));
+	        il.append(InstructionConstants.DUP);
+	        il.append(_factory.createFieldAccess("edu.columbia.mipl.runtime.Term$Type", "MATRIX", new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Constants.GETSTATIC));
+	        il.append(new PUSH(_cp, names.get(i)));
+	        il.append(_factory.createLoad(Type.OBJECT, jobRetVar));
+	        il.append(new PUSH(_cp, i));
+	        il.append(_factory.createInvoke("java.util.List", "get", Type.OBJECT, new Type[] {Type.INT}, Constants.INVOKEINTERFACE));
+	        il.append(_factory.createCheckCast(new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")));
+	        il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Term", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term$Type"), Type.STRING, new ObjectType("edu.columbia.mipl.datastr.PrimitiveType")}, Constants.INVOKESPECIAL));
+	        il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Fact", "<init>", Type.VOID, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Term")}, Constants.INVOKESPECIAL));
+	        il.append(_factory.createInvoke("edu.columbia.mipl.runtime.Program", "add", Type.BOOLEAN, new Type[] {new ObjectType("edu.columbia.mipl.runtime.Command")}, Constants.INVOKEVIRTUAL));
+	        il.append(InstructionConstants.POP);
 	    }
+	    
+	    if1.setTarget(dst1);
 	    
 	    resetDeclarationList();
 	}
