@@ -36,19 +36,20 @@ public class CompilerTest extends TestCase {
 		this.runtime = Runtime.getRuntime();
 	}
 
-	public boolean testExecutionSuccess(String mainCommand) throws java.io.IOException, java.lang.InterruptedException {
+	public void testJavaSource() throws java.io.IOException, java.lang.InterruptedException {
 		String[] inputFiles = new File(testInputPath).list();
 		String output;
 		DataInputStream outputEater, errorEater;
 
+		System.out.println("\nTesting Java Source: \n");
 		boolean success = true;
 		for (int i = 0; i < inputFiles.length; i++) {
-			if (inputFiles[i].startsWith("."))
+			if (inputFiles[i].startsWith(".") || inputFiles[i].startsWith("pagerank.mipl"))
 				continue;
 			
 			boolean result = true;
 
-			Process mainOfMIPL = runtime.exec(mainCommand + testInputPath + "/" + inputFiles[i]);
+			Process mainOfMIPL = runtime.exec(miplMainCommand + testInputPath + "/" + inputFiles[i]);
 			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
 			errorEater = new DataInputStream(mainOfMIPL.getErrorStream());
 			while ((output = outputEater.readLine()) != null)
@@ -87,16 +88,52 @@ public class CompilerTest extends TestCase {
 			if (result)
 				System.out.println(inputFiles[i] + " passed.");
 		}
-		return success;
+		assertTrue(success);
 	}
 
-	public void	testJavaSource() throws java.io.IOException, java.lang.InterruptedException {
-		System.out.println("\nTesting Java Source: \n");
-		assertTrue(testExecutionSuccess(this.miplMainCommand));
-	}
 
 	public void testByteCode() throws java.io.IOException, java.lang.InterruptedException {
-		System.out.println("\nTesting JVM ByteCode: \n");
-		assertTrue(testExecutionSuccess(this.miplMainCommand.replace("JavaSrc", "ByteCode")));
+		String[] inputFiles = new File(testInputPath).list();
+		String output;
+		DataInputStream outputEater, errorEater;
+
+		System.out.println("\nTesting JVM Byte: \n");
+		boolean success = true;
+		for (int i = 0; i < inputFiles.length; i++) {
+			if (inputFiles[i].startsWith(".") || inputFiles[i].startsWith("pagerank.mipl"))
+				continue;
+			
+			boolean result = true;
+
+			miplMainCommand = miplMainCommand.replace("JavaSrc", "Bytecode");
+
+			Process mainOfMIPL = runtime.exec(miplMainCommand + testInputPath + "/" + inputFiles[i]);
+			outputEater = new DataInputStream(mainOfMIPL.getInputStream());
+			errorEater = new DataInputStream(mainOfMIPL.getErrorStream());
+			while ((output = outputEater.readLine()) != null)
+				;
+			while ((output = errorEater.readLine()) != null)
+				System.out.println(output);
+			result &= (mainOfMIPL.waitFor() == 0);
+			if (!result)
+				System.out.println(inputFiles[i] + " failed while compiling MIPL Source in Compiler Mode.");
+			success &= result;
+
+			Process runTarget = runtime.exec(runCompiledInputCommand);
+			outputEater = new DataInputStream(runTarget.getInputStream());
+			errorEater = new DataInputStream(runTarget.getErrorStream());
+			while ((output = outputEater.readLine()) != null)
+				;
+			while ((output = errorEater.readLine()) != null)
+				System.out.println(output);
+			result &= (runTarget.waitFor() == 0);
+			if (!result)
+				System.out.println(inputFiles[i] + " failed while running compiled (straight to ByteCode) in Compiler Mode.");
+			success &= result;
+
+			if (result)
+				System.out.println(inputFiles[i] + " passed.");
+		}
+		assertTrue(success);
 	}
 }

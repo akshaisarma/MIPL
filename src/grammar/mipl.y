@@ -239,10 +239,13 @@ relational_expr
 	;
 
 boolvalue_expr
-	: TRUE
-	| FALSE
-	| '(' bool_expr ')'		{ $$ = $2; }
+	: '(' bool_expr ')'		{ $$ = $2; }
 	;
+//	: TRUE
+//	| FALSE
+//	| '(' bool_expr ')'		{ $$ = $2; }
+//	;
+
 
 additive_expr
 	: multiplicative_expr				/* Default Action $$ = $1 */
@@ -272,20 +275,20 @@ primary_expr
 	| NUMBER				{ $$ = new JobExpr(JobExpr.Type.TERM, new Term(Term.Type.NUMBER, (Double) $1)); }
 	| '(' expr ')'			{ $$ = $2; }
 	;
-/*
-array_idx_elmt
-	: '~'					{ $$ = new ArrayIndex(0, true); }
-	| '~' NUMBER			{ $$ = new ArrayIndex(0, (long) (double) (Double) $2); }
-	| NUMBER				{ $$ = new ArrayIndex((long) (double) (Double) $1); } 
-	| NUMBER '~'			{ $$ = new ArrayIndex((long) (double) (Double) $1, true); }
-	| NUMBER '~' NUMBER		{ $$ = new ArrayIndex((long) (double) (Double) $1, (long) (double) (Double) $3); }
-	;
+//
+//array_idx_elmt
+//	: '~'					{ $$ = new ArrayIndex(0, true); }
+//	| '~' NUMBER			{ $$ = new ArrayIndex(0, (long) (double) (Double) $2); }
+//	| NUMBER				{ $$ = new ArrayIndex((long) (double) (Double) $1); } 
+//	| NUMBER '~'			{ $$ = new ArrayIndex((long) (double) (Double) $1, true); }
+//	| NUMBER '~' NUMBER		{ $$ = new ArrayIndex((long) (double) (Double) $1, (long) (double) (Double) $3); }
+//	;
 
-array_idx_list
-	: array_idx_elmt			{ $$ = new ArrayList<ArrayIndex>(); ((List<ArrayIndex>) $$).add((ArrayIndex) $1); }
-	| array_idx_list ',' array_idx_elmt	{ $$ = $1; ((List<ArrayIndex>) $$).add((ArrayIndex) $3); }
-	;
-*/
+//array_idx_list
+//	: array_idx_elmt			{ $$ = new ArrayList<ArrayIndex>(); ((List<ArrayIndex>) $$).add((ArrayIndex) $1); }
+//	| array_idx_list ',' array_idx_elmt	{ $$ = $1; ((List<ArrayIndex>) $$).add((ArrayIndex) $3); }
+//	;
+//
 postfix_expr
 	: primary_expr							/* Default Action $$ = $1 */
 //	| VARIABLE '[' array_idx_list ']' '[' array_idx_list ']'	{ $$ = new JobExpr(JobExpr.Type.ARRAY, new Term(Term.Type.VARIABLE, (String) $1), 		(List<ArrayIndex>) $3, (List<ArrayIndex>) $6); }

@@ -49,11 +49,15 @@ System Validation: Akshai Sarma $<as4107@columbia.edu>$
 }
 
 \begin{abstract}
-MIPL is a language for Data Mining which provides methods to 
-implement various sophisticated matrix-based algorithms and 
-to retrieve the computed data easily by offering a novel,
-convenient way that converts matrices into a set of Facts
-and vice versa.
+MIPL is a language geared toward use in the rapidly developing Data Mining field. The MIPL 
+language provides a rich syntax that supports easy expression of 
+commonly used idioms in Data Mining applications and is modular
+enough to enable users with various degrees of proficiency in
+Data Mining to write sophisticated algorithms and queries quickly.
+Some key features of MIPL include a logic based data retrieval and
+computation mechanism inspired by Prolog, built-in matrix and matrix operation
+support, multiple return values from functions, a backend that uses MapReduce
+for parallel and efficient computation on very large datasets, among others.
 \end{abstract}
 
 %\category{C.2.2}{Computer-Communication Networks}{Network Protocols}
@@ -81,7 +85,7 @@ and vice versa.
 
 \section{Introduction}
 
-Mining Integrated Programming Language (MIPL) is a programming language
+The Mining Integrated Programming Language (MIPL) is a language
 that provides a very simple, easy way for the users to use Data Mining
 algorithms and retrieve data from their computations. At the same time, 
 MIPL also enables developers to easily design these algorithms with 
@@ -89,8 +93,8 @@ explicit support for working with large matrices and matrix operations.
 
 Algorithm developers work with MIPL's Job interface, where MIPL allows
 for programming constructs, such as conditionals and iterations, with
-support for working with matrices. A Job can be likened to a traditional
-function but focused toward MIPL's target audience: data miners. The JOB 
+support for working with matrices and native matrix operations. A Job can be likened to a traditional
+function but focused toward MIPL's target audience: data miners. The Job 
 interface sports novel concepts such as returning more than one value.
 Furthermore, algorithms developed as a Job are automatically distributed 
 and accelerated on the computer clusters and hardware accelerators through
@@ -105,6 +109,9 @@ concept in MIPL is that Facts in the FRQ can be converted to matrices
 in Job and vice versa, connecting the simple interface of the FRQ with
 Job.
 
+The white paper presents a general overview of the features one may find
+in MIPL.
+
 \medskip
 
 % Head 1
@@ -114,13 +121,13 @@ expression operators, and other separators.  In general blanks, tabs,
 newlines, and comments as described below are ignored except to
 serve as token seperators. At least one of these characters is required
 to separate otherwise adjacent identifiers, constants, and certain
-operatorpairs.  If the input stream has been parsed into tokens up
+operator pairs.  If the input stream has been parsed into tokens up
 to a given character, the next token is taken to include the longest
 string of characters which could possibly constitute a token.
 
 In MIPL, an identifiers is a word that starts with a lower case alphabet
 and a variable is a word that starts with a upper case alphabet.  For
-example, cat is a indentifier and Name is a variable.
+example, cat is a identifier and Name is a variable.
 \medskip
 
 % Head 2
@@ -135,7 +142,8 @@ MIPL uses shell script-like comments, which begins with the character
 
 An Identifier is a sequence of letters that begins with lower case alphabets.
 Upper and lower case letters are considered different.   Identifiers are
-served for use as the name of Terms, the basic block of MIPL syntax.
+served for use as the name of Terms, the basic block of MIPL syntax, which 
+are used to define various Facts, Jobs, Queries and Rules..
 \medskip
 
 \subsection{Variables}
@@ -145,12 +153,13 @@ or the underscore character, \_, which means that this variable will not
 be tracked.  Upper and lower case letters in the variable names are
 considered different. A Variable is used for convenience sake, to distinguish
 it from an identifier. A Variable always has a location value, while identifiers
-can refer to Facts in the FRQ or bindings.
+can refer to Facts in the FRQ or bindings. This convention has been adopted from 
+Prolog to distinguish it from identifiers.
 \medskip
 
 \subsection{Numbers}
 
-A number in MIPL can be integeres or floating point numbers.  A number consists of
+A number in MIPL can be integers or floating point numbers.  A number consists of
 an integer part, a decimal point, a fractional part, an e or E, and a signed 
 integer exponent. The integer and fraction parts both consist of sequences of decimal
 digits.
@@ -172,19 +181,25 @@ Expression Operators are explained in detail Built-in Operators and Jobs section
 \section{Data Types}
 
 \subsection {Term}
-Term is the only data type for Facts, Rules, and Queries.  Numbers, Strings,
-Facts, Rules, Queries and even Terms are recursively defined in a form of a Term. 
-Variables in a Term can contain a Term and their scope is within the Command.
-\medskip
+A Term is the only data type for Facts, Rules, and Queries.  Numbers, Strings,
+Facts, Rules, Queries and even other Terms are recursively defined in a form of a Term. 
+The scope of a term is within the Command, as defined below in the grammar.
 
 \subsection {Job Types}
-Unlike the FRQ part of MIPL, a Job has two primitive types, Matrix and
-Number, which can both be computed within a Job description. MIPL strictly
-distinguish boolean expressions from numeric expressions, so boolean can be
+Within a Job, however, there are three  data types. They include numbers of double precision, integers, booleans and
+matrices. MIPL strictly distinguishes boolean expressions from numeric expressions, so boolean can be
 considered another primitive type, however it is not visible to the users
-as there is no variables that can contain boolean values.  Variables in a
-Job can contain a Number or a Matrix and their scope is within the Job
-definition.
+as there are no variables that can contain boolean values. Booleans are defined in MIPL by relational and logical expressions, while doubles,
+integers and matrices are represented as Variables. Thus, the basic data types in a Job are represented by Variables 
+and implicit boolean expressions. Numbers can also be used as constants
+within the source. Matrices can be loaded from files in the common CSV (Comma Separated Value)
+or Table format. Matrices can also be defined from Facts, where a collection of facts with the
+same identifier is represented as a Matrix with their contents (if they are numbers)
+becoming the rows of the matrix in the order they were defined. 
+
+The scope of all these data types is within the Job body. MIPL follows the same conventions as C or Java with regard
+to block statements and scope, which is, a reference is toward the nearest nested Variable.
+\medskip.
 
 \section{Syntax}
 
@@ -200,18 +215,19 @@ program
 \end{lstlisting}
 
 In other words, a MIPL program consists of commands, where commands can contain multiple 
-commmands again.
+commmands again. As mentioned above, the scope of a Term is within in such a command.
 
-MIPL can run in an interpreter mode or can compile, much like Python or Prolog. A command
-is the basic unit for MIPL and directly maps to a line in the interpreter mode in MIPL.
+MIPL can run in an interpreter mode, an interactive mode or can compile, much like Python or Prolog. A command
+is the basic unit for MIPL and directly maps to a line in the interpreter and interactive mode in MIPL.
 More specifically, when the user writes a command to the
-input terminal, the command is executed right away by the interpreter,
+input terminal, the command is executed right away in the Interactive mode,
 whereas the compiler generates target machine code so that it can be
-executed by running the generated target machine code.  However, the
+executed by running the generated target machine code. The Interpreter mode simply takes a MIPL file and runs
+it without compiling it from the intermediate code. However, the
 results from the same MIPL program are always identical regardless of
-whether it is executed by the interpreter or through compiled code.
+the mode.
 
-Here is a sample MIPL program:
+Here is a sample MIPL program that doesn't necessarily do anything:
 
 \begin{lstlisting}
 job countPositive(A, SizeOfA) {
@@ -250,8 +266,10 @@ shows that $countPositive\{\}$ includes several other commands.
 
 \subsection{Command}
 
-In MIPL, there are four types of commands: $fact$, $query$, $rule$, and $job$.
-TODO: mention about INCLUDE
+In MIPL, there are five types of commands: $fact$, $query$, $rule$, $job$ and $include$.
+The $include$ command is used to insert another MIPL program into the source of the 
+current one. The semantics of this operation is the same as copying and pasting the
+text of the other MIPL program into the current one. It serves as a modularizing mechanism.
 
 \begin{lstlisting}
 command
@@ -301,21 +319,25 @@ cat(tom).
 mouse(jerry), mouse(mickey).
 \end{lstlisting}
 
-A $fact$ can be Term, which is terminated with a $"."$. A $fact$ is used to
+A $fact$ can be a Term, which is terminated with a $"."$. A $fact$ is used to
 describe or define a Fact (which expresses some statement in the context
-of the application) in MIPL, or to process a Job. There are two kinds of
+of the application) in MIPL, or to process a Job. A $fact$ can have arity, similar to a function
+definition and can be semantically seen as a relationship between the various arguments that satisfies
+the body of the $fact$, the identifier. Similar to logic programming, 
+a fact defines a construct that is "true" from the programmer's perspective. For instance, cat(tom). is a 
+$fact$ that can represent the fact that tom, the name of some entity, is the animal cat. There are two kinds of
 Facts: static and dynamic Facts. A static Fact is a Term that is terminated
-with $"."$. A dynamic Fact is a Term that is wrapped in $[ ]$, and as part
+with $"."$. A dynamic Fact are identifiers (thus all facts should start with a lowercase letter) wrapped in $[ ]$, and as part
 of its definition, a dynamic Fact calls a Job to process data. The semantics
-of the $jobcall$ are exactly the same as the dicussion in \ref{Job_PostFix_Expression}
-and it is not duplicated here. A $fact$ should start with a lowercase letter.
-TODO: nested jobcall above was removed from jobcall\_args\_cand
+of the $jobcall$ are similar to the dicussion in \ref{Job_PostFix_Expression}
+and it is not duplicated here. However, a primary  simplifying difference is that
+the $jobcall$ may not contain nested calls to other jobs.
 \medskip
 
 \subsubsection{Query}
 \begin{lstlisting}
 query
-	: or_terms `?'		
+	: term `?'		
 	;
 \end{lstlisting}
 
@@ -332,7 +354,9 @@ weighted_grade(86, 99, 32).
 weighted_grade(*)? # Returns 86, 99, 32
 \end{lstlisting}
 
-A $query$ is terminated with a $"?"$. A $query$ operates on an OR Term. A $query$ 
+A $query$ is terminated with a $"?"$. A query is semantically equivalent to finding 
+(and printing their values to the standard output) if there are
+any facts that match the body of the query.A $query$ operates on a Term. A $query$ 
 are applied to Facts and Rules. Even if there are no direct matched Facts, Rules
 can be used to derive new Facts to determine the result of a Query. A $query$ to 
 a Fact returns $true$ or $false$ if the Query contains only identifiers. A $query$ 
@@ -341,6 +365,33 @@ Variables. If the Fact contains multiple  arguments, then the Query can contain 
 as the query argument to show all bindings, regardless of the number of arguments, 
 whereas using Queries with Variables will require specifying the same number of 
 Variables as arguments of the Fact.
+
+MIPL provides regular expression support in queries. Semantically, all facts that match 
+the regular expression are returned. As above, a query with *, disregards the arity of the
+$fact$ and simply matches all facts with the same identifier in the body.
+
+A Query may not contain any of the the following terms. In other words, queries cannot
+contain terms that are or have expressions. This is a natural requirement as queries 
+are toward facts and computation is not defined on facts.
+
+Since a query may not contain logical operations, MIPL provides an alternative mechanism for 
+asking queries on multiple constructs. For instance, one may wish to query the results of two 
+dynamic facts. Using the $rule$ construct below, the two or more constructs that one wishes to 
+query about are linked with logical connectors in any manner required. The query on that rule term
+then retrieves the appropriate results.
+
+\begin{lstlisting}
+term	
+	| term_expr		
+	| VARIABLE IS term_expr
+	| term_expr `<' term_expr
+	| term_expr `>' term_expr
+	| term_expr LE_OP term_expr
+	| term_expr GE_OP term_expr
+	| term_expr EQ_OP term_expr
+	| term_expr NE_OP term_expr
+	;
+\end{lstlisting}
 \medskip
 
 \subsubsection{Rule}
@@ -365,8 +416,10 @@ The body of the Rule contains $or\_terms$. For evaluating a Rule to generate a F
 MIPL implements short circuit evaluation. If any of the constituent compounds in
 $or\_terms$ evaluates to True, then MIPL stops and generates the Fact matching the
 left side of the rule. To the left of the LARROW\_OP is the rule, which is a $term$. 
-If the right of the rule operator is a Job, the left Term should be a dynamic Fact, 
-as described above.
+The right of the rule operator cannot have jobs.
+
+An important use of the $rule$ is to allow queries to operate on multiple results connected 
+with logical connectors (OR, AND, NOT).
 \medskip
 
 \subsection{Terms}
@@ -422,7 +475,8 @@ given IDENTIFIER.
 \medskip
 
 For defining a Query, Term can be used with argument lists, which are expressed by
-$(\ term\_args\ )$. To query all data, Term can be used with an asterisk, which
+$(\ term\_args\ )$. As mentioned above, to query all facts with all arities that match, 
+a Term can be used with an asterisk, which
 is expressed by $*$. Also, Term can be a regular expression in MIPL; however,
 Term as a regular expression can be only used in Query. All terms matched by the
 regular expression will be queried with the given argument lists.
@@ -434,7 +488,7 @@ As an extension of this, Term Expressions can be assigned to Variables,
 by $VARIABLE\ IS\ term_expr$.
 \medskip
 
-In addition, comparison operators with Term expressions are also Term. There are six
+In addition, comparison operators with Term expressions are also terms. There are six
 comparison operatros can be used in Term: $<, >, <=, >=, ==, !=$. LE\_OP refers $<=$,
 GE\_OP refers $>=$, EQ\_OP refers $==$, and NE\_OP refers $!=$.
 \medskip
@@ -451,7 +505,7 @@ term_expr
 	;
 \end{lstlisting}
 
-Term Expression is an expression which belongs to a Term.  Term 
+Term Expression is an expression which can define a Term.  Term 
 Expressions can consist of binary operators `+' and `-' along with Term
 Factors. These two operators left-associate Term Facts so that Term
 Factors within a Term Expression can be computed with a left priority.
@@ -517,7 +571,7 @@ term_args
 
 \end{lstlisting}
 
-Term Argument Candidate is an Identifier, a Variable, an Anonymous
+A Term Argument Candidate is an Identifier, a Variable, an Anonymous
 Variable, a Number, or a String.  An Identifier can have one
 or more arguments within a pair of parentheses or no arguments.
 This arguments again consist of Term Argument Candidates, which
@@ -525,13 +579,16 @@ allows a recursive form of argument definition.  For instance,
 $com(monitor, board(cpu, ram(4, 4)), P)$ is a valid form
 of a Term declaration.
 
-Term Argument List is used for Term definition. Hence, Term
+An Anonymous Variable is used when the actual variable is not used in the 
+body of the defining construct (fact, rule etc.)
+
+A Term Argument List is used for Term definition. Hence, Term
 Argument List can be a part of the declarations of Facts, Rules,
 and Queries.  Sharing the same type of argument list for the
 declarations of FRQs is possible because there are no type and
 variable declarations in MIPL.  Thus, a Job definition and
-a Job-calling Fact basically have the same argument list.
-Also, MIPL's Job definitions allows variable numbers of return
+a Job-calling dynamic Fact basically have the same argument list.
+Also, since, MIPL's Job definitions allows variable numbers of return
 values dynamically, the generated program
 checks if the numbers of return values from Job and the numbers of
 Fact names are matched.  Otherwise, a run-time error is generated.
@@ -551,21 +608,29 @@ job_args
 \end{lstlisting}
 
 \label{Job_Section}
-Job is MIPL's basic operation that provides matrix operations.
-Job is a function-like task, with no nested definitions, no
-overloading of definition, or generic types supported. Job uses
+A Job is MIPL's basic operation that provides matrix operations and 
+defines powerful computations on data. While the FRQ is an abstract,
+simple interface for performing logical operations, a Job is MIPL's 
+way of providing computation.
+
+A Job is a function-like task, with no nested definitions of other Jobs and no
+overloading of definitions. Job uses 
 positional parameter passing with call-by-value.  A Job
-definition starts with the keyword JOB. It denotes a number of variables and a set of Job
+definition starts with the keyword $job$. It denotes a number of variables and a set of Job
 Statements.  At runtime, a compiled Job is distributed over
 a MapReduce clusters, computed, and delivered to the user. For
 example, when a user loads two matrices and calls a Job giving those
 matrices, the matrices are split into several smaller matrices,
-distributed to MapReduce clusters, and computed.
+distributed to MapReduce clusters, and computed. Note that MIPL does not
+actually load the matrices. In fact, the call-by-value is satisfied because 
+only the string represented by the path of the Matrix file is passed. In this 
+way, MIPL is lazy and does not load the matrix (which in Data Mining applications) 
+can be very large, until it needs to use it.
 
 Job Arguments play a role in passing data from Facts to Job, by
 delivering number values and converting Facts into matrices
 so that the Job computes the number values and the matrices by
-the algorithm described in the Job.
+the computation described in the Job.
 \medskip
 
 \subsection{Job Statement}
@@ -612,7 +677,9 @@ compound_stmt
 
 Job Compound Statement is a Job Statement, which includes
 zero or more Job Statements, surrounded by a pair of curly
-brackets.
+brackets. As mentioned previously, scope in compound statements
+is similar to languages like C, where the nearest nested reference 
+is taken.
 \medskip
 
 \subsubsection{Job Return Statement}
@@ -626,16 +693,17 @@ return_stmt
 
 Job Return Statement is a sentence that returns a matrix.  Since
 Job is likely executed on MapReduce clusters (unless configured
-so or the matrix size is smaller than configured threshold), Job
+so or the matrix size is smaller than configured threshold), a Job
 Return Statement fetches the matrix.  The most interesting part
 in MIPL with regard to Job Return Statement is a Job can contain
-more than on Job Return Statement for returning values more than
-one.  Accordingly, as a Job can contain a number of Job Selection
+more than on Job Return Statement for returning multiple values. 
+Accordingly, as a Job can contain a number of Job Selection
 Statements and Job Iterative Statements, the combination of those
 allows a Job to return variable numbers of return values. This is
 possible because Job Return Statement does not ``return" immediately,
-when its program counter meets Job Return Statement.  Instead, a
-MIPL program keeps executing passing that Job Return Statement.
+when its execution meets Job Return Statement.  Instead, a
+MIPL program keeps executing, passing that Job Return Statement till
+it finishes all possible computations within the Job.
 For example, below MIPL program returns three matrix values.  If
 the given number of names for return values are not matched to the
 number of values the actual Job returns, MIPL reports an error.
@@ -658,8 +726,8 @@ there's no acceptable Job Return Statement like $@.$, which some
 languages provide to flow control such as ``return;" in C.  The
 return operator $@$ is designed to deliver a matrix value from
 MapReduce clusters to the user.  When a user want to quit the Job
-in the mid of the Job, the user should use Job Control Statements
-such as If Statement to do so.
+in the mid of the Job, the user should use boolean expressions to
+end the computation.
 \medskip
 
 
@@ -672,7 +740,8 @@ expr_stmt
 \end{lstlisting}
 
 Job Expression Statement is a Job Statement that includes a Job
-Expression.  This allows users use Job Expressions in a Job.
+Expression.  This allows users use arithmetic and assignment expressions in a Job. 
+
 \medskip
 
 \subsubsection{Job Selection Statement}
@@ -690,7 +759,7 @@ the statements accordingly.  If the value of the Job Expression is
 true, the first Job Statement will be executed.  If the value of
 the expression is false and the ELSE statement is provided, this
 statement will be executed.  The IF ELSE syntax is ambiguous,
-however, by Yacc's default behavior, reduce precedes shift, which
+however, by Yacc's default behavior, shift is prioritized, which
 results in that the ELSE is associated with closer IF.
 \medskip
 
@@ -726,9 +795,10 @@ expr
 Job Expression is a grammatical unit that conveys a numeric value,
 which includes a matrix or a number.  Whether a Job Expression
 contains a matrix or a number is decided dynamically at runtime,
-as well as how big is the matrix, since MIPL is dynamic typed.
+as well as how big is the matrix, since MIPL is dynamic typed. Due
+to this, MIPL can throw dynamic runtime errors on type mismatches.
 
-Job Expressions assigns a numberic value to a Variable contained
+Job Expressions assigns a numeric value to a Variable contained
 at the left-hand side.  The value of Job Expression is the value
 newly assigned to the Variable.  This may relays multiple times,
 for example, $Variable1 = Variable2 = Variable3 = 3.$.
@@ -819,7 +889,14 @@ a matrix expression. As with the additive expressions, errors may be
 generated at run-time for incompatible operations. For instance, the
 multiplication of two matrices with incompatible number of rows and
 columns will result in an error.
-TODO: MUL\_CELL\_OP, DIV\_CELL\_OP, EXP\_CELL\_OP were added
+
+The cell operations for multiplication, division and exponentiation are 
+useful in data mining operations. As a result, MIPL supports these operations. Given two matrices of equal dimensions,
+a cell operation computes the resulting matrix where each entry in the result 
+is computed by the scalar operation of the corresponding cells. 
+
+The cell operation for multiplication is $.*$, division is $./$ and 
+exponentiation is $.^$.
 \medskip
 
 \subsubsection{Job Unary Expression}
@@ -843,7 +920,7 @@ unary_expr
 
 \subsubsection{Job PostFix Expression}
 
-A postfix expression is either a primary expression, an matrix access or 
+A postfix expression is either a primary expression, or 
 a Job call.
 
 \begin{lstlisting}
@@ -856,17 +933,11 @@ postfix_expr
 \label{Job_PostFix_Expression}
 
 A VARIABLE is like an IDENTIFIER but it begins with an uppercase letter,
-followed by lowercase or uppercase alphabets or underscore. A VARIABLE
-followed by two `[' and `]' is a matrix access. The matrix is accessed
-by subscripts, also known as the array index list, described in a later
-section. The subscripts correspond exactly to the two dimensional 
-interpretation of the matrix, where the the subscript within the first 
-set of square brackets refers to the row of the matrix while the second
-subscript refers to the corresponding pressure. The VARIABLE must refer 
-to a matrix type. Using array index lists, any subset of the matrix can be
-obtained. The result of this postfix expression can be a single value of
-the type of the matrix or any subset of the matrix.
-TODO: array index was removed
+followed by lowercase or uppercase alphabets or underscore. MIPL has 
+removed support for index based access of matrices due to its distributed
+nature on MapReduce clusters. Instead, the appropriate range can easy be 
+obtained with matrix operations, such as matrix multiplication with constant
+matrices with 0 and 1 placed to obtain exactly the required ranges.
 
 An IDENTIFIER followed by a set of paranthesis `(' and `)' is a Job
 invocation. A Job is defined according to \ref{Job_Section}. Only a defined
@@ -913,11 +984,11 @@ A VARIABLE is also a primary expression. A VARIABLE is used to denote
 data types with location values such as matrices in order to distinguish them 
 from IDENTIFIERS.
 
-TODO: NUMBER is replaced by numerical\_value.
-A NUMBER refers to a the decimal representation of a number and is also a 
+A numerical_value refers to a the decimal representation of a number and is also a 
 primary expression. Scientific notation is also supported, following the 
 E-notation. $10^{x}$ in scientific notation is simply written with either an
-`e' or an `E' followed by x.
+`e' or an `E' followed by x. A numerical_value serves as a wrapper for NUMBERS, in 
+order to support arbitrary insertions of the $-$ or negation operation.
 
 Finally, an expression enclosed with parantheses is also a primary expression 
 and the value of this expression is the same as if the parantheses did not 
@@ -943,9 +1014,11 @@ expression as described above in \ref{Expression_Section}.
 \subsection{Job Boolean Expression}
 
 Job Boolean Expression is a basic Expression that can be evaluated as
-true or false.  Job Selection Statement and Job Iteration Statement
+true or false.
+
+Job Selection Statement and Job Iteration Statement
 contains a Job Boolean Expression in order to determine whether to proceed
-or how many times to repeat.  Unlike C Programming Language, MIPL strictly
+or how many times to repeat.  Unlike the C Programming Language, MIPL strictly
 distinguish Job Boolean Expressions from Job Expressions as Job Boolean
 Expressions can be used only for conditions in Job Selection Statements
 and Job Iteration Statements.  Thus, a Job Boolean Expression cannot be
@@ -1058,15 +1131,17 @@ Expression evaluates to false.
 
 \begin{lstlisting}
 boolvalue_expr
-	: TRUE
-	| FALSE
 	| '(' bool_expr ')'
 	;
 \end{lstlisting}
 
-The character sequences TRUE and FALSE refer to the sequences ``true"
-and ``false" respectively.  Job BooleanValue Expression can be expanded
-to a nested Job Boolean Expression embraced with a pare of parentheses.
+Job BooleanValue Expression can be expanded
+to a nested Job Boolean Expression surrounded with a pair of parentheses.
+
+MIPL does not currently provide support for basic
+types such as true or false. One convention that can be followed for obtaining
+a true value is writing the boolean expression 0 == 0 and false by 0 == 1. 
+
 \medskip
 
 
