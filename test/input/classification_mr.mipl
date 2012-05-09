@@ -1,0 +1,34 @@
+# MIPL: Mining Integrated Programming Language
+#
+# File: classification.mipl
+# Author: Jin Hyung Park <jp2105@columbia.edu>
+# Reviwer: YoungHoon Jung <yj2244@columbia.edu>
+# Description: A MIPL program that shows the example of the classification
+#
+
+job classify(A, M, Ca, Cb, Cc) {
+    B = A - M.
+
+    B = B./abs(B).
+
+    Ba = B * Ca.
+    Bb = B * Cb.
+    Bc = B * Cc.
+
+    R = (Ba - 1)/2 + (Ba + 1)/2 .* Bb.
+    R = R/2 + Bc.
+
+    @R.
+}
+
+ca(1). cb(0). cc(0).
+ca(0). cb(1). cc(0).
+ca(0). cb(0). cc(1).
+
+# Temp, Rain(1 = No Rain, 0 = Rain), Girl Friend(1 = is comming, 0 = is not comming)
+a <- load("test/matrix/classfication_input.txt").
+m <- load("test/matrix/classfication_m.txt").
+
+[result] <- classify(a, m, ca, cb, cc).
+
+result(X)?
