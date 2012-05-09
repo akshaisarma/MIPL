@@ -42,8 +42,8 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 		paddedCol = getPaddedLength(col);
 
 		if (!padded) {
-			if (data != null && data.length != row * col)
-				assert (false);
+//			if (data != null && data.length != row * col)
+//				assert (false);
 		}
 		else if (data.length != paddedRow * paddedCol) {
 			assert (false);
@@ -147,13 +147,23 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 		int pos;
 		int offset = 0;
 
+//		System.out.println("printMatrix : " + row + "  " + col + " " + paddedRow + " " + paddedCol);
+		
+		System.out.println("data");
+		for (int i = 0; i < data.length; i++) {
+			System.out.print(data[i] + " " );
+			if ( (i+1) % paddedCol == 0) System.out.println();
+		}
+		
+		System.out.println();
 		for (int i = 0; i < row; ++i) {
 			pos = offset;
 			for (int j = 0; j < col; ++j) {
 				System.out.print(data[pos] + " ");
 				pos++;
 			}
-			offset += paddedRow;
+//			offset += paddedRow;
+			offset += paddedCol;
 			System.out.println("|");
 		}
 		System.out.println("----------------------------");
