@@ -20,7 +20,7 @@ import edu.columbia.mipl.runtime.execute.*;
 import edu.columbia.mipl.runtime.traverse.*;
 
 public class Main {
-	private static final String optString = "help;h version;v syntax;s interactive;i config;c: server;s: writer;w: output;o: remote;r";
+	private static final String optString = "help;h version;v syntax;x interactive;i config;c: server;s: writer;w: output;o: remote;r";
 
 	public static void main(String[] args) {
 		//Parser parser = new Parser(new Program(new SemanticChecker(), new ProgramExecutor())); // Interactive Mode
@@ -32,7 +32,9 @@ public class Main {
 		Map<String, String> optMap = new HashMap<String, String>();
 		int index = getOpt(args, optString, optMap);
 		if (index < 0) {
-			System.exit(1);
+			System.err.println("Unknown option");
+			showUsage();
+			System.exit(-1);
 		}
 		
 		// show usage
@@ -63,23 +65,23 @@ public class Main {
 			// interactive mode
 			Parser parser = new Parser(new Program(new SemanticChecker(), new ProgramExecutor()));
 		}
-		else {
+		else {			
 			if (index >= args.length) {
-				System.out.println("index =" + index + " length = " + args.length);
+//				System.out.println("index =" + index + " length = " + args.length);
 				showUsage();
-				System.exit(1);
+				System.exit(-1);
 			}
 			
 			String srcName = args[index];
 			
 			Parser parser = new Parser(srcName);
 			if (parser.getNumError() != 0) {
-				System.exit(1);
+				System.exit(-1);
 			}
 			
 			if (!parser.getProgram().traverse(new SemanticChecker())) {
-				System.out.println("SemanticChecker Error");
-				System.exit(1);
+				System.err.println("SemanticChecker Error");
+				System.exit(-1);
 			}
 			
 			// check only
@@ -171,8 +173,15 @@ public class Main {
 	}
 	
 	public static void showUsage() {
-		System.err.println("Usage: java edu.columbia.cs.mipl.Mipl [options] input.mipl");
-		System.err.println("      [options] : " + optString);
+		System.err.println("Usage: [PROGRAM] [options] [input]");
+		System.err.println("  -help : show usage (-h)");
+		System.err.println("  -version : print the current version (-v)");
+		System.err.println("  -syntax : syntax check only (-x)");
+		System.err.println("  -interactive : interactive mode (-i)");	
+		System.err.println("  -writer [javasrc/bytecode] : specify output file type (-w)");
+		System.err.println("  -output [filename] : specify output file name (-o)");
+		System.err.println("  -remote : remote computation (-r)");
+		System.err.println("  -server [address] : add a remote server (-s)");		
 	}
 	
 	public static void showVersion() {
