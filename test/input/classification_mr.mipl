@@ -26,8 +26,9 @@ ca(0). cb(1). cc(0).
 ca(0). cb(0). cc(1).
 
 # Temp, Rain(1 = No Rain, 0 = Rain), Girl Friend(1 = is comming, 0 = is not comming)
-a <- load("test/matrix/classfication_input.txt").
-m <- load("test/matrix/classfication_m.txt").
+a <- load("test/matrix/classification_input.txt").
+m <- load("test/matrix/classification_m.txt").
+a(*)?
 
 [result] <- classify(a, m, ca, cb, cc).
 
