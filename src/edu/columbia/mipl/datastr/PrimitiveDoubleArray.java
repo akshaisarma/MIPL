@@ -149,13 +149,6 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 
 //		System.out.println("printMatrix : " + row + "  " + col + " " + paddedRow + " " + paddedCol);
 		
-		System.out.println("data");
-		for (int i = 0; i < data.length; i++) {
-			System.out.print(data[i] + " ");
-			if ((i + 1) % paddedCol == 0) System.out.println();
-		}
-		
-		System.out.println();
 		for (int i = 0; i < row; ++i) {
 			pos = offset;
 			for (int j = 0; j < col; ++j) {
