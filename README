@@ -1,0 +1,26 @@
+###
+### HOW TO BUILD AND RUN MIPL PROGRAMS
+###
+
+1. Build MIPL compiler
+
+$ ant
+
+2. Compile an MIPL program
+
+$ ./miplc.sh [MIPL program] 
+# a corresponding class file will be produced in ./build directory.
+
+3. Run generated class file
+
+$ ./launch.sh
+
+[optional]
+
+2-1. Run an MIPL program directly without producing a class file.
+
+$ ./mipl.sh [MIPL program]
+
+2-2. Run MIPL interpreter.
+
+$ ./mipl.sh -i
