@@ -10,6 +10,10 @@ package edu.columbia.mipl.datastr;
 
 import java.util.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.*;
 
 class HashIndex {
@@ -24,7 +28,7 @@ class HashIndex {
 	public int getRow() {
 		return row;
 	}
-	
+
 	public int getCol() {
 		return col;
 	}
@@ -56,6 +60,10 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 
 	protected PrimitiveMatrix() {
 		status = Status.PM_STATUS_INVALID;
+	}
+	
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	/* SparseMatrix */
@@ -117,32 +125,57 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 			// throw new DataRequestedToSparseMatrix();
 			// or, transform into a full matrix
 			switch (status) {
-				case PM_STATUS_INVALID:
-					// error
-					break;
-				case PM_STATUS_URI_LOCAL:
-					loadMatrix();
-					break;
-				case PM_STATUS_URI_REMOTE:
-				case PM_STATUS_LOADED_FULL:
-//					new Exception("Not Implemented").printStackTrace();
-					// error
-					break;
-				case PM_STATUS_LOADED_SPARSE:
-					data = new PrimitiveDoubleArray(sparseRow, sparseCol);
-					status = Status.PM_STATUS_LOADED_FULL;
-					for (HashIndex hi : sparseList.keySet())
-						data.setValue(hi.getRow(), hi.getCol(), sparseList.get(hi));
-					break;
-				case PM_STATUS_UNBOUND_MATRIX:
-					// error
-					break;
+			case PM_STATUS_INVALID:
+				// error
+				break;
+			case PM_STATUS_URI_LOCAL:
+				loadMatrix();
+				break;
+			case PM_STATUS_URI_REMOTE:
+			case PM_STATUS_LOADED_FULL:
+				//					new Exception("Not Implemented").printStackTrace();
+				// error
+				break;
+			case PM_STATUS_LOADED_SPARSE:
+				data = new PrimitiveDoubleArray(sparseRow, sparseCol);
+				status = Status.PM_STATUS_LOADED_FULL;
+				for (HashIndex hi : sparseList.keySet())
+					data.setValue(hi.getRow(), hi.getCol(), sparseList.get(hi));
+				break;
+			case PM_STATUS_UNBOUND_MATRIX:
+				// error
+				break;
 			}
 
 		}
 		return data;
 	}
-	
+
+	public String duplicateMatrix() {
+		String newuri = "/tmp/temp_matrix_" + System.nanoTime();
+		try {
+
+			File from = new File(uri);
+			File target = new File(newuri);
+			InputStream in = new FileInputStream(from);
+			OutputStream out = new FileOutputStream(target);
+
+			byte[] buf = new byte[1024];
+			int len;
+
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+
+			in.close();
+			out.close();
+		} catch (Exception e) {
+
+		}
+		return newuri;
+
+	}
+
 	public void moveMatrix() {
 		if (status == Status.PM_STATUS_URI_LOCAL) {
 			String[] dir = uri.split("/");
@@ -151,7 +184,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 			String newname = "temp_matrix_" + System.nanoTime();
 			File from = new File(uri);
 			File to = new File(newuri);
-			
+
 			boolean success = from.renameTo(new File(to, from.getName()));
 			uri = newuri + newname;
 			File change = new File(uri);
@@ -162,11 +195,11 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 
 	public void saveMatrix() {
 		if (status == Status.PM_STATUS_LOADED_FULL) {
-		//	status = Status.PM_STATUS_URI_LOCAL;
+			//	status = Status.PM_STATUS_URI_LOCAL;
 			MatrixLoader matrixLoader = MatrixLoaderFactory.getMatrixLoader("table");
 			uri = "/tmp/temp_matrix_" + System.nanoTime();
-//			System.out.println(this);
-//			this.print();
+			//			System.out.println(this);
+			//			this.print();
 			matrixLoader.saveMatrix(uri, this);
 		}
 		//new Exception("Not Implemented").printStackTrace();
@@ -180,7 +213,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 			return;
 		}
 		else if (status == Status.PM_STATUS_URI_REMOTE) {
-		// TODO: similar to LOCAL or MatrixFactory returns a remote matrix loader;
+			// TODO: similar to LOCAL or MatrixFactory returns a remote matrix loader;
 		}
 		//new Exception("Not Implemented").printStackTrace();
 	}
@@ -211,11 +244,15 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		return null;
 	}
 	
+	public void setURI(String uri) {
+		this.uri = uri;
+	}
+
 	public String getURI() {
 		saveMatrix();
 		return uri;
 	}
-	
+
 	public Status getStatus() {
 		return status;
 	}

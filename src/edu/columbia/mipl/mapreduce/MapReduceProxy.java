@@ -12,6 +12,11 @@ import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 
+import edu.columbia.mipl.mapreduce.MapReduceMatrixOp.MatrixMultiplyMapper;
+import edu.columbia.mipl.mapreduce.MapReduceMatrixOp.MatrixMultiplyReducer;
+import edu.columbia.mipl.mapreduce.MapReduceMatrixOp.MatrixMultiplySecondMapper;
+import edu.columbia.mipl.mapreduce.MapReduceMatrixOp.MatrixMultiplySecondReducer;
+
 
 public class MapReduceProxy {
 	
@@ -79,7 +84,7 @@ public class MapReduceProxy {
 
 	public void abs(String inputPath1, String outputPath) {
 		try {
-//			System.out.println("MapReduce : Abs");
+			System.out.println("MapReduce : Abs");
 //			showFile(inputPath1);
 			JobClient client = new JobClient();
 			JobConf conf = new JobConf(MapReduceMatrixOp.class);
@@ -126,7 +131,7 @@ public class MapReduceProxy {
 
 	public void add(String inputPath1, String inputPath2, String outputPath) {
 		try {
-//			System.out.println("MapReduce : Add");
+			System.out.println("MapReduce : Add");
 //			showFile(inputPath1);
 //			showFile(inputPath2);
 			JobClient client = new JobClient();
@@ -160,7 +165,7 @@ public class MapReduceProxy {
 	
 	public void add(String inputPath1, double arg2, String outputPath) {
 		try {
-//			System.out.println("MapReduce : Add");
+			System.out.println("MapReduce : Add");
 //			showFile(inputPath1);
 			JobClient client = new JobClient();
 			JobConf conf = new JobConf(MapReduceMatrixOp.class);
@@ -193,7 +198,7 @@ public class MapReduceProxy {
 	
 	public void sub(String inputPath1, double arg2, String outputPath) {
 		try {
-//			System.out.println("MapReduce : Sub");
+			System.out.println("MapReduce : Sub");
 //			showFile(inputPath1);
 			JobClient client = new JobClient();
 			JobConf conf = new JobConf(MapReduceMatrixOp.class);
@@ -212,6 +217,7 @@ public class MapReduceProxy {
 
 			JobClient.runJob(conf);
 			
+			System.out.println("Done");
 //			System.out.println("Output");
 //			showFile(outputPath + "/part-00000");
 
@@ -227,7 +233,7 @@ public class MapReduceProxy {
 	
 	public void div(String inputPath1, double arg2, String outputPath) {
 		try {
-//			System.out.println("MapReduce : Div");
+			System.out.println("MapReduce : Div");
 //			showFile(inputPath1);
 			JobClient client = new JobClient();
 			JobConf conf = new JobConf(MapReduceMatrixOp.class);
@@ -262,7 +268,7 @@ public class MapReduceProxy {
 
 	public void sub(String inputPath1, String inputPath2, String outputPath) {
 		try {
-//			System.out.println("MapReduce : Sub");
+			System.out.println("MapReduce : Sub");
 //			showFile(inputPath1);
 //			showFile(inputPath2);
 			JobClient client = new JobClient();
@@ -280,6 +286,7 @@ public class MapReduceProxy {
 			FileOutputFormat.setOutputPath(conf, new Path(outputPath));
 
 			JobClient.runJob(conf);
+			System.out.println("Done");
 //			System.out.println("Output");
 //			showFile(outputPath + "/part-00000");
 
@@ -290,7 +297,7 @@ public class MapReduceProxy {
 
 	public void cellmul(String inputPath1, String inputPath2, String outputPath) {
 		try {
-//			System.out.println("MapReduce : CellMul");
+			System.out.println("MapReduce : CellMul");
 //			showFile(inputPath1);
 //			showFile(inputPath2);
 			JobClient client = new JobClient();
@@ -318,7 +325,7 @@ public class MapReduceProxy {
 
 	public void celldiv(String inputPath1, String inputPath2, String outputPath) {
 		try {
-//			System.out.println("MapReduce : CellDiv");
+			System.out.println("MapReduce : CellDiv");
 //			showFile(inputPath1);
 //			showFile(inputPath2);
 			JobClient client = new JobClient();
@@ -342,6 +349,60 @@ public class MapReduceProxy {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
+	}
+	
+	public void mul(String inputPath1, String inputPath2, String outputPath) {
+		try {
+			System.out.println("MapReduce : Mul");
+//			showFile(inputPath1);
+//			showFile(inputPath2);
+//			JobClient client = new JobClient();
+			JobConf conf = new JobConf(MapReduceMatrixOp.class);
+			
+//			job(MapReduceMatrixOp.class, client, conf);
+			
+			conf.set("input1", inputPath1);
+			conf.set("input2", inputPath2);
+			conf.setInt("op", MapReduceProxy.MATRIX_MUL);
+			conf.setJobName("MapReduceMatrixOp");
+			
+			FileInputFormat.addInputPath(conf, new Path(inputPath1));
+			FileInputFormat.addInputPath(conf, new Path(inputPath2));
+			FileOutputFormat.setOutputPath(conf, new Path("intermediate"));
+			conf.setMapOutputKeyClass(LongWritable.class);
+			conf.setMapOutputValueClass(WritableArray.class);
+
+			conf.setOutputKeyClass(WritableIndex.class);
+			conf.setOutputValueClass(WritableArray.class);
+
+			conf.setMapperClass(MatrixMultiplyMapper.class);
+			conf.setReducerClass(MatrixMultiplyReducer.class);
+
+			
+			JobConf conf2 = new JobConf(MapReduceMatrixOp.class);
+			conf2.setMapOutputKeyClass(WritableIndex.class);
+			conf2.setMapOutputValueClass(WritableArray.class);
+
+			conf2.setOutputKeyClass(WritableIndex.class);
+			conf2.setOutputValueClass(WritableArray.class);
+
+			conf2.setMapperClass(MatrixMultiplySecondMapper.class);
+			conf2.setReducerClass(MatrixMultiplySecondReducer.class);
+			FileInputFormat.addInputPath(conf2, new Path("intermediate"));
+			FileOutputFormat.setOutputPath(conf2, new Path(outputPath));
+
+
+			JobClient.runJob(conf);
+//			System.out.println("EndReduce");
+			JobClient.runJob(conf2);
+
+//			System.out.println("Output");
+//			showFile(outputPath + "/part-00000");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		
 	}
 
 	public void merge() {

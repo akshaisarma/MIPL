@@ -9,7 +9,7 @@ import org.apache.hadoop.io.WritableComparable;
 
 import edu.columbia.mipl.datastr.*;
 
-public class WritableIndex implements Writable, WritableComparable {
+public class WritableIndex implements Writable, WritableComparable<WritableIndex> {
 	int row;
 	int col;
 
@@ -45,17 +45,17 @@ public class WritableIndex implements Writable, WritableComparable {
 	}
 
 	@Override
-	public int compareTo(Object arg0) {
+	public int compareTo(WritableIndex arg0) {
 		WritableIndex ind = (WritableIndex) arg0;
 		
-		if (ind.row != row) return ind.row - row;
-		return ind.col - col;
+		if (ind.row != row) return row - ind.row;
+		return col - ind.col;
 	}
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		
-//		sb.append(row + " " + col);
+		sb.append(row + " " + col);
 		return sb.toString();
 	}
 }

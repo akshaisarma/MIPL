@@ -14,6 +14,7 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 	int operation;
 	int size;
 	double operand;
+	int rowPos;
 
 	public WritableArray() {
 
@@ -45,6 +46,14 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		this.operation = op;
 	}
 	
+	public void setRowPos(int rowPos) {
+		this.rowPos = rowPos;
+	}
+	
+	public int getRowPos() {
+		return rowPos;
+	}
+	
 	public double getOperand() {
 		return operand;
 	}
@@ -59,6 +68,12 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 	
 	public void setSize(int size) {
 		this.size = size;
+	}
+	
+	public void putData(double d, int row, int col) {
+		double[] data = getData();
+		int paddedCol = getPaddedCol();
+		data[row * paddedCol + col] = d;
 	}
 
 	public void readFields(DataInput in) throws IOException {
@@ -77,6 +92,7 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		pos = in.readLong();
 		
 		operand = in.readFloat();
+		rowPos = in.readInt();
 		
 		
 		
@@ -128,6 +144,8 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		out.writeLong(pos);
 		
 		out.writeFloat((float) operand);
+		
+		out.writeInt(rowPos);
 
 		for (i = 0; i < row; i++)
 			for (j = 0; j < col; j++) {
@@ -156,4 +174,9 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 
 		return sb.toString();
 	}
+	
+	public int getSize() {
+		return getRow() * getCol();
+	}
+	
 }

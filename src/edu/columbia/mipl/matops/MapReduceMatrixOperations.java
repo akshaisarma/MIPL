@@ -52,6 +52,12 @@ public class MapReduceMatrixOperations extends ClMatrixOperations {
 				c.delete();
 			folder.delete();
 		}
+		File folder2 = new File("intermediate");
+		if (folder2.exists()) {
+			for (File c : folder2.listFiles())
+				c.delete();
+			folder2.delete();
+		}
 	}
 
 	public PrimitiveMatrix sub(PrimitiveMatrix arg1,  PrimitiveMatrix arg2) {
@@ -117,12 +123,11 @@ public class MapReduceMatrixOperations extends ClMatrixOperations {
 		return matrix;
 	}
 	
-	/*
 	public PrimitiveMatrix mult(PrimitiveMatrix arg1,  PrimitiveMatrix arg2) {
 
 		MapReduceProxy mapred = new MapReduceProxy();
 
-		mapred.celldiv(arg1.getURI(), arg2.getURI(), "temp");
+		mapred.mul(arg1.getURI(), arg2.getURI(), "temp");
 
 		PrimitiveMatrix matrix = new PrimitiveMatrix("temp/part-00000", true);
 		
@@ -132,7 +137,7 @@ public class MapReduceMatrixOperations extends ClMatrixOperations {
 		
 		return matrix;
 	}
-	*/
+	
 	public PrimitiveMatrix div(PrimitiveMatrix arg1, double arg2) {
 
 		MapReduceProxy mapred = new MapReduceProxy();
@@ -161,6 +166,12 @@ public class MapReduceMatrixOperations extends ClMatrixOperations {
 		
 		return matrix;
 
+	}
+	
+	public void assign(PrimitiveMatrix arg1, final PrimitiveMatrix arg2) {
+		
+		arg1.setStatus(arg2.getStatus());
+		arg1.setURI(arg2.duplicateMatrix());
 	}
 
 	/*
