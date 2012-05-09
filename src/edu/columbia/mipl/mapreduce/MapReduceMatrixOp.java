@@ -504,7 +504,7 @@ public class MapReduceMatrixOp {
 				while (values.hasNext()) {
 					double val = 0;
 					WritableArray array = values.next();
-					System.out.println(array);
+//					System.out.println(array);
 					if (sumArr == null) {
 //						System.out.println(array.getRow() + " " + array.getCol() + " " + array.getPos());
 						sumArr = new WritableArray(array.getRow(), array.getCol() - 2, array.getPos());
