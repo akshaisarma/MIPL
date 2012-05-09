@@ -151,8 +151,8 @@ public class PrimitiveDoubleArray extends PrimitiveArray {
 		
 		System.out.println("data");
 		for (int i = 0; i < data.length; i++) {
-			System.out.print(data[i] + " " );
-			if ( (i+1) % paddedCol == 0) System.out.println();
+			System.out.print(data[i] + " ");
+			if ((i + 1) % paddedCol == 0) System.out.println();
 		}
 		
 		System.out.println();
