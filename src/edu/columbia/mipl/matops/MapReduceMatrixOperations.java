@@ -54,6 +54,115 @@ public class MapReduceMatrixOperations extends ClMatrixOperations {
 		}
 	}
 
+	public PrimitiveMatrix sub(PrimitiveMatrix arg1,  PrimitiveMatrix arg2) {
+
+		MapReduceProxy mapred = new MapReduceProxy();
+
+//		arg2.print();
+//		System.out.println(arg2.get);
+//		System.out.println(arg2);
+		mapred.sub(arg1.getURI(), arg2.getURI(), "temp");
+
+		PrimitiveMatrix matrix = new PrimitiveMatrix("temp/part-00000", true);
+		
+		matrix.moveMatrix();
+
+		cleanup();
+		
+		return matrix;
+	}
+
+	public PrimitiveMatrix abs(PrimitiveMatrix arg1) {
+
+		MapReduceProxy mapred = new MapReduceProxy();
+
+		mapred.abs(arg1.getURI(), "temp");
+
+		PrimitiveMatrix matrix = new PrimitiveMatrix("temp/part-00000", true);
+		
+		matrix.moveMatrix();
+
+		cleanup();
+		
+		return matrix;
+	}
+
+	public PrimitiveMatrix cellmul(PrimitiveMatrix arg1,  PrimitiveMatrix arg2) {
+
+		MapReduceProxy mapred = new MapReduceProxy();
+
+		mapred.cellmul(arg1.getURI(), arg2.getURI(), "temp");
+
+		PrimitiveMatrix matrix = new PrimitiveMatrix("temp/part-00000", true);
+		
+		matrix.moveMatrix();
+
+		cleanup();
+		
+		return matrix;
+	}
+
+	public PrimitiveMatrix celldiv(PrimitiveMatrix arg1,  PrimitiveMatrix arg2) {
+
+		MapReduceProxy mapred = new MapReduceProxy();
+
+		mapred.celldiv(arg1.getURI(), arg2.getURI(), "temp");
+
+		PrimitiveMatrix matrix = new PrimitiveMatrix("temp/part-00000", true);
+		
+		matrix.moveMatrix();
+
+		cleanup();
+		
+		return matrix;
+	}
+	
+	/*
+	public PrimitiveMatrix mult(PrimitiveMatrix arg1,  PrimitiveMatrix arg2) {
+
+		MapReduceProxy mapred = new MapReduceProxy();
+
+		mapred.celldiv(arg1.getURI(), arg2.getURI(), "temp");
+
+		PrimitiveMatrix matrix = new PrimitiveMatrix("temp/part-00000", true);
+		
+		matrix.moveMatrix();
+
+		cleanup();
+		
+		return matrix;
+	}
+	*/
+	public PrimitiveMatrix div(PrimitiveMatrix arg1, double arg2) {
+
+		MapReduceProxy mapred = new MapReduceProxy();
+
+		mapred.div(arg1.getURI(), arg2, "temp");
+
+		PrimitiveMatrix matrix = new PrimitiveMatrix("temp/part-00000", true);
+		
+		matrix.moveMatrix();
+
+		cleanup();
+		
+		return matrix;
+	}
+	
+	public PrimitiveMatrix add(PrimitiveMatrix arg1, double arg2) {
+		MapReduceProxy mapred = new MapReduceProxy();
+
+		mapred.add(arg1.getURI(), arg2, "temp");
+
+		PrimitiveMatrix matrix = new PrimitiveMatrix("temp/part-00000", true);
+		
+		matrix.moveMatrix();
+
+		cleanup();
+		
+		return matrix;
+
+	}
+
 	/*
 	public PrimitiveMatrix add(final PrimitiveMatrix arg1, double arg2) {
 		return new PrimitiveMatrix(add(arg1.getData(), arg2));
@@ -178,7 +287,6 @@ public class MapReduceMatrixOperations extends ClMatrixOperations {
 	}
 	*/
 	
-//	PrimitiveArray add(final PrimitiveArray arg1, double arg2);
 
 //	PrimitiveArray sub(final PrimitiveArray arg1, final PrimitiveArray arg2);
 

@@ -39,6 +39,7 @@ public class MapReduceMatrixOp {
 		private static String input2;
 
 		private static int operation;
+		private static double operand;
 
 		public void map(LongWritable key, Text val,
 				OutputCollector<LongWritable, WritableArray> output, Reporter reporter)
@@ -64,8 +65,11 @@ public class MapReduceMatrixOp {
 				n++;
 			}
 
-			if (fileName.endsWith(input1)) {
+//			System.out.println("fileName = " + input1 + " " + fileName + " " + fileName.endsWith(input1));
+			if (fileName.endsWith(input1) || input1.endsWith(fileName)) {
+//				System.out.println("input1?");
 				array.setOperation(operation);
+				array.setOperand(operand);
 			}
 			newKey.set(count);
 			output.collect(newKey, array);
@@ -80,6 +84,11 @@ public class MapReduceMatrixOp {
 			input2 = job.get("input2");
 
 			operation = job.getInt("op", 0);
+			
+			if (operation >= MapReduceProxy.MATRIX_ADD_DOUBLE) {
+				operand = job.getFloat("operand", 0);
+//				System.out.println("Operand = " + operand);
+			}
 			//			System.out.println(operation);
 		}
 	}
@@ -108,19 +117,42 @@ public class MapReduceMatrixOp {
 			WritableArray sumArr = null;
 			while (values.hasNext()) {
 				WritableArray array = values.next();
+//				System.out.println("array = " + array);
 
 				if (sumArr == null) { 
 					sumArr = new WritableArray(array.getRow(), array.getCol(), array.getPos());
 					sumArr.setOperation(array.getOperation());
+					sumArr.setOperand(array.getOperand());
+//					System.out.println("reduce Operand = " + array.getOperand());
+					/*
+					for (double dd : array.getData()) {
+						System.out.print(dd + " ");
+					}
+					*/
+//					System.out.println();
 					sumArr.copyRange(array, 0, 0, 0, 0, array.getRow(), array.getCol());
-					
-					if (array.getOperation() == MapReduceProxy.MATRIX_ABS) {
+//					System.out.println("sumarr = " + sumArr);
+
+					switch (sumArr.getOperation()) {
+					case MapReduceProxy.MATRIX_ABS:
 						sumArr = new WritableArray(array.getRow(), array.getCol(), ((PrimitiveDoubleArray) new DefaultMatrixOperations().abs(array)).getData(), array.getPos());
+						break;
+					case MapReduceProxy.MATRIX_ADD_DOUBLE:
+						sumArr = new WritableArray(array.getRow(), array.getCol(), ((PrimitiveDoubleArray) new DefaultMatrixOperations().add(array, array.getOperand())).getData(), array.getPos());
+						break;
+					case MapReduceProxy.MATRIX_SUB_DOUBLE:
+						sumArr = new WritableArray(array.getRow(), array.getCol(), ((PrimitiveDoubleArray) new DefaultMatrixOperations().sub(array, array.getOperand())).getData(), array.getPos());
+						break;
+					case MapReduceProxy.MATRIX_DIV_DOUBLE:
+						sumArr = new WritableArray(array.getRow(), array.getCol(), ((PrimitiveDoubleArray) new DefaultMatrixOperations().div(array, array.getOperand())).getData(), array.getPos());
+						break;
+					
 					}
 				}
 				else {
 
 					if (sumArr.isFirstMatrix()) {
+//						System.out.println("sumarr = " + sumArr.getRow() + " " + sumArr.getCol() + " " + sumArr.getData().length);
 
 						switch (sumArr.getOperation()) {
 						case MapReduceProxy.MATRIX_ADD:
@@ -133,11 +165,18 @@ public class MapReduceMatrixOp {
 							sumArr = new WritableArray(sumArr.getRow(), sumArr.getCol(), ((PrimitiveDoubleArray) new DefaultMatrixOperations().cellmult(sumArr, array)).getData(), sumArr.getPos());						
 							break;
 						case MapReduceProxy.MATRIX_CELLDIV:
+//							System.out.println("SUMARR");
+//							sumArr.printMatrix();
+//							System.out.println("ARRAY");
+//							array.printMatrix();
 							sumArr = new WritableArray(sumArr.getRow(), sumArr.getCol(), ((PrimitiveDoubleArray) new DefaultMatrixOperations().celldiv(sumArr, array)).getData(), sumArr.getPos());						
 							break;
 						}
+//						System.out.println("w sumarr = " + sumArr);
 					}
 					else {
+//						System.out.println("arr OP = " + array.getOperation());
+//						System.out.println("sum OP = " + sumArr.getOperation());
 						switch (array.getOperation()) {
 						case MapReduceProxy.MATRIX_ADD:
 							sumArr = new WritableArray(sumArr.getRow(), sumArr.getCol(), ((PrimitiveDoubleArray) new DefaultMatrixOperations().add(array, sumArr)).getData(), sumArr.getPos());						
@@ -152,10 +191,13 @@ public class MapReduceMatrixOp {
 							sumArr = new WritableArray(sumArr.getRow(), sumArr.getCol(), ((PrimitiveDoubleArray) new DefaultMatrixOperations().celldiv(sumArr, array)).getData(), sumArr.getPos());						
 							break;
 						}
+//						System.out.println("here ? sumarr = " + sumArr);
 					}
 				}
 
 			}
+//			System.out.println("sumarr = " + sumArr);
+//			System.out.println("array = " + array);
 			output.collect(NullWritable.get(), sumArr);
 		}
 		public void configure(JobConf job) {
@@ -166,6 +208,7 @@ public class MapReduceMatrixOp {
 			input2 = job.get("input2");
 
 			operation = job.getInt("op", 0);
+//			System.out.println("Getting op = " + operation);
 			//			System.out.println(operation);
 		}
 
@@ -188,9 +231,9 @@ public class MapReduceMatrixOp {
 		JobConf conf = new JobConf(MapReduceMatrixOp.class);
 
 
-		conf.set("input1", "input1.csv");
-		conf.set("input2", "input2.csv");
-		conf.setInt("op", MapReduceProxy.MATRIX_SUB);
+		conf.set("input1", "haha.txt");
+		conf.set("input2", "haha2.txt");
+		conf.setInt("op", MapReduceProxy.MATRIX_ADD);
 		conf.setJobName("MatrixSplitter");
 
 		conf.setMapOutputKeyClass(LongWritable.class);
@@ -199,8 +242,8 @@ public class MapReduceMatrixOp {
 		conf.setOutputKeyClass(WritableIndex.class);
 		conf.setOutputValueClass(WritableArray.class);
 
-		FileInputFormat.addInputPath(conf, new Path("input/input1.csv"));
-		FileInputFormat.addInputPath(conf, new Path("input/input2.csv"));
+		FileInputFormat.addInputPath(conf, new Path("haha.txt"));
+		FileInputFormat.addInputPath(conf, new Path("haha2.txt"));
 		FileOutputFormat.setOutputPath(conf, new Path("output"));
 
 		conf.setMapperClass(MatrixMapper.class);
