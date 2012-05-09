@@ -152,7 +152,7 @@ public class TableMatrixLoader extends MatrixLoader {
 				}
 			}
 			else {
-				System.out.println("what???" + matrix);
+//				System.o	ut.println("what???" + matrix);
 				//Additional PrimitiveArray types here
 			}
 			outputWriter.close();

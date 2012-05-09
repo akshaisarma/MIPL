@@ -99,6 +99,7 @@ public class JavaSourceWriter extends InstructionWriter {
 			println("public class " + filename + " {");
 			
 			println("public static void main(String[] args) throws MiplRuntimeException {");
+			println("try {");
 			
 			// set configuration
 			Configuration conf = Configuration.getInstance();
@@ -552,9 +553,14 @@ public class JavaSourceWriter extends InstructionWriter {
 			stack.push("new PrimitiveDouble(0.0)");
 		}
 	}
+	
 
 	public void finish() {
 		try {
+			println("} catch (OutOfMemoryError e) {");
+			println("System.out.println(\"MIPL Out of Memory Error\");");
+			println("e.printStackTrace();");
+			println("}");
 			println("}");
 			println("");
 			println(jobDeclarations);
