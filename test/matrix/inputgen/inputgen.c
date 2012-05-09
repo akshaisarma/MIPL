@@ -14,7 +14,11 @@ int main(int argc, char ** argv) {
 
 	if (argc == 2) {
 		while (i-- > 0) {
-			printf("%d %d %d\n", (int) (rand() * 180.0 / RAND_MAX - 60), (rand() >= RAND_MAX/2), (rand() >= RAND_MAX/2));
+			int c;
+			do {
+				c = (int) (rand() * 180.0 / RAND_MAX - 60);
+			} while (c == 50);
+			printf("%d %d %d\n", c, (rand() >= RAND_MAX/2), (rand() >= RAND_MAX/2));
 		}
 	}
 	else if(argc == 3) {

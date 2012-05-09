@@ -50,6 +50,14 @@ public abstract class PrimitiveArray {
 	public void increaseCol() {
 		increaseCol(1);
 	}
+	
+	public void setRow(int row) {
+		this.row = row;
+	}
+	
+	public void setCol(int col) {
+		this.col = col;
+	}
 
 	public void increaseCol(int n) {
 		assert (row == 1);

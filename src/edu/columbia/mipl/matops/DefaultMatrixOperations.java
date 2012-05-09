@@ -155,8 +155,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 		if (!checkDimensionMutipliable(arg1, arg2)) {
 			/* throw new UncompatiableMatrixDimensionException() */;
 			log.error("To multiply, two input matrices should have same dimensions and squares.");
-			arg1.getData().printMatrix();
-			arg2.getData().printMatrix();
+//			arg1.getData().printMatrix();
+//			arg2.getData().printMatrix();
 		}
 
 		if (containsUnboundMatrix(arg1, arg2)) {
@@ -364,7 +364,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				data[pos] = data1[pos] + data2[pos];
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 
 		return result;
@@ -384,7 +385,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				data[pos] = data1[pos] + arg2;
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 
 		return result;
@@ -411,7 +413,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				data[pos] = data1[pos] - data2[pos];
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 		return result;
 	}
@@ -430,7 +433,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				data[pos] = data1[pos] - arg2;
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 		return result;
 	}
@@ -455,7 +459,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				data[pos] = data1[pos] * data2[pos];
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 
 		return result;
@@ -481,7 +486,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				data[pos] = res;
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 		return result;
 	}
@@ -499,7 +505,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				data[pos] = data1[pos] * arg2;
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 		return result;
 	}
@@ -529,7 +536,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				data[pos] = data1[pos] / data2[pos];
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 
 		return result;
@@ -571,7 +579,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				data[pos] = data1[pos] / arg2;
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 		return result;
 	}
@@ -652,7 +661,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				matT.setValue(j, i, (Double) data[pos]);
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 		return matT;
 	}
@@ -716,7 +726,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				}
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 		return coMat;
 	}
@@ -738,7 +749,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				data[pos] = 1;
 				pos++;
 			}
-			offset += r.getPaddedRow();
+//			offset += r.getPaddedRow();
+			offset += r.getPaddedCol();
 		}
 
 		return r;
@@ -845,7 +857,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				result += data1[pos];
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 
 		return result;
@@ -871,7 +884,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				pos++;
 			}
 			result.setValue(i, 0, (Double) val);
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 
 		return result;
@@ -892,7 +906,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				pos++;
 			}
 			result.setValue(i, 0, (Double) val / arg1.getCol());
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 
 		return result;
@@ -913,7 +928,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				result.setValue(0, j, (Double) val);
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 
 		return result;
@@ -934,7 +950,8 @@ public class DefaultMatrixOperations implements MatrixOperations {
 				result.setValue(0, j, (Double) val);
 				pos++;
 			}
-			offset += arg1.getPaddedRow();
+//			offset += arg1.getPaddedRow();
+			offset += arg1.getPaddedCol();
 		}
 
 		for (j = 0; j < arg1.getCol(); j++) {

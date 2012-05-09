@@ -12,6 +12,8 @@ import edu.columbia.mipl.datastr.*;
 public class WritableArray extends PrimitiveDoubleArray implements Writable, WritableComparable<WritableArray>  {
 	long pos;
 	int operation;
+	int size;
+	double operand;
 
 	public WritableArray() {
 
@@ -35,8 +37,16 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		return (operation != 0);
 	}
 	
+	public void setOperand(double operand) {
+		this.operand = operand;
+	}
+	
 	public void setOperation(int op) {
 		this.operation = op;
+	}
+	
+	public double getOperand() {
+		return operand;
 	}
 	
 	public int getOperation() {
@@ -45,6 +55,10 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 
 	public long getPos() {
 		return pos;
+	}
+	
+	public void setSize(int size) {
+		this.size = size;
 	}
 
 	public void readFields(DataInput in) throws IOException {
@@ -55,20 +69,43 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		int row = in.readInt();
 		int col = in.readInt();
 		int paddedCol = in.readInt();
+		
+		
+		size = in.readInt();
 		operation = in.readInt();
 		
 		pos = in.readLong();
 		
+		operand = in.readFloat();
+		
+		
+		
+//		System.out.println("read " + row + " " + col + " " + paddedCol + " " + size + " " + operation);
+
+		double[] data = getData();
+//		System.out.println("read data = " + data.length);
 		if (getRow() < row)
 			increaseRow(row - getRow());
 		if (getCol() < col)
 			increaseCol(col - getCol());
 		
-		double[] data = getData();
+		data = getData();
+//		System.out.println("read data = " + data.length);
 
 		for (i = 0; i < row; i++)
-			for (j = 0; j < col; j++)
+			for (j = 0; j < col; j++) {
 				data[i * paddedCol + j] = in.readDouble();
+//				System.out.print(data[i * paddedCol + j] + " ");
+			}
+		
+//		System.out.println();
+		
+//		System.out.println("read data = " + data.length);
+		
+		setRow(row);
+		setCol(col);
+//		System.out.println("read data = " + data.length);
+//		System.out.println("read " + getRow() + " " + getCol() + " " + paddedCol);
 	}
 	public void write(DataOutput out) throws IOException {
 		int i;
@@ -77,18 +114,28 @@ public class WritableArray extends PrimitiveDoubleArray implements Writable, Wri
 		int row = getRow();
 		int col = getCol();
 		int paddedCol = getPaddedCol();
+		
+		
 
-//		System.out.println("write " + row + " " + col + " " + paddedCol);
+//		System.out.println("write " + row + " " + col + " " + paddedCol + " " + size + " " + operation);
 		out.writeInt(row);
 		out.writeInt(col);
 		out.writeInt(paddedCol);
+		out.writeInt(size);
 		out.writeInt(operation);
 
 		
 		out.writeLong(pos);
+		
+		out.writeFloat((float) operand);
+
 		for (i = 0; i < row; i++)
-			for (j = 0; j < col; j++)
+			for (j = 0; j < col; j++) {
 				out.writeDouble(data[i * paddedCol + j]);
+//				System.out.print(data[i * paddedCol + j] + " ");
+			}
+//		System.out.println("write data = " + data.length);
+//		System.out.println();
 	}
 
 	@Override

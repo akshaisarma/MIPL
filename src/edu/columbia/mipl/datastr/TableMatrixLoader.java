@@ -107,13 +107,15 @@ public class TableMatrixLoader extends MatrixLoader {
 	}
 
 	public void saveMatrix(String file, PrimitiveMatrix matrix) {
-		if (matrix.getStatus() == PrimitiveMatrix.Status.PM_STATUS_LOADED_FULL)
+		if (matrix.getStatus() == PrimitiveMatrix.Status.PM_STATUS_LOADED_FULL) {
+//			System.out.println("Status = " + matrix.getStatus());
 			saveMatrix(file, matrix.getData());
+		}
 		else if (matrix.getStatus() == PrimitiveMatrix.Status.PM_STATUS_URI_LOCAL)
 			copyFile(new File(matrix.getURI()), new File(file));
 		else if (matrix.getStatus() == PrimitiveMatrix.Status.PM_STATUS_URI_REMOTE)
 			new Exception("Not Implemented").printStackTrace();
-		else
+		else 
 			new Exception("Not Implemented").printStackTrace();
 	}
 
@@ -121,6 +123,7 @@ public class TableMatrixLoader extends MatrixLoader {
 		try {
 			FileWriter outputFile = new FileWriter(file);
 			BufferedWriter outputWriter = new BufferedWriter(outputFile);
+//			matrix.printMatrix();
 
 			if (matrix instanceof PrimitiveDoubleArray) {
 				PrimitiveDoubleArray pda = (PrimitiveDoubleArray) matrix;
@@ -128,9 +131,9 @@ public class TableMatrixLoader extends MatrixLoader {
 				/* Saving padded matrix instead of real matrix */
 				int rows = pda.getPaddedRow();
 				int cols = pda.getPaddedCol();
-				for (int i = 0; i < rows; i++)  {
+				for (int i = 0; i < pda.getRow(); i++)  {
 					String oneLine = "";
-					for (int j = 0; j < cols; j++)
+					for (int j = 0; j < pda.getCol(); j++)
 						oneLine = oneLine + data[i * cols + j] + "\t";
 					outputWriter.write(oneLine.trim() + "\n");
 				}
@@ -149,6 +152,7 @@ public class TableMatrixLoader extends MatrixLoader {
 				}
 			}
 			else {
+				System.out.println("what???" + matrix);
 				//Additional PrimitiveArray types here
 			}
 			outputWriter.close();

@@ -125,7 +125,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 					break;
 				case PM_STATUS_URI_REMOTE:
 				case PM_STATUS_LOADED_FULL:
-					new Exception("Not Implemented").printStackTrace();
+//					new Exception("Not Implemented").printStackTrace();
 					// error
 					break;
 				case PM_STATUS_LOADED_SPARSE:
@@ -148,7 +148,7 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 			String[] dir = uri.split("/");
 			String name = dir[dir.length - 1];
 			String newuri = "/tmp/";
-			String newname = "temp_matrix_" + System.currentTimeMillis();
+			String newname = "temp_matrix_" + System.nanoTime();
 			File from = new File(uri);
 			File to = new File(newuri);
 			
@@ -164,7 +164,9 @@ public class PrimitiveMatrix<T> implements PrimitiveType {
 		if (status == Status.PM_STATUS_LOADED_FULL) {
 		//	status = Status.PM_STATUS_URI_LOCAL;
 			MatrixLoader matrixLoader = MatrixLoaderFactory.getMatrixLoader("table");
-			uri = "/tmp/temp_matrix_" + System.currentTimeMillis();
+			uri = "/tmp/temp_matrix_" + System.nanoTime();
+//			System.out.println(this);
+//			this.print();
 			matrixLoader.saveMatrix(uri, this);
 		}
 		//new Exception("Not Implemented").printStackTrace();
