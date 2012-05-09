@@ -1,7 +1,7 @@
 #!/bin/bash
 
 INPUT=$*
-[ $# -lt 1 ] && INPUT=test/input/multi_jobs.mipl
+#[ $# -lt 1 ] && INPUT=test/input/multi_jobs.mipl
 
 rm -rf temp
 
