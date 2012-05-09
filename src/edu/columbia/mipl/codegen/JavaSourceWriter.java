@@ -559,7 +559,6 @@ public class JavaSourceWriter extends InstructionWriter {
 		try {
 			println("} catch (OutOfMemoryError e) {");
 			println("System.out.println(\"MIPL Out of Memory Error\");");
-			println("e.printStackTrace();");
 			println("}");
 			println("}");
 			println("");
